@@ -1,0 +1,7 @@
+include ':app'
+//setBinding(new Binding([gradle: this]))
+//evaluate(new File(
+//  settingsDir,
+//  '../flutter_module_yl/.android/include_flutter.groovy'
+//))
+//include ':annotationtest'
