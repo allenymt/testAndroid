@@ -21,10 +21,10 @@ android {
 
     signingConfigs {
         debug {
-            keyAlias 'yulun'
-            keyPassword '123456'
-            storeFile file('../ylAndroid.jks')
-            storePassword '123456'
+//            keyAlias 'yulun'
+//            keyPassword '123456'
+//            storeFile file('../ylAndroid.jks')
+//            storePassword '123456'
         }
         release {
             keyAlias 'yulun'

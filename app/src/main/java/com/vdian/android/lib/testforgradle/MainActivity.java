@@ -33,6 +33,7 @@ import com.vdian.android.lib.testforgradle.touch.TestTouchActivity;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.util.HashSet;
@@ -82,6 +83,24 @@ public class MainActivity extends AppCompatActivity {
         }
 //        System.out.print(maxValidLength);
         return maxValidLength;
+    }
+
+
+    /**
+     * 判断是不是鸿蒙系统
+     * @return
+     */
+    public static boolean isOhos() {
+        boolean isOhos = false;
+        try {
+            Class<?> cls = Class.forName("com.huawei.system.BuildEx");
+            Method method = cls.getMethod("getOsBrand");
+            Object obj =  method.invoke(cls);
+//            isOhos = true;
+        } catch (Exception ignored) {
+        }
+
+        return isOhos;
     }
 
     @Override
@@ -316,6 +335,8 @@ public class MainActivity extends AppCompatActivity {
 //        c.setTestParam(true);
 
         TestReflexAction.test();
+
+        isOhos();
     }
 
     public void testDrawableSize() {

@@ -46,6 +46,7 @@
         <activity android:name=".activityResult.TestDActivity" />
         <activity android:name=".window_toast.TestWindowToastActivity" />
         <activity android:name=".launch_app.LaunchOtherAppActivity" />
+        <activity android:name=".oomDemo.OomDemoActivity" />
     </application>
 
 </manifest>
