@@ -14,7 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".self_view.SelfViewActivity"></activity>
+        <activity android:name=".thread.TestThreadActivity"></activity>
+        <activity android:name=".self_view.SelfViewActivity" />
         <activity android:name=".touch.TestTouchActivity" />
         <activity android:name=".applink.AppLinkTestDomainActivity" />
         <activity android:name=".testleak.TestLeak1Activity" />

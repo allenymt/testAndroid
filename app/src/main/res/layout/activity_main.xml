@@ -90,4 +90,14 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/test_view" />
 
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="go_to_thread"
+        android:onClick="goToThread"
+        android:id="@+id/go_to_thread"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/oom_test_btn" />
+
 </android.support.constraint.ConstraintLayout>

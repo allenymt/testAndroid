@@ -29,6 +29,7 @@ import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
 import com.vdian.android.lib.testforgradle.self_view.SelfViewActivity;
 import com.vdian.android.lib.testforgradle.single.TestStaticInnerSingle;
 import com.vdian.android.lib.testforgradle.testleak.TestLeak1Activity;
+import com.vdian.android.lib.testforgradle.thread.TestThreadActivity;
 import com.vdian.android.lib.testforgradle.touch.TestTouchActivity;
 
 import java.io.InputStream;
@@ -88,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * 判断是不是鸿蒙系统
+     *
      * @return
      */
     public static boolean isOhos() {
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             Class<?> cls = Class.forName("com.huawei.system.BuildEx");
             Method method = cls.getMethod("getOsBrand");
-            Object obj =  method.invoke(cls);
+            Object obj = method.invoke(cls);
 //            isOhos = true;
         } catch (Exception ignored) {
         }
@@ -568,6 +570,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToOomDemo(View view) {
         startActivity(new Intent(MainActivity.this, OomDemoActivity.class));
+    }
+
+    public void goToThread(View view) {
+        startActivity(new Intent(MainActivity.this, TestThreadActivity.class));
     }
 
     public void testJaveStackHead() {

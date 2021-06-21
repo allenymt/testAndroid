@@ -1,5 +1,7 @@
 package com.vdian.android.lib.testforgradle.thread;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 /**
  * @author yulun
  * @sinice 2020-03-18 11:31
@@ -15,10 +17,10 @@ public class TestPrintAbc {
         threadPrintB.start();
         threadPrintC.start();
     }
-
+    static AtomicBoolean atomicBoolean = new AtomicBoolean(false);
     class ThreadPrint extends Thread {
         String printStr;
-        int _printControl;
+        volatile int _printControl;
 
         public ThreadPrint(String printStr, int printControl) {
             super(printStr);
@@ -28,6 +30,9 @@ public class TestPrintAbc {
 
         @Override
         public void run() {
+            if (atomicBoolean.compareAndSet(false, true)) {
+                android.util.Log.i("TestPrintAbc", "atomicBoolean zzz");
+            }
             synchronized (ThreadPrint.class) {
                 System.out.println("name is " + getName() + "  get lock");
                 while (printControl <= 30) {
