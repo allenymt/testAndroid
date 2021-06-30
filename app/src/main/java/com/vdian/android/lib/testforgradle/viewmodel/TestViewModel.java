@@ -1,6 +1,6 @@
 package com.vdian.android.lib.testforgradle.viewmodel;
 
-import android.arch.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModel;
 
 /**
  * @author yulun

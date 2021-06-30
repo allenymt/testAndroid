@@ -11,16 +11,18 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.vdian.android.lib.testforgradle.activityResult.TestBActivity;
 import com.vdian.android.lib.testforgradle.applink.AppLinkTestDomainActivity;
+import com.vdian.android.lib.testforgradle.binder.RemoteTestActivity;
 import com.vdian.android.lib.testforgradle.directory.TestAndroidFileDirectory;
 import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
 import com.vdian.android.lib.testforgradle.memory.TestMemory;
@@ -573,8 +575,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToThread(View view) {
+        int oldCapacity = 10;
+        oldCapacity = oldCapacity >> 1; // 右移1位 除以2
         startActivity(new Intent(MainActivity.this, TestThreadActivity.class));
     }
+
+    public void goToTestBinder(View view) {
+        startActivity(new Intent(MainActivity.this, RemoteTestActivity.class));
+    }
+
 
     public void testJaveStackHead() {
 //        String ss = "ss";

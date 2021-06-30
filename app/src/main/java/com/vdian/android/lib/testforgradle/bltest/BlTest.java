@@ -1,6 +1,6 @@
 package com.vdian.android.lib.testforgradle.bltest;
 
-import android.support.v4.util.ArrayMap;
+import androidx.collection.ArrayMap;
 
 /**
  * @author yulun

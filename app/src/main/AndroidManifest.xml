@@ -10,11 +10,13 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name=".App"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".thread.TestThreadActivity"></activity>
+        <activity android:name=".binder.RemoteTestActivity"></activity>
+        <activity android:name=".thread.TestThreadActivity" />
         <activity android:name=".self_view.SelfViewActivity" />
         <activity android:name=".touch.TestTouchActivity" />
         <activity android:name=".applink.AppLinkTestDomainActivity" />
@@ -48,6 +50,11 @@
         <activity android:name=".window_toast.TestWindowToastActivity" />
         <activity android:name=".launch_app.LaunchOtherAppActivity" />
         <activity android:name=".oomDemo.OomDemoActivity" />
+
+        <service
+            android:name=".binder.IComputerService"
+            android:process=":remote"
+            />
     </application>
 
 </manifest>

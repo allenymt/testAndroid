@@ -13,7 +13,7 @@ import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Environment;
 import android.os.PowerManager;
-import android.support.v4.app.ActivityCompat;
+import androidx.core.app.ActivityCompat;
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 
@@ -23,7 +23,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -580,9 +579,9 @@ public class RomTest {
             if (mayOnEmulatorViaQEMU(context)) {
                 return true;
             }
-            if (mayOnEmulatorViaTelephonyDeviceId(context)) {
-                return true;
-            }
+//            if (mayOnEmulatorViaTelephonyDeviceId(context)) {
+//                return true;
+//            }
             if (mayIntelOrAmd()) {
                 return true;
             }
@@ -661,38 +660,38 @@ public class RomTest {
             return false;
         }
 
-        static boolean mayOnEmulatorViaTelephonyDeviceId(Context context) {
-            try {
-                TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-                if (tm == null) {
-                    return false;
-                }
-
-                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                    // TODO: Consider calling
-                    //    ActivityCompat#requestPermissions
-                    // here to request the missing permissions, and then overriding
-                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
-                    // to handle the case where the user grants the permission. See the documentation
-                    // for ActivityCompat#requestPermissions for more details.
-                    String deviceId = tm.getDeviceId();
-                    if (deviceId == null || deviceId.length() == 0) {
-                        return false;
-                    }
-
-                    for (int i = 0; i < deviceId.length(); i++) {
-                        if (deviceId.charAt(i) != '0') {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-            } catch (Throwable e) {
-                e.printStackTrace();
-            }
-            return false;
-        }
+//        static boolean mayOnEmulatorViaTelephonyDeviceId(Context context) {
+//            try {
+//                TelephonyManager tm = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+//                if (tm == null) {
+//                    return false;
+//                }
+//
+//                if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+//                    // TODO: Consider calling
+//                    //    ActivityCompat#requestPermissions
+//                    // here to request the missing permissions, and then overriding
+//                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+//                    //                                          int[] grantResults)
+//                    // to handle the case where the user grants the permission. See the documentation
+//                    // for ActivityCompat#requestPermissions for more details.
+//                    String deviceId = tm.getDeviceId();
+//                    if (deviceId == null || deviceId.length() == 0) {
+//                        return false;
+//                    }
+//
+//                    for (int i = 0; i < deviceId.length(); i++) {
+//                        if (deviceId.charAt(i) != '0') {
+//                            return false;
+//                        }
+//                    }
+//                    return true;
+//                }
+//            } catch (Throwable e) {
+//                e.printStackTrace();
+//            }
+//            return false;
+//        }
 
         static boolean mayIntelOrAmd() {
             try {
