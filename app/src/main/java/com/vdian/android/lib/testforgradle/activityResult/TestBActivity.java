@@ -22,6 +22,7 @@ public class TestBActivity extends AppCompatActivity {
     private TestViewModel testViewModel;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        overridePendingTransition(R.anim.flutter_hybrid_top_in, R.anim.flutter_hybrid_exit_bottom);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         // 因为是系统的toast,所以能展示，业务上可以这么理解
@@ -31,22 +32,22 @@ public class TestBActivity extends AppCompatActivity {
         android.util.Log.i("testViewModel", "TestBActivity onCreate a is " + testViewModel.getA());
         testViewModel.setA(10);
 
-        ((TextView) findViewById(R.id.test_text)).setText("TestBActivity");
-        findViewById(R.id.test).setOnClickListener(new View.OnClickListener() {
+//        ((TextView) findViewById(R.id.test_text)).setText("TestBActivity");
+        findViewById(R.id.test_text).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                try {
-//                    Intent intent = new Intent(TestBActivity.this, TestCActivity.class);
-//                    startActivityForResult(intent, 1002);
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                }
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ((TextView)findViewById(R.id.test)).setText("Hohohong Test");
-                    }
-                }).start();
+                try {
+                    Intent intent = new Intent(TestBActivity.this, TestBActivity.class);
+                    startActivityForResult(intent, 1002);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        ((TextView)findViewById(R.id.test)).setText("Hohohong Test");
+//                    }
+//                }).start();
 
             }
         });
@@ -54,7 +55,7 @@ public class TestBActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                ((TextView)findViewById(R.id.test)).setText("Hohohong Test");
+                ((TextView)findViewById(R.id.test_text)).setText("Hohohong Test");
             }
         }).start();
     }
@@ -106,5 +107,11 @@ public class TestBActivity extends AppCompatActivity {
         // ActivityThread的handleDestroyActivity，调用wm的removeView，会走到ViewRootImpl里的die,调用到ViewGroup的dispatchDetachedFromWindow
         // 在onDestroy之后
         android.util.Log.i("testToast","onDetachedFromWindow");
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(R.anim.flutter_hybrid_enter_bottom, R.anim.flutter_hybrid_top_out);
     }
 }

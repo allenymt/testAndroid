@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
@@ -7,5 +7,37 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <style name="hybrid_Theme_AppCompat_Light_NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+<!--        <item name="android:windowActivityTransitions">true</item>-->
+        <!--        <item name="android:windowBackground">@android:color/white</item>-->
+<!--        &lt;!&ndash; 去除Activity顶部黑线 &ndash;&gt;-->
+<!--        <item name="android:windowContentOverlay">@null</item>-->
+        <!-- 系统状态栏背景设置透明 -->
+<!--        <item name="android:windowDrawsSystemBarBackgrounds" tools:targetApi="lollipop">-->
+<!--            @android:color/transparent-->
+<!--        </item>-->
+<!--        <item name="android:windowFullscreen">true</item>-->
+        <item name="android:windowAnimationStyle">@style/TranslucentWindow</item>
+
+    </style>
+
+    <style name="AnimationTranslucentWindow" parent="@android:style/Animation.Translucent">
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
+    </style>
+
+
+    <style name="TranslucentWindow" parent="@android:style/Animation">
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
+    </style>
+
+    <style name="wdb_ui_Theme.AppCompat.Translucent.NoAnimation" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsTranslucent">true</item>
+<!--        <item name="android:windowAnimationStyle">@style/AnimationTranslucentWindow</item>-->
+    </style>
+
 
 </resources>

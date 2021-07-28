@@ -7,21 +7,24 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
+        android:name=".App"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:name=".App"
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".binder.RemoteTestActivity"></activity>
+        <activity android:name=".thread_dump.TestThreadDumpActivity"></activity>
+        <activity android:name=".binder.RemoteTestActivity" />
         <activity android:name=".thread.TestThreadActivity" />
         <activity android:name=".self_view.SelfViewActivity" />
         <activity android:name=".touch.TestTouchActivity" />
         <activity android:name=".applink.AppLinkTestDomainActivity" />
         <activity android:name=".testleak.TestLeak1Activity" />
-        <activity android:name=".MainActivity">
+        <activity
+            android:name=".MainActivity"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -44,17 +47,50 @@
                     android:scheme="https" />
             </intent-filter>
         </activity>
-        <activity android:name=".activityResult.TestBActivity" />
-        <activity android:name=".activityResult.TestCActivity" />
         <activity android:name=".activityResult.TestDActivity" />
+        <activity
+            android:name=".activityResult.TestBActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/wdb_ui_Theme.AppCompat.Translucent.NoAnimation"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:host="wdb" />
+                <data android:path="/flutter" />
+                <data android:scheme="weidianbuyer" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activityResult.TestCActivity"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
+            android:hardwareAccelerated="true"
+            android:screenOrientation="portrait"
+            android:theme="@style/wdb_ui_Theme.AppCompat.Translucent.NoAnimation"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:host="wdb" />
+                <data android:path="/flutterTrans" />
+                <data android:scheme="weidianbuyer" />
+            </intent-filter>
+        </activity>
         <activity android:name=".window_toast.TestWindowToastActivity" />
         <activity android:name=".launch_app.LaunchOtherAppActivity" />
         <activity android:name=".oomDemo.OomDemoActivity" />
 
         <service
             android:name=".binder.IComputerService"
-            android:process=":remote"
-            />
+            android:process=":remote" />
     </application>
 
 </manifest>

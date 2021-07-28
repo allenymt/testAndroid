@@ -18,6 +18,7 @@ public class TestCActivity extends AppCompatActivity {
     static boolean toD = false;
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
+        overridePendingTransition(R.anim.flutter_hybrid_top_in, 0);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_test);
         ((TextView)findViewById(R.id.test_text)).setText("TestCActivity");
@@ -42,5 +43,11 @@ public class TestCActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         android.util.Log.i("yulun","TestCActivity requestCode is "+requestCode+ " resultCode is :"+resultCode);
 
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, R.anim.flutter_hybrid_top_out);
     }
 }

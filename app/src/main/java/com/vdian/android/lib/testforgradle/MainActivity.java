@@ -32,6 +32,7 @@ import com.vdian.android.lib.testforgradle.self_view.SelfViewActivity;
 import com.vdian.android.lib.testforgradle.single.TestStaticInnerSingle;
 import com.vdian.android.lib.testforgradle.testleak.TestLeak1Activity;
 import com.vdian.android.lib.testforgradle.thread.TestThreadActivity;
+import com.vdian.android.lib.testforgradle.thread_dump.TestThreadDumpActivity;
 import com.vdian.android.lib.testforgradle.touch.TestTouchActivity;
 
 import java.io.InputStream;
@@ -385,9 +386,9 @@ public class MainActivity extends AppCompatActivity {
 //        Intent intent = new Intent(MainActivity.this, TestBActivity.class);
 //        startActivity(intent);
 
-        ThreadLocalTest threadLocalTest = new ThreadLocalTest();
-        threadLocalTest.test();
-        threadLocalTest.testWeakHashMap();
+//        ThreadLocalTest threadLocalTest = new ThreadLocalTest();
+//        threadLocalTest.test();
+//        threadLocalTest.testWeakHashMap();
 
         // 自定义json解析
 //        try {
@@ -584,6 +585,10 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, RemoteTestActivity.class));
     }
 
+    public void goToTestThreadDump(View view) {
+        startActivity(new Intent(MainActivity.this, TestThreadDumpActivity.class));
+
+    }
 
     public void testJaveStackHead() {
 //        String ss = "ss";
@@ -643,7 +648,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void testViewModel(View v) {
-        startActivity(new Intent(MainActivity.this, TestBActivity.class));
+        startActivityForResult(new Intent(MainActivity.this, TestBActivity.class),1002);
+
     }
 
     @Override

@@ -1,113 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".MainActivity">
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        android:onClick="testAnr"
         android:id="@+id/test1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:onClick="testAnr"
+        android:text="Hello World!" />
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!22"
-        android:onClick="testAnr2"
         android:id="@+id/test2"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test1" />
-
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="testAnr2"
+        android:text="Hello World!22" />
 
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="go_to_link_test"
-        android:onClick="toLink"
         android:id="@+id/go_to_link"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test2" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="testViewModel"
-        android:onClick="testViewModel"
+        android:onClick="toLink"
+        android:text="go_to_link_test" />
+
+    <Button
         android:id="@+id/test3"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/go_to_link" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="testViewModel"
+        android:text="test_View_Model" />
 
 
     <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="go_to_touch_ac"
-        android:onClick="goToTouchAc"
         android:id="@+id/test_touch"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test3" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="go_to_launch_ac"
-        android:onClick="goToLaunchAc"
+        android:onClick="goToTouchAc"
+        android:text="go_to_touch_ac" />
+
+    <Button
         android:id="@+id/test_launch"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test_touch" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="go_to_self_View"
-        android:onClick="goToSelfView"
+        android:onClick="goToLaunchAc"
+        android:text="go_to_launch_ac" />
+
+    <Button
         android:id="@+id/test_view"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test_launch" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="go_to_oom_ac"
-        android:onClick="goToOomDemo"
+        android:onClick="goToSelfView"
+        android:text="go_to_self_View" />
+
+    <Button
         android:id="@+id/oom_test_btn"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/test_view" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="go_to_thread"
-        android:onClick="goToThread"
+        android:onClick="goToOomDemo"
+        android:text="go_to_oom_ac" />
+
+    <Button
         android:id="@+id/go_to_thread"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/oom_test_btn" />
-
-    <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="go_to_test_binder"
-        android:onClick="goToTestBinder"
-        android:id="@+id/go_to_binder"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/go_to_thread" />
+        android:onClick="goToThread"
+        android:text="go_to_thread" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <Button
+        android:id="@+id/go_to_binder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="goToTestBinder"
+        android:text="go_to_test_binder" />
+
+    <Button
+        android:id="@+id/go_to_thread_dump"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="goToTestThreadDump"
+        android:text="go_to_thread_dump" />
+
+</LinearLayout>
