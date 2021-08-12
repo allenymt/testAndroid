@@ -17,7 +17,7 @@ class LaunchOtherAppActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_launch_app)
         findViewById<View>(R.id.test).setOnClickListener {
-            call1()
+            call2()
         }
     }
 
@@ -44,7 +44,12 @@ class LaunchOtherAppActivity : AppCompatActivity() {
             intent = Intent()
         }
         if (intent != null) {
-            intent.data = Uri.parse("weidianbuyer://wdb/goods_detail?itemId=3857967270&wfr=hongbaowt&ffr=hongbaowt")
+            /**
+             * https://wdb/goods_detail?itemId=2675728831&wfr=hongbaowt&ffr=hongbaowt
+            weidianbuyer://wdb/goods_detail?itemId=2675728831&wfr=hongbaowt&ffr=hongbaowt
+            https://wdb-applink.weidian.com/?targetUrl=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D2675728831%26wfr%3Dhongbaowt%26ffr%3Dhongbaowt
+             */
+            intent.data = Uri.parse("weidianbuyer://wdb/goods_detail?itemId=2675728831&wfr=hongbaowt&ffr=hongbaowt")
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
         }
