@@ -28,6 +28,8 @@ import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
 import com.vdian.android.lib.testforgradle.memory.TestMemory;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
 import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
+import com.vdian.android.lib.testforgradle.rom.RomCheckActivity;
+import com.vdian.android.lib.testforgradle.rom.RomChecker;
 import com.vdian.android.lib.testforgradle.self_view.SelfViewActivity;
 import com.vdian.android.lib.testforgradle.single.TestStaticInnerSingle;
 import com.vdian.android.lib.testforgradle.testleak.TestLeak1Activity;
@@ -37,10 +39,8 @@ import com.vdian.android.lib.testforgradle.touch.TestTouchActivity;
 
 import java.io.InputStream;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URLDecoder;
-import java.util.HashSet;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -96,16 +96,7 @@ public class MainActivity extends AppCompatActivity {
      * @return
      */
     public static boolean isOhos() {
-        boolean isOhos = false;
-        try {
-            Class<?> cls = Class.forName("com.huawei.system.BuildEx");
-            Method method = cls.getMethod("getOsBrand");
-            Object obj = method.invoke(cls);
-//            isOhos = true;
-        } catch (Exception ignored) {
-        }
-
-        return isOhos;
+        return RomChecker.Companion.isOhos();
     }
 
     @Override
@@ -122,11 +113,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        boolean is64 = android.os.Process.is64Bit();
-        String[] abac = Build.SUPPORTED_32_BIT_ABIS;
-        String[] xcxx = Build.SUPPORTED_64_BIT_ABIS;
-        String[] dsfsadf = Build.SUPPORTED_ABIS;
-        android.util.Log.i("yulun ut_hash", "android.os.Build.DISPLAY is " + abac);
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -145,7 +131,6 @@ public class MainActivity extends AppCompatActivity {
                 android.util.Log.i("yulun ut_hash", "ut_hash is " + ut_hash);
             }
         }, 0);
-        android.util.Log.i("yulun 123", "werwer");
         try {
             getClassLoader().loadClass("a.b.c.d.d");
         } catch (Exception e) {
@@ -158,128 +143,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        Boolean sssss = new Boolean(true);
-        if (sssss.equals(Boolean.TRUE)) {
-            android.util.Log.i("yulun 123", "123");
-        } else {
-            android.util.Log.i("yulun 123", "456");
-        }
-
-        Boolean sssss1 = new Boolean("true");
-        if (sssss1 == Boolean.TRUE) {
-            android.util.Log.i("yulun 123", "123");
-        } else {
-            android.util.Log.i("yulun 123", "456");
-        }
-
         TestAndroidFileDirectory.testPrintFile(this);
         TestMemory.testMemory(this);
-//        findViewById(R.id.test1).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-////                startActivityForResult(new Intent(MainActivity.this, TestLeakActivity.class), 1);
-//                android.util.Log.i("isEmulator", "get rom info is " +
-//                        EmulatorChecker.romInfo(MainActivity.this) +
-//                        " , isEmulator "+ EmulatorChecker.checkEmulator(MainActivity.this) +
-//                        " , isEmulator double check is "+EmulatorChecker.isEmulator(MainActivity.this));
-//            }
-//        });
-//        findViewById(R.id.test1).setOnTouchListener(new View.OnTouchListener() {
-//            @Override
-//            public boolean onTouch(View v, MotionEvent event) {
-//                return false;
-//            }
-//        });
-//        testJaveStackHead();
-        //测试值传递 引用传递 url格式
-//        new Test(1).main();
-//        mHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        });
-//        Runnable runnable = new Runnable() {
-//            @Override
-//            public void run() {
-//
-//            }
-//        };
-//        AbsInterface absInterface = new AbsInterface() {
-//            @Override
-//            public void sdf() {
-//
-//            }
-//        };
-//        absInterface.test();
-//        try {
-//            Class c = Class.forName("com.vdian.android.lib.testforgradle.abs.AbsInterface",false,getClassLoader());
-////            AbsInterface test =(AbsInterface) c.newInstance();
-//            AbsInterface test123= new AbsInterface() {
-//                @Override
-//                public void sdf() {
-//
-//                }
-//            };
-//            AbsInterface2 absInterface2 = new AbsInterface2() {
-//                @Override
-//                public void sdf() {
-//                }
-//            };
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-//        mHandler.post(new Runnable() {
-//            @Override
-//            public void run() {
-//                android.util.Log.i("test handler", "mHandler");
-//            }
-//        });
-//        GenericA childTest = new GenericA();
-//        GenericTest<String> parentTest = childTest;
-//        parentTest.setTestParam("2");
-
-//        android.util.Log.i("testGeneric", parentTest.getTestParam());
-//        List list4 = new ArrayList();
-//        list4.add("hello");
-//        list4.add(0);
-
-//        try {
-//            TestPrintAbc testPrintAbc = new TestPrintAbc();
-//            testPrintAbc.main();
-//            UserManager manager = ProxyImpl.getService(UserManager.class);
-//            manager.delUser("123");
-//
-//            manager.addUser(new ResuleCallbackImp<String>() {
-//                @Override
-//                public void realCallBack() {
-//                    System.out.println("realCallBack");
-//                }
-//            });
-//
-//            Thread thread = new Thread();
-//            UserManager userManager1 = ProxyImpl.getService(new UserManagerImpl());
-//            userManager1.findUser("123");
-//            System.out.println("proxy result is " + userManager1.findUser("123"));
-//            synchronized (UserManager.class){
-//
-//            }
-//
-//            synchronized(userManager1.getClass()){
-//
-//            }
-//
-//            char[] ss = new char[1];
-//            ss[0] = 1;
-//            String ss1 = new String(ss);
-//            byte[] bytes = ss1.getBytes();
-//            System.out.println("中文是的长度: "+bytes.length);
-////            Set
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
 
 //        try {
 //            GenericTest<String> childTest = new GenericTest();
@@ -302,24 +167,6 @@ public class MainActivity extends AppCompatActivity {
             childTest.getClass().getMethods();
             childTest.getClass().getDeclaredMethods();
             android.util.Log.i("test reflex", childTest.getA() + "__" + field.getClass().getName());
-//
-//            Field field1 = refelex.getDeclaredField("c");
-//            field1.setAccessible(true);
-//            field1.set(null, 55);
-//            android.util.Log.i("test reflex", field1.get(null) + "");
-//
-//            Method method = refelex.getDeclaredMethod("printxxx", String.class);
-//            method.setAccessible(true);
-//            method.invoke(childTest, "123");
-//
-//            Method method1 = refelex.getDeclaredMethod("printBBB", String.class);
-//            method1.setAccessible(true);
-//            method1.invoke(null, "12345");
-//
-//            Constructor constructor = refelex.getConstructor(int.class);
-//            Test child2 = (Test) constructor.newInstance(100);
-//            android.util.Log.i("test reflex child2", child2.getA() + "");
-//
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -375,61 +222,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    public void addInterTest(List<? extends Number> list3) {
-        for (Number object : list3) {
-            System.out.println(object);
-        }
-    }
-
     public void testAnr(View view) {
-        // 测试activity数据回调
-//        Intent intent = new Intent(MainActivity.this, TestBActivity.class);
-//        startActivity(intent);
-
-//        ThreadLocalTest threadLocalTest = new ThreadLocalTest();
-//        threadLocalTest.test();
-//        threadLocalTest.testWeakHashMap();
-
-        // 自定义json解析
-//        try {
-//            JsonParser.testJsonParser();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-
-//        new BlTest().has("1");
-
-//        testPush();
-//        ReferenceTest.main(null);
-//        new HashTest().test();
-//        new FastJsonTest().main();
-//        TestArrayMap.main(null);
-//        TestSuperPatch.testSuperCall();
-//        android.util.Log.i("testFinalize", "test anr111");
-//        try {
-//            Thread.sleep(30000);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        int a =1;
-//        a= a+1;
-//        TestFinalize aaa = null;
-//        aaa.toString();
-//        System.out.println("maxLen is " + lengthOfLongestSubstring1(" "));
-//        System.out.println("maxLen is " + lengthOfLongestSubstring1("我的的的 "));
-//        System.out.println("maxLen is " + lengthOfLongestSubstring1("bbbb"));
-//        System.out.println("maxLen is " + lengthOfLongestSubstring1("pwwddddfffqbdd"));
-//        testDrawableSize();
-//        testAssetsSize();
-//        testSegment();
-//        TestDouble.isParallel(this);
-
-//        List<Object> objectList = new ArrayList<>();
-//        for (int i = 0; i < 10; i++) {
-//            Object obj = new Object();
-//            objectList.add(obj);
-//            obj = null;
-//        }
     }
 
     public void testPush() {
@@ -544,15 +337,6 @@ public class MainActivity extends AppCompatActivity {
         return maxLength;
     }
 
-    public boolean strInset(int start, int end, HashSet<Character> pool, String s) {
-        boolean in = false;
-        for (int i = start; i <= end; i++) {
-            in = pool.contains(s.charAt(i));
-            if (in)
-                break;
-        }
-        return in;
-    }
 
     public void testAnr2(View view) {
         android.util.Log.i("testFinalize", "test anr222");
@@ -590,49 +374,6 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void testJaveStackHead() {
-//        String ss = "ss";
-//        String ss1 = "ss";
-//
-//        android.util.Log.i("testStackHead == ", (ss == ss1) + "");
-//        android.util.Log.i("testStackHead equals", "" + ss.equals(ss1));
-////        View v = new View(this);
-////        v.setTouchDelegate(new TouchDelegate());
-//        //jdk 5.0开始的
-//        Integer integer = 1;
-//        Class<Integer> cls = Integer.TYPE;
-//
-//        Class cls1 = Activity.class;
-//
-//        byte b = 127;
-
-        //测试值传递 引用传递 url格式
-//        new Test(1).main();
-
-//        TestFinalize testFinalize = new TestFinalize();
-//        testFinalize = null;
-//        System.gc();
-//
-////        try {
-////            Thread.sleep(8000);
-////        } catch (Exception e) {
-////            e.printStackTrace();
-////        }
-//
-//        if (quote == null) {
-//            android.util.Log.i("testFinalize", "testFinalize 对象被回收了");
-//        } else {
-//            android.util.Log.i("testFinalize", "testFinalize 对象没有被回收");
-//        }
-//
-//        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-//            @Override
-//            public void uncaughtException(Thread thread, Throwable throwable) {
-//                Log.e("TXT", "uncaughtException: happen!", throwable);
-//            }
-//        });
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -648,9 +389,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void testViewModel(View v) {
-        startActivityForResult(new Intent(MainActivity.this, TestBActivity.class),1002);
+        startActivityForResult(new Intent(MainActivity.this, TestBActivity.class), 1002);
 
     }
+
+
+    public void goToRomCheck(View view) {
+        startActivity(new Intent(MainActivity.this, RomCheckActivity.class));
+    }
+
 
     @Override
     public void onAttachedToWindow() {

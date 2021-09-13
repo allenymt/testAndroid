@@ -86,4 +86,10 @@
         android:onClick="goToTestThreadDump"
         android:text="go_to_thread_dump" />
 
+    <Button
+        android:id="@+id/go_to_rom_check"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="goToRomCheck"
+        android:text="go_to_rom_check" />
 </LinearLayout>

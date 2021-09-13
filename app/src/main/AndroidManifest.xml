@@ -15,7 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".thread_dump.TestThreadDumpActivity"></activity>
+        <activity
+            android:name=".rom.RomCheckActivity"
+            android:exported="true" />
+        <activity android:name=".thread_dump.TestThreadDumpActivity" />
         <activity android:name=".binder.RemoteTestActivity" />
         <activity android:name=".thread.TestThreadActivity" />
         <activity android:name=".self_view.SelfViewActivity" />
