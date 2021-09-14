@@ -9,9 +9,10 @@ import java.util.List;
 /**
  * @author yulun
  * @sinice 2020-03-09 10:29
+ * 泛型测试
  */
 public class GenericTest<T> {
-    protected T testParam;
+    public T testParam;
 
     public T getTestParam() {
         return testParam;
@@ -19,8 +20,10 @@ public class GenericTest<T> {
 
     public void setTestParam(T testParam) throws NoSuchMethodException {
 //        android.util.Log.i("testGeneric","setTestParam parent");
+        // 泛型赋值
         this.testParam = testParam;
 
+        // 测试泛型擦除
         Method method = GenericTest.class.getMethod("getStringList", (Class<?>)null);
         Type returnType = method.getGenericReturnType();
         if(returnType instanceof ParameterizedType){

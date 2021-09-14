@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 /**
  * @author yulun
  * @sinice 2020-04-24 11:40
+ * 反射测试代码
  */
 public class TestReflexAction {
     public static void test() {
@@ -57,5 +58,20 @@ public class TestReflexAction {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        try {
+            TestChild childTest = new TestChild(100);
+            Class refelex = childTest.getClass().getSuperclass();
+            Field field = refelex.getDeclaredField("a");
+
+            field.setAccessible(true);
+            field.set(childTest, 2);
+            childTest.getClass().getMethods();
+            childTest.getClass().getDeclaredMethods();
+            android.util.Log.i("test reflex", childTest.getA() + "__" + field.getClass().getName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

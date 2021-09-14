@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".generic.GenericTestActivity"
+            android:exported="true" />
+        <activity
             android:name=".rom.RomCheckActivity"
             android:exported="true" />
         <activity android:name=".thread_dump.TestThreadDumpActivity" />

@@ -24,9 +24,11 @@ import com.vdian.android.lib.testforgradle.activityResult.TestBActivity;
 import com.vdian.android.lib.testforgradle.applink.AppLinkTestDomainActivity;
 import com.vdian.android.lib.testforgradle.binder.RemoteTestActivity;
 import com.vdian.android.lib.testforgradle.directory.TestAndroidFileDirectory;
+import com.vdian.android.lib.testforgradle.generic.GenericTest;
 import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
 import com.vdian.android.lib.testforgradle.memory.TestMemory;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
+import com.vdian.android.lib.testforgradle.reflex.TestChild;
 import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
 import com.vdian.android.lib.testforgradle.rom.RomCheckActivity;
 import com.vdian.android.lib.testforgradle.rom.RomChecker;
@@ -41,6 +43,7 @@ import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -145,46 +148,6 @@ public class MainActivity extends AppCompatActivity {
 
         TestAndroidFileDirectory.testPrintFile(this);
         TestMemory.testMemory(this);
-
-//        try {
-//            GenericTest<String> childTest = new GenericTest();
-//            Class refelex = childTest.getClass();
-//            Field field = refelex.getDeclaredField("testParam");
-//            field.setAccessible(true);
-//            field.set(childTest, "123");
-//            android.util.Log.i("test reflex", childTest.getTestParam() + "");
-//        } catch (Exception e) {
-//            android.util.Log.i("test reflex", e.toString());
-//        }
-//
-        try {
-            TestChild childTest = new TestChild(100);
-            Class refelex = childTest.getClass().getSuperclass();
-            Field field = refelex.getDeclaredField("a");
-
-            field.setAccessible(true);
-            field.set(childTest, 2);
-            childTest.getClass().getMethods();
-            childTest.getClass().getDeclaredMethods();
-            android.util.Log.i("test reflex", childTest.getA() + "__" + field.getClass().getName());
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        //通配符 具体泛型 object
-//        List<Object> list1 = new ArrayList<>();
-//        list1.add("hello");
-//        list1.add(0);
-//
-//        List<String> list2 = new ArrayList<>();
-//        list2.add("world");
-//
-//        List<? extends Number> list3 = new ArrayList<Integer>();
-//        Number a = Integer.valueOf(1);
-//      Number number=   list3.get(0);
-//        list3.add(null);
-
-//        GenericTest<Boolean> c = new GenericTest();
-//        c.setTestParam(true);
 
         TestReflexAction.test();
 
