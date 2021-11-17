@@ -18,12 +18,15 @@ public class IComputerService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        android.util.Log.i("remoteTest", "onCreate ");
         mBinder = new ICompute.Stub() {
             @Override
             public int add(int a, int b) throws RemoteException {
                 return a+b;
             }
         };
+        // 这里不会返回proxy对象
+        ICompute remote = ICompute.Stub.asInterface(mBinder);
     }
 
     @Nullable

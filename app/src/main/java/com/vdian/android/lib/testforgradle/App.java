@@ -16,7 +16,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        android.util.Log.i("tstApp", Application.getProcessName());
+//        android.util.Log.i("tstApp", Application.getProcessName());
         WindowManager mWm = getSystemService(WindowManager.class);
 
     }
