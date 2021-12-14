@@ -2,9 +2,10 @@ package com.vdian.android.lib.testforgradle;
 
 import android.app.Application;
 import android.os.Build;
-import android.view.WindowManager;
 
 import androidx.annotation.RequiresApi;
+
+import com.yl.lib.sentry.hook.PrivacySentry;
 
 /**
  * @author yulun
@@ -16,8 +17,7 @@ public class App extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-//        android.util.Log.i("tstApp", Application.getProcessName());
-        WindowManager mWm = getSystemService(WindowManager.class);
-
+        android.util.Log.i("tstApp", Application.getProcessName());
+        PrivacySentry.Privacy.INSTANCE.init(this);
     }
 }

@@ -7,11 +7,10 @@ import java.net.URI;
  * @sinice 2020-03-03 16:32
  */
 public class Test {
-
     private static int c;
     protected int a = 1;
     protected int b = 2;
-
+    private final int d = 3;
     public Test(int a) {
         this.a = a;
     }

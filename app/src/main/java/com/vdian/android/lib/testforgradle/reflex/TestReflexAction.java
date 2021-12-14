@@ -14,17 +14,20 @@ public class TestReflexAction {
 
         //test final int
         try {
-//            java.lang.String name = "1234";
-//            Field strField = java.lang.String.class.getDeclaredField("value");
-//            strField.setAccessible(true);
-//            char[] data = (char[])strField.get(name);
-//            data[4] = 'r';
-//            System.out.println("1231231__"+name);
-
+            // final , 编译期常量能改
             Field fieldA = TestReflex.class.getDeclaredField("aaFinal");
             fieldA.setAccessible(true);
             fieldA.set(testReflex, 2);
             System.out.println("1231231__"+testReflex.getAaFinal()+"__"+fieldA.get(testReflex));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            // static final 也能改
+            Field fieldA = TestReflex.class.getDeclaredField("abddd");
+            fieldA.setAccessible(true);
+            fieldA.set(testReflex, 2);
         } catch (Exception e) {
             e.printStackTrace();
         }

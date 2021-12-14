@@ -44,7 +44,10 @@ import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -269,6 +272,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
+        int t=0;
+        int f=0;
+        for(int i=0;i<10000;i++){
+            if (tryDownCdnMax()){
+                t++;
+            }else {
+                f++;
+            }
+        }
+        android.util.Log.e("yulun","t is "+t+"  f is "+f);
         return super.dispatchTouchEvent(ev);
     }
 
@@ -335,6 +348,18 @@ public class MainActivity extends AppCompatActivity {
     public void goToTestThreadDump(View view) {
         startActivity(new Intent(MainActivity.this, TestThreadDumpActivity.class));
 
+    }
+
+    public boolean tryDownCdnMax(){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if(hour<20 || hour>22){
+            return false;
+        }
+        Random random = new Random();
+        random.setSeed(System.currentTimeMillis());
+        return random.nextInt(100)%2==0;
     }
 
     @Override
