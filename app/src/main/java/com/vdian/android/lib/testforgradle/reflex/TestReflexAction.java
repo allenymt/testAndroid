@@ -1,6 +1,7 @@
 package com.vdian.android.lib.testforgradle.reflex;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * @author yulun
@@ -76,5 +77,17 @@ public class TestReflexAction {
             e.printStackTrace();
         }
 
+        KtTestReflex.KtTestReflex.INSTANCE.test();
+        try{
+            Class refelex = Class.forName("com.vdian.android.lib.testforgradle.reflex.Test");
+            Method m = refelex.getDeclaredMethod("testReturnStr");
+            m.setAccessible(true);
+            Object ss = m.invoke(null,null);
+            android.util.Log.e("JavaTestReflex",ss.toString());
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
+
+
 }

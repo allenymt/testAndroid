@@ -107,6 +107,10 @@ public class Test {
 //        a1 = 2;
 //    }
 
+    public static String testReturnStr(){
+        return "123";
+    }
+
     class A {
         public String str;
 
