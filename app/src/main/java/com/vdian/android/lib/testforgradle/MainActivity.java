@@ -1,6 +1,7 @@
 package com.vdian.android.lib.testforgradle;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
@@ -30,10 +31,12 @@ import com.vdian.android.lib.testforgradle.memory.TestMemory;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
 import com.vdian.android.lib.testforgradle.reflex.TestChild;
 import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
+import com.vdian.android.lib.testforgradle.rom.AppInstallUtil;
 import com.vdian.android.lib.testforgradle.rom.RomCheckActivity;
 import com.vdian.android.lib.testforgradle.rom.RomChecker;
 import com.vdian.android.lib.testforgradle.self_view.SelfViewActivity;
 import com.vdian.android.lib.testforgradle.single.TestStaticInnerSingle;
+import com.vdian.android.lib.testforgradle.testclass.JAndKClassTest;
 import com.vdian.android.lib.testforgradle.testleak.TestLeak1Activity;
 import com.vdian.android.lib.testforgradle.thread.TestThreadActivity;
 import com.vdian.android.lib.testforgradle.thread_dump.TestThreadDumpActivity;
@@ -155,6 +158,10 @@ public class MainActivity extends AppCompatActivity {
         TestReflexAction.test();
 
         isOhos();
+
+        AppInstallUtil.trackAppInstallTime(getApplicationContext());
+
+       new JAndKClassTest().testA();
     }
 
     public void testDrawableSize() {
@@ -321,6 +328,14 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToTouchAc(View view) {
         startActivity(new Intent(MainActivity.this, TestTouchActivity.class));
+        android.util.Log.i("getStatusBarHeight",  "getStatusBarHeight: "+getStatusBarHeight(this));
+
+    }
+
+    public static int getStatusBarHeight(Context context) {
+        // 获得状态栏高度
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        return context.getResources().getDimensionPixelSize(resourceId);
     }
 
     public void goToLaunchAc(View view) {
