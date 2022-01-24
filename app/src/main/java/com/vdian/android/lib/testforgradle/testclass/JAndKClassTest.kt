@@ -33,7 +33,7 @@ class JAndKClassTest {
         var k2 = (AClass::class as Any).javaClass// javaClass，拿到的是这个kotlin.jvm.internal.ClassReference
         println("JAndKClassTest k2 is $k2")
 
-        var k3 = AClass::class.java // 先拿到KClass ,再转javaClass 同j2，一个对象，一个是类s
+        var k3 = AClass::class.java // 先拿到KClass ,再转javaClass 同j2，一个对象，一个是类
         println("JAndKClassTest k3 is $k3")
 
         var k4 = AClass::javaClass // property javaClass ，没理解
