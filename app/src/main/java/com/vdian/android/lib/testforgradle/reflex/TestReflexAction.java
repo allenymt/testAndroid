@@ -19,7 +19,7 @@ public class TestReflexAction {
             Field fieldA = TestReflex.class.getDeclaredField("aaFinal");
             fieldA.setAccessible(true);
             fieldA.set(testReflex, 2);
-            System.out.println("1231231__"+testReflex.getAaFinal()+"__"+fieldA.get(testReflex));
+            System.out.println("1231231__" + testReflex.getAaFinal() + "__" + fieldA.get(testReflex));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,7 +48,7 @@ public class TestReflexAction {
             Field fieldA = TestReflex.class.getDeclaredField("bbFinal");
             fieldA.setAccessible(true);
             fieldA.set(testReflex, "sadfsdaf");
-            System.out.println("1231231"+testReflex.getBbFinal());
+            System.out.println("1231231" + testReflex.getBbFinal());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,16 +78,14 @@ public class TestReflexAction {
         }
 
         KtTestReflex.KtTestReflex.INSTANCE.test();
-        try{
+        try {
             Class refelex = Class.forName("com.vdian.android.lib.testforgradle.reflex.Test");
             Method m = refelex.getDeclaredMethod("testReturnStr");
             m.setAccessible(true);
-            Object ss = m.invoke(null,null);
-            android.util.Log.e("JavaTestReflex",ss.toString());
-        }catch (Exception e){
+            Object ss = m.invoke(null, null);
+            android.util.Log.e("JavaTestReflex", ss.toString());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-
 }
