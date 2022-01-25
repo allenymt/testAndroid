@@ -25,11 +25,10 @@ import com.vdian.android.lib.testforgradle.activityResult.TestBActivity;
 import com.vdian.android.lib.testforgradle.applink.AppLinkTestDomainActivity;
 import com.vdian.android.lib.testforgradle.binder.RemoteTestActivity;
 import com.vdian.android.lib.testforgradle.directory.TestAndroidFileDirectory;
-import com.vdian.android.lib.testforgradle.generic.GenericTest;
+import com.vdian.android.lib.testforgradle.ktl.inline.TestNoInline;
 import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
 import com.vdian.android.lib.testforgradle.memory.TestMemory;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
-import com.vdian.android.lib.testforgradle.reflex.TestChild;
 import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
 import com.vdian.android.lib.testforgradle.rom.AppInstallUtil;
 import com.vdian.android.lib.testforgradle.rom.RomCheckActivity;
@@ -43,16 +42,12 @@ import com.vdian.android.lib.testforgradle.thread_dump.TestThreadDumpActivity;
 import com.vdian.android.lib.testforgradle.touch.TestTouchActivity;
 
 import java.io.InputStream;
-import java.lang.reflect.Field;
 import java.net.URI;
 import java.net.URLDecoder;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Random;
-
-import kotlin.jvm.internal.markers.KMutableList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -110,6 +105,12 @@ public class MainActivity extends AppCompatActivity {
         return RomChecker.Companion.isOhos();
     }
 
+    public static int getStatusBarHeight(Context context) {
+        // 获得状态栏高度
+        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
+        return context.getResources().getDimensionPixelSize(resourceId);
+    }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -163,7 +164,8 @@ public class MainActivity extends AppCompatActivity {
 
         AppInstallUtil.trackAppInstallTime(getApplicationContext());
 
-       new JAndKClassTest().testA();
+        new TestNoInline().main();
+        new JAndKClassTest().testA();
     }
 
     public void testDrawableSize() {
@@ -281,16 +283,16 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        int t=0;
-        int f=0;
-        for(int i=0;i<10000;i++){
-            if (tryDownCdnMax()){
+        int t = 0;
+        int f = 0;
+        for (int i = 0; i < 10000; i++) {
+            if (tryDownCdnMax()) {
                 t++;
-            }else {
+            } else {
                 f++;
             }
         }
-        android.util.Log.e("yulun","t is "+t+"  f is "+f);
+        android.util.Log.e("yulun", "t is " + t + "  f is " + f);
         return super.dispatchTouchEvent(ev);
     }
 
@@ -322,7 +324,6 @@ public class MainActivity extends AppCompatActivity {
         return maxLength;
     }
 
-
     public void testAnr2(View view) {
         android.util.Log.i("testFinalize", "test anr222");
         startActivity(new Intent(MainActivity.this, TestLeak1Activity.class));
@@ -330,14 +331,8 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToTouchAc(View view) {
         startActivity(new Intent(MainActivity.this, TestTouchActivity.class));
-        android.util.Log.i("getStatusBarHeight",  "getStatusBarHeight: "+getStatusBarHeight(this));
+        android.util.Log.i("getStatusBarHeight", "getStatusBarHeight: " + getStatusBarHeight(this));
 
-    }
-
-    public static int getStatusBarHeight(Context context) {
-        // 获得状态栏高度
-        int resourceId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
-        return context.getResources().getDimensionPixelSize(resourceId);
     }
 
     public void goToLaunchAc(View view) {
@@ -367,16 +362,16 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public boolean tryDownCdnMax(){
+    public boolean tryDownCdnMax() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if(hour<20 || hour>22){
+        if (hour < 20 || hour > 22) {
             return false;
         }
         Random random = new Random();
         random.setSeed(System.currentTimeMillis());
-        return random.nextInt(100)%2==0;
+        return random.nextInt(100) % 2 == 0;
     }
 
     @Override
