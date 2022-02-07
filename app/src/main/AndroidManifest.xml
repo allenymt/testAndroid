@@ -16,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".ktl.coroutines.TestCoroutinesActivity"
+            android:exported="true" />
+        <activity
             android:name=".generic.GenericTestActivity"
             android:exported="true" />
         <activity

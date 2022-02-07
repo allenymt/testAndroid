@@ -1,5 +1,9 @@
 package com.vdian.android.lib.testforgradle.ktl
 
+import com.vdian.android.lib.testforgradle.ktl.extensions.TestExtensions
+import com.vdian.android.lib.testforgradle.ktl.extensions.doPrint
+import com.vdian.android.lib.testforgradle.ktl.extensions.swap
+
 /**
  * @author yulun
  * @since 2022-01-19 17:26

@@ -27,14 +27,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="toLink"
-        android:text="go_to_link_test" />
+        android:text="app-link测试" />
 
     <Button
         android:id="@+id/test3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="testViewModel"
-        android:text="test_View_Model" />
+        android:text="viewModel测试" />
 
 
     <Button
@@ -42,28 +42,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="goToTouchAc"
-        android:text="go_to_touch_ac" />
+        android:text="touch测试" />
 
     <Button
         android:id="@+id/test_launch"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="goToLaunchAc"
-        android:text="go_to_launch_ac" />
+        android:text="启动其他APP" />
 
     <Button
         android:id="@+id/test_view"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="goToSelfView"
-        android:text="go_to_self_View" />
+        android:text="自定义view" />
 
     <Button
         android:id="@+id/oom_test_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="goToOomDemo"
-        android:text="go_to_oom_ac" />
+        android:text="oom测试" />
 
     <Button
         android:id="@+id/go_to_thread"
@@ -77,19 +77,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="goToTestBinder"
-        android:text="go_to_test_binder" />
+        android:text="binder测试" />
 
     <Button
         android:id="@+id/go_to_thread_dump"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="goToTestThreadDump"
-        android:text="go_to_thread_dump" />
+        android:text="线程dump测试" />
 
     <Button
         android:id="@+id/go_to_rom_check"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="goToRomCheck"
-        android:text="go_to_rom_check" />
+        android:text="checkRom" />
+
+    <Button
+        android:id="@+id/go_to_coroutines"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="goToCoroutines"
+        android:text="协程测试" />
 </LinearLayout>

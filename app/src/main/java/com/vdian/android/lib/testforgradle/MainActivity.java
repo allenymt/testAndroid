@@ -25,6 +25,7 @@ import com.vdian.android.lib.testforgradle.activityResult.TestBActivity;
 import com.vdian.android.lib.testforgradle.applink.AppLinkTestDomainActivity;
 import com.vdian.android.lib.testforgradle.binder.RemoteTestActivity;
 import com.vdian.android.lib.testforgradle.directory.TestAndroidFileDirectory;
+import com.vdian.android.lib.testforgradle.ktl.coroutines.TestCoroutinesActivity;
 import com.vdian.android.lib.testforgradle.ktl.inline.TestNoInline;
 import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
 import com.vdian.android.lib.testforgradle.memory.TestMemory;
@@ -396,6 +397,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToRomCheck(View view) {
         startActivity(new Intent(MainActivity.this, RomCheckActivity.class));
+    }
+
+    public void goToCoroutines(View view) {
+        startActivity(new Intent(MainActivity.this, TestCoroutinesActivity.class));
     }
 
 

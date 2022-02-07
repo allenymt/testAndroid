@@ -2,6 +2,7 @@ package com.vdian.android.lib.testforgradle;
 
 import android.app.Application;
 import android.os.Build;
+import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
@@ -13,11 +14,12 @@ import com.yl.lib.sentry.hook.PrivacySentry;
  */
 public class App extends Application {
 
-    @RequiresApi(api = Build.VERSION_CODES.P)
     @Override
     public void onCreate() {
         super.onCreate();
-        android.util.Log.i("tstApp", Application.getProcessName());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            Log.i("tstApp", Application.getProcessName());
+        }
         PrivacySentry.Privacy.INSTANCE.init(this);
     }
 }
