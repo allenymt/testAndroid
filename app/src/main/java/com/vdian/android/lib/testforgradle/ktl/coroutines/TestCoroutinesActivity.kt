@@ -1,7 +1,7 @@
 package com.vdian.android.lib.testforgradle.ktl.coroutines
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import com.vdian.android.lib.testforgradle.R
 
 class TestCoroutinesActivity : AppCompatActivity() {
@@ -10,7 +10,13 @@ class TestCoroutinesActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test_coroutines)
 //        TestCoroutinesBasics.Test.main()
         log("do TestCoroutinesActivity onCreate")
-        TestCoroutineScope.Test.testCoroutineScope()
+//        TestCoroutineScope.Test.testSupervisorScope()
+//        TestCoroutineBuilder.Test.testAsync()
+//        TestCoroutineBuilder.Test.testAsyncError()
+//        TestCoroutineContext.Test.testJob()
+//        TestCoroutineContext.Test.testDispatchers()
+//        TestCoroutineContext.Test.testWithContext()
+        TestCancelCoroutine.Test.testCancel()
     }
 
     override fun onStart() {

@@ -43,15 +43,16 @@ class DelegationBaseImpl(val x: Int) : DelegationBase {
 //这里的定义是指什么？ 这语法看着好奇怪，说实话没发现实用点在哪？？
 // 编译后呢？ 实际上就是DelegationDerived实现了DelegationBase接口，并且内部持有DelegationBase实例
 class DelegationDerived(b: DelegationBase) : DelegationBase by b{
-//    override fun print() {
-//        print("123123")
-//    }
+}
+
+class DelegationDerived2: DelegationBase by DelegationBaseImpl(11){
 }
 
 fun main() {
     //测试类委托
     val b = DelegationBaseImpl(10)
     DelegationDerived(b).print()
+    DelegationDerived2().print()
 
     //测试属性委托
     println(TestPropDelegate().prop)
