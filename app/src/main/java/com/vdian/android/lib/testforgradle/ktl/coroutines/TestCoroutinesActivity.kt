@@ -16,7 +16,13 @@ class TestCoroutinesActivity : AppCompatActivity() {
 //        TestCoroutineContext.Test.testJob()
 //        TestCoroutineContext.Test.testDispatchers()
 //        TestCoroutineContext.Test.testWithContext()
-        TestCancelCoroutine.Test.testCancel()
+//        TestCancelCoroutine.Test.testCancel()
+//        TestCancelCoroutine.Test.testCancelFail()
+//        TestCancelCoroutine.Test.testCancelSuccess()
+//        TestCancelCoroutine.Test.testNoCancel()
+//        TestCoroutineException.Test.fetchDocs()
+//        TestCoroutineException.Test.testCoroutineExceptionHandler()
+        TestCoroutineException.Test.testSupervisorJob()
     }
 
     override fun onStart() {
