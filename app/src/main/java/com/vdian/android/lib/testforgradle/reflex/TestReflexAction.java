@@ -82,7 +82,7 @@ public class TestReflexAction {
             Class refelex = Class.forName("com.vdian.android.lib.testforgradle.reflex.Test");
             Method m = refelex.getDeclaredMethod("testReturnStr");
             m.setAccessible(true);
-            Object ss = m.invoke(null, null);
+            Object ss = m.invoke(null, new Object[1]);
             android.util.Log.e("JavaTestReflex", ss.toString());
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,7 +1,6 @@
 package com.vdian.android.lib.testforgradle.ktl.coroutines
 
 import kotlinx.coroutines.*
-import kotlin.coroutines.CoroutineContext
 
 /**
  * @author yulun
@@ -87,24 +86,27 @@ class TestCoroutineScope {
             log("Do GlobalScope  end")
         }
 
-        // TODO 感觉无大用
         // supervisorScope 函数用于创建一个使用了 SupervisorJob 的 coroutineScope，该作用域的特点就是抛出的异常不会连锁取消同级协程和父协程
-        // 但从实际的结果来看，这个不对，抛异常后APP直接退出了
+        // 但从实际的结果来看，这个不对，抛异常后APP直接退出了，这个注释是错误的。因为协程里抛出异常和在其他线程抛出异常是一样的，都会导致APP退出
+        // supervisorScope的作用是将协程抛异常控制在执行只向下`传播，因为正常的scope,在抛出异常后
+        //      取消它自己的子级
+        //      取消它自己
+        //      将异常传播并传递给它的父级
+        // 而supervisorScope取消操作只会向下传播，一个子协程的运行失败不会影响到同级协程和父协程，也就是只会影响这个协程的孩子
         fun testSupervisorScope() {
-            try {
-                runBlocking {
+
+               fun main()= runBlocking {
                     launch {
                         delay(100)
                         log("Task from runBlocking")
                     }
-                    supervisorScope {
-                        launch {
+                    // supervisorScope，第一个协程抛出异常的情况下，第二个协程能正常运行
+                    // coroutineScope 就不行
+                   coroutineScope {
+                        launch(CoroutineExceptionHandler { coroutineContext, throwable -> throwable.printStackTrace() }) {
                             delay(500)
                             log("Task throw Exception")
-                            try {
-                            } catch (e: Exception) {
-                                throw Exception("failed")
-                            }
+                            throw Exception("failed")
                         }
                         launch {
                             delay(600)
@@ -113,8 +115,10 @@ class TestCoroutineScope {
                     }
                     log("Coroutine scope is over")
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
+            try{
+                main()
+            }catch (e:Exception){
+                //main()方法里的协程抛异常，这里是捕获不到的，涉及到异步执行
             }
         }
 
@@ -140,6 +144,7 @@ class TestCoroutineScope {
         }
     }
 }
+
 //假设我们在 Activity 中先后启动了多个协程用于执行异步耗时操作，
 // 那么当 Activity 退出时，必须取消所有协程以避免内存泄漏。我们可以通过保留每一个 Job 引用然后在 onDestroy方法里来手动取消，
 // 但这种方式相当来说会比较繁琐和低效。kotlinx.coroutines 提供了 CoroutineScope 来管理多个协程的生命周期
@@ -148,7 +153,7 @@ class TestCoroutineScope {
 // 后者创建 UI 应用程序的作用域并使用 Dispatchers.Main 作为默认的调度器
 // 已取消的作用域无法再创建协程。因此，仅当控制其生命周期的类被销毁时，才应调用 scope.cancel()。例如，使用 viewModelScope 时， ViewModel 会在自身的 onCleared() 方法中自动取消作用域
 // 之前学的委托正常写法,第一种写法就是把委托的对象实例交给外部
-class TestCoroutineDelegation(c:CoroutineScope) : CoroutineScope by c {
+class TestCoroutineDelegation(c: CoroutineScope) : CoroutineScope by c {
     fun onCreate() {
         launch {
             repeat(5) {
