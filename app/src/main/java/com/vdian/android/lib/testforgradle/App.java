@@ -20,6 +20,6 @@ public class App extends Application {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             Log.i("tstApp", Application.getProcessName());
         }
-        PrivacySentry.Privacy.INSTANCE.init(this);
+        PrivacySentry.Privacy.INSTANCE.initTransform(this);
     }
 }

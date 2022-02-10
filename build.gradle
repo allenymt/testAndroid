@@ -7,7 +7,7 @@ buildscript {
     repositories {
         google()
         jcenter()
-        
+        maven { url 'https://jitpack.io' }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:4.0.0'
@@ -15,14 +15,14 @@ buildscript {
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        classpath 'com.github.allenymt.PrivacySentry:plugin-sentry:1.0.2'
     }
-    println "yulun"
 }
 
 allprojects {
     repositories {
-        maven { url 'https://jitpack.io' }
         google()
+        maven { url 'https://jitpack.io' }
         jcenter()
         
     }
