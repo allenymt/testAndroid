@@ -6,6 +6,12 @@ import kotlinx.coroutines.*
  * @author yulun
  * @since  17:41
  * 自定义协程作用域，注意GlobalScope和
+ *
+ * runBlocking 与 coroutineScope 可能看起来很类似，因为它们都会等待其协程体以及所有子协程结束。
+ * 主要区别在于，runBlocking 方法会阻塞当前线程来等待， 而 coroutineScope 只是挂起，会释放底层线程用于其他用途。
+ * 由于存在这点差异，runBlocking 是常规函数，而 coroutineScope 是挂起函数。
+ *
+ * 在 GlobalScope 中启动的活动协程并不会使进程保活。它们就像守护线程。
  */
 class TestCoroutineScope {
     object Test {
@@ -141,6 +147,41 @@ class TestCoroutineScope {
                 activity.onDestroy()
                 delay(1000)
             }
+        }
+
+        //TODO 卧槽这里真没看懂，第二个Unconfined竟然不是main线程运行的？？？？ 不纠结了坑爹
+        //Unconfined      : I'm working in thread main
+        //main runBlocking: I'm working in thread main
+        //Unconfined      : After delay in thread kotlinx.coroutines.DefaultExecutor
+        //main runBlocking: After delay in thread main
+        fun testDispatcher(){
+            fun main() = runBlocking<Unit> {
+                launch(Dispatchers.Unconfined) { // not confined -- will work with main thread
+                    log("Unconfined      : I'm working in thread ${Thread.currentThread().name}")
+                    delay(500)
+                    log("Unconfined      : After delay in thread ${Thread.currentThread().name}")
+                }
+                launch { // context of the parent, main runBlocking coroutine
+                    log("main runBlocking: I'm working in thread ${Thread.currentThread().name}")
+                    delay(1000)
+                    log("main runBlocking: After delay in thread ${Thread.currentThread().name}")
+                }
+
+                launch(Dispatchers.IO) { // context of the parent, main runBlocking coroutine
+                    //也是在不同线程
+                    var i=1
+                    //DefaultDispatcher-worker-1
+                    log(" runBlocking: I'm working in thread ${Thread.currentThread().name}")
+                    while (i<10){
+                        i++
+                    }
+                    delay(1000)
+                    i++
+                    //DefaultDispatcher-worker-3
+                    log(" runBlocking: After delay in thread ${Thread.currentThread().name} i is $i")
+                }
+            }
+            main()
         }
     }
 }

@@ -10,7 +10,10 @@ import kotlinx.coroutines.*
 class TestCancelCoroutine {
     object Test {
 
-        // 这个case没什么参考意义
+        // 这个case还是有参考意义的，注意下面这段话
+        // 协程的取消是 协作 的。一段协程代码必须协作才能被取消。 所有 kotlinx.coroutines 中的挂起函数都是 可被取消的 。
+        // 它们检查协程的取消， 并在取消时抛出 CancellationException。
+        // 下面这个例子里有delay，他是挂起函数，因此它能取消
         fun testCancel() {
             fun main() = runBlocking {
                 val job = launch {
@@ -29,7 +32,7 @@ class TestCancelCoroutine {
             main()
         }
 
-
+        // 取消是协作的, 这句话很重要
         // 协程的取消案例
         // 协程取消并不代表协程真的不运行了，这个和Thread的stop很像
         fun testCancelFail() {
@@ -42,10 +45,11 @@ class TestCancelCoroutine {
                         if (System.currentTimeMillis() >= nextPrintTime) {
                             log("job: I'm sleeping ${i++} ...")
                             nextPrintTime += 500L
+//                            delay(1) //关键在于这个，由于整个计算任务都没有挂起函数参与，因为无法被取消
                         }
                     }
                 }
-                delay(1100L)
+                delay(900L)
                 log("main: I'm tired of waiting!")
 //                job.cancel() //这里执行完了立马就执行下面的代码了，如果想要卡主等待，就要join
 //                job.join() //join和cancelAndJoin都是suspend的，所以能卡主

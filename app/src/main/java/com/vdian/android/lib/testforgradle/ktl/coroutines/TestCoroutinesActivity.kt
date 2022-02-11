@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import com.vdian.android.lib.testforgradle.R
+import com.vdian.android.lib.testforgradle.ktl.coroutines.flow.TestFlowKotlin
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -26,10 +27,23 @@ class TestCoroutinesActivity : AppCompatActivity() {
 //        TestCancelCoroutine.Test.testCancelFail()
 //        TestCancelCoroutine.Test.testCancelSuccess()
 //        TestCancelCoroutine.Test.testNoCancel()
+//        TestCoroutineScope.Test.testDispatcher()
 //        TestCoroutineException.Test.fetchDocs()
 //        TestCoroutineException.Test.testCoroutineExceptionHandler()
 //        TestCoroutineException.Test.testSupervisorJob()
+//        TestDebugCoroutine.Test.testThreadRef()
 
+
+
+        //以下是flow测试相关
+//        TestFlowKotlin.Test.testSuspendSequence()
+//        TestFlowKotlin.Test.testSimpleFlow()
+//        TestFlowKotlin.Test.testColdFlow()
+//        TestFlowKotlin.Test.testCancelFlow()
+//        TestFlowKotlin.Test.testContinuityFlow()
+//        TestFlowKotlin.Test.testFlowContext()
+//        TestFlowKotlin.Test.testWithContextFlow()
+        TestFlowKotlin.Test.testChangeThread()
         // lifecycleScope就是SupervisorJob() + Dispatchers.Main.immediate
         lifecycleScope.launch {
             delay(1000)
