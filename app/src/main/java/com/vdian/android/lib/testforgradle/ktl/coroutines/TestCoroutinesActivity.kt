@@ -1,12 +1,16 @@
 package com.vdian.android.lib.testforgradle.ktl.coroutines
 
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.coroutineScope
 import androidx.lifecycle.lifecycleScope
 import com.vdian.android.lib.testforgradle.R
 import com.vdian.android.lib.testforgradle.ktl.coroutines.flow.TestFlowKotlin
+import com.yl.lib.sentry.hook.util.PrivacyUtil
+import de.robv.android.xposed.DexposedBridge
+import de.robv.android.xposed.XC_MethodHook
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -66,5 +70,17 @@ class TestCoroutinesActivity : AppCompatActivity() {
         super.onStart()
         log("do TestCoroutinesActivity start")
         veiwModel.fetchDocs()
+    }
+
+    private fun configEpicHook() {
+        var hook = object: XC_MethodHook(){
+            override fun beforeHookedMethod(param: MethodHookParam?) {
+                super.beforeHookedMethod(param)
+
+                android.util.Log.d("TestEpic", "stack= " + PrivacyUtil.Util.getStackTrace() +" , methodName is "+ param?.method?.name)
+
+            }
+        }
+        DexposedBridge.hookAllMethods(TelephonyManager::class.java,"getSubscriberId",hook)
     }
 }

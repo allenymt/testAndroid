@@ -122,14 +122,17 @@ public class MainActivity extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
     }
 
+    private int priInt =1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 int ut_hash = 0;
+                int ut_hash1=ut_hash+priInt;
                 ut_hash = ut_hash | 1;
                 android.util.Log.i("yulun ut_hash", "ut_hash is " + ut_hash);
                 ut_hash = ut_hash | 1 << 1;

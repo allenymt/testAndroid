@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.coroutines.*
 
 /**
  * @author yulun
@@ -27,6 +28,26 @@ class TestViewModel : ViewModel() {
             val result = get("https://developer.android.com")
             log("TestViewModel $result")
         }
+
+        suspend {
+
+        }.createCoroutine(object :Continuation<Unit>{
+            override val context: CoroutineContext
+                get() = EmptyCoroutineContext
+
+            override fun resumeWith(result: Result<Unit>) {
+                TODO("Not yet implemented")
+            }
+        }).resumeWith(Result.success(Unit))
+
+        suspend {  }.startCoroutine(object : Continuation<Unit>{
+            override val context: CoroutineContext
+                get() = EmptyCoroutineContext
+
+            override fun resumeWith(result: Result<Unit>) {
+                TODO("Not yet implemented")
+            }
+        })
     }
 
     suspend fun get(url: String) = withContext(Dispatchers.IO) { url }
