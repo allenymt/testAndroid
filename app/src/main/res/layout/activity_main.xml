@@ -12,14 +12,14 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:onClick="testAnr"
-        android:text="Hello World!" />
+        android:text="testAnr" />
 
     <Button
         android:id="@+id/test2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:onClick="testAnr2"
-        android:text="Hello World!22" />
+        android:text="testAnr2" />
 
 
     <Button

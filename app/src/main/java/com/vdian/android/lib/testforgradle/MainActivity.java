@@ -25,6 +25,7 @@ import com.vdian.android.lib.testforgradle.activityResult.TestBActivity;
 import com.vdian.android.lib.testforgradle.applink.AppLinkTestDomainActivity;
 import com.vdian.android.lib.testforgradle.binder.RemoteTestActivity;
 import com.vdian.android.lib.testforgradle.directory.TestAndroidFileDirectory;
+import com.vdian.android.lib.testforgradle.ktl.TestObjectCompanion;
 import com.vdian.android.lib.testforgradle.ktl.coroutines.TestCoroutinesActivity;
 import com.vdian.android.lib.testforgradle.ktl.inline.TestNoInline;
 import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
@@ -93,10 +94,24 @@ public class MainActivity extends AppCompatActivity {
             after++;
         }
 //        System.out.print(maxValidLength);
+
+        TestObjectCompanion.ObjectManager.INSTANCE.getB();
         return maxValidLength;
     }
 
 
+    private void testTryCache(){
+        try {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    throw new NullPointerException("123123");
+                }
+            },500);
+        }catch (Throwable t){
+            t.printStackTrace();
+        }
+    }
     /**
      * 判断是不是鸿蒙系统
      *
@@ -204,6 +219,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void testAnr(View view) {
+        testTryCache();
     }
 
     public void testPush() {
