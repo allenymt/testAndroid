@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.vdian.android.lib.testforgradle.ktl.TestObjectCompanion;
 import com.vdian.android.lib.testforgradle.ktl.coroutines.TestCoroutinesActivity;
 import com.vdian.android.lib.testforgradle.ktl.inline.TestNoInline;
 import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
+import com.vdian.android.lib.testforgradle.location.LocationTestActivity;
 import com.vdian.android.lib.testforgradle.memory.TestMemory;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
 import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
@@ -62,43 +64,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     });
-
-    public static void printCollection(List<?> col) {//此方法使用了无限通配符
-        for (Object object : col) {
-            System.out.println(object);
-        }
-    }
-
-    public static int lengthOfLongestSubstring1(String s) {
-        boolean[] map = new boolean[128];
-        int length = s.length();
-        int pre = 0, after = 0;
-        int maxValidLength = 0;
-        int currentLength = 0;
-        while (after < length) {
-            char character = s.charAt(after);
-            int hash = (int) character;
-            if (map[hash]) {
-                while (character != s.charAt(pre)) {
-                    map[s.charAt(pre)] = false;
-                    pre++;
-                }
-                pre++;
-            } else {
-                currentLength = after - pre + 1;
-                if (maxValidLength < currentLength) {
-                    maxValidLength = currentLength;
-                }
-                map[hash] = true;
-            }
-            after++;
-        }
-//        System.out.print(maxValidLength);
-
-        TestObjectCompanion.ObjectManager.INSTANCE.getB();
-        return maxValidLength;
-    }
-
 
     private void testTryCache(){
         try {
@@ -420,6 +385,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToCoroutines(View view) {
         startActivity(new Intent(MainActivity.this, TestCoroutinesActivity.class));
+    }
+
+    public void goToLocation(View view) {
+        startActivity(new Intent(MainActivity.this, LocationTestActivity.class));
     }
 
 

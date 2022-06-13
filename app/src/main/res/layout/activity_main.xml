@@ -99,4 +99,11 @@
         android:layout_height="wrap_content"
         android:onClick="goToCoroutines"
         android:text="协程测试" />
+
+    <Button
+        android:id="@+id/go_to_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="goToLocation"
+        android:text="定位测试" />
 </LinearLayout>
