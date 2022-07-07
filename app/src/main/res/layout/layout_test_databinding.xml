@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <!--指定可在此布局使用的变量model 变量名字不可以有下划线，否则系统会找不到文件-->
+        <variable
+            name="userModel"
+            type="com.vdian.android.lib.testforgradle.dataBinding.UserModel" />
+
+        <!--OnViewClickHandler 主要处理view点击事件回调后的处理-->
+        <variable
+            name="onViewClickHandler"
+            type="com.vdian.android.lib.testforgradle.dataBinding.TestDateBindingActivity.OnViewClickHandler" />
+
+        <!--声明一个基本数据类型变量 这里更多是我们平时在activity中的使用的全局标志位之类-->
+        <variable
+            name="isShow"
+            type="Boolean" />
+
+        <!--把View倒入进来，xml才知道-->
+        <import type="android.view.View" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!--include进来的布局也可以使用dataBinding-->
+        <include
+            app:isShow="@{isShow}"
+            layout="@layout/layout_loading" />
+
+        <!--布局中的表达式使用“@{}”语法给控件赋值。-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@{userModel.name}"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
+            android:text="@{userModel.sex}"
+            android:textColor="@color/colorAccent"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+        <!--() -> onViewClickHandler.userChangeClick()是指定点击之后执行的方法 如果你需要view的话也可这样：
+            (view) -> onViewClickHandler.userChangeClick(view)-->
+        <!--显示隐藏的做法：@{isShow ? View.GONE : View.VISIBLE}-->
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_margin="16dp"
+            android:background="@color/colorAccent"
+            android:gravity="center"
+            android:onClick="@{() -> onViewClickHandler.userChangeClick()}"
+            android:text="加载数据"
+            android:textColor="@color/cardview_dark_background"
+            android:textSize="16sp"
+            tools:ignore="HardcodedText"
+            android:visibility="@{isShow ? View.GONE : View.VISIBLE}"/>
+    </LinearLayout>
+
+</layout>

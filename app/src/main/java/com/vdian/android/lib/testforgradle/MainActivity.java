@@ -25,6 +25,7 @@ import androidx.core.app.ActivityCompat;
 import com.vdian.android.lib.testforgradle.activityResult.TestBActivity;
 import com.vdian.android.lib.testforgradle.applink.AppLinkTestDomainActivity;
 import com.vdian.android.lib.testforgradle.binder.RemoteTestActivity;
+import com.vdian.android.lib.testforgradle.dataBinding.TestDateBindingActivity;
 import com.vdian.android.lib.testforgradle.directory.TestAndroidFileDirectory;
 import com.vdian.android.lib.testforgradle.ktl.TestObjectCompanion;
 import com.vdian.android.lib.testforgradle.ktl.coroutines.TestCoroutinesActivity;
@@ -38,6 +39,7 @@ import com.vdian.android.lib.testforgradle.rom.AppInstallUtil;
 import com.vdian.android.lib.testforgradle.rom.RomCheckActivity;
 import com.vdian.android.lib.testforgradle.rom.RomChecker;
 import com.vdian.android.lib.testforgradle.self_view.SelfViewActivity;
+import com.vdian.android.lib.testforgradle.single.TestClassInit;
 import com.vdian.android.lib.testforgradle.single.TestStaticInnerSingle;
 import com.vdian.android.lib.testforgradle.testclass.JAndKClassTest;
 import com.vdian.android.lib.testforgradle.testleak.TestLeak1Activity;
@@ -107,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        TestClassInit.Test.main();
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -391,6 +393,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, LocationTestActivity.class));
     }
 
+    public void goToDataBinding(View view) {
+        startActivity(new Intent(MainActivity.this, TestDateBindingActivity.class));
+    }
 
     @Override
     public void onAttachedToWindow() {

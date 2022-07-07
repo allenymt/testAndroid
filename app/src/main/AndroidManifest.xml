@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".dataBinding.TestDateBindingActivity"
+            android:exported="false" />
+        <activity
             android:name=".location.LocationTestActivity"
             android:exported="true" />
         <activity
@@ -40,14 +43,15 @@
         <activity android:name=".testleak.TestLeak1Activity" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".applink.AppLinkActivity">
+        <activity android:name=".applink.AppLinkActivity" android:exported="true">
 
             <!-- 这个必须要有 -->
             <tools:validation testUrl="https://example.test.com" />
@@ -70,7 +74,8 @@
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/wdb_ui_Theme.AppCompat.Translucent.NoAnimation"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -88,7 +93,8 @@
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/wdb_ui_Theme.AppCompat.Translucent.NoAnimation"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
