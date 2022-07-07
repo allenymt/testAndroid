@@ -7,7 +7,6 @@ import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -26,8 +25,8 @@ import com.vdian.android.lib.testforgradle.activityResult.TestBActivity;
 import com.vdian.android.lib.testforgradle.applink.AppLinkTestDomainActivity;
 import com.vdian.android.lib.testforgradle.binder.RemoteTestActivity;
 import com.vdian.android.lib.testforgradle.dataBinding.TestDateBindingActivity;
+import com.vdian.android.lib.testforgradle.databinding.ActivityMainBinding;
 import com.vdian.android.lib.testforgradle.directory.TestAndroidFileDirectory;
-import com.vdian.android.lib.testforgradle.ktl.TestObjectCompanion;
 import com.vdian.android.lib.testforgradle.ktl.coroutines.TestCoroutinesActivity;
 import com.vdian.android.lib.testforgradle.ktl.inline.TestNoInline;
 import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
@@ -46,13 +45,13 @@ import com.vdian.android.lib.testforgradle.testleak.TestLeak1Activity;
 import com.vdian.android.lib.testforgradle.thread.TestThreadActivity;
 import com.vdian.android.lib.testforgradle.thread_dump.TestThreadDumpActivity;
 import com.vdian.android.lib.testforgradle.touch.TestTouchActivity;
+import com.vdian.android.lib.testforgradle.viewBinding.TestViewBindingActivity;
 
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
@@ -66,19 +65,8 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     });
+    private int priInt = 1;
 
-    private void testTryCache(){
-        try {
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    throw new NullPointerException("123123");
-                }
-            },500);
-        }catch (Throwable t){
-            t.printStackTrace();
-        }
-    }
     /**
      * 判断是不是鸿蒙系统
      *
@@ -94,6 +82,19 @@ public class MainActivity extends AppCompatActivity {
         return context.getResources().getDimensionPixelSize(resourceId);
     }
 
+    private void testTryCache() {
+        try {
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    throw new NullPointerException("123123");
+                }
+            }, 500);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        }
+    }
+
     @Override
     protected void onPostResume() {
         super.onPostResume();
@@ -104,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
     }
 
-    private int priInt =1;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -114,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void run() {
                 int ut_hash = 0;
-                int ut_hash1=ut_hash+priInt;
+                int ut_hash1 = ut_hash + priInt;
                 ut_hash = ut_hash | 1;
                 android.util.Log.i("yulun ut_hash", "ut_hash is " + ut_hash);
                 ut_hash = ut_hash | 1 << 1;
@@ -395,6 +395,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToDataBinding(View view) {
         startActivity(new Intent(MainActivity.this, TestDateBindingActivity.class));
+    }
+
+    public void goToViewBinding(View view) {
+        startActivity(new Intent(MainActivity.this, TestViewBindingActivity.class));
     }
 
     @Override

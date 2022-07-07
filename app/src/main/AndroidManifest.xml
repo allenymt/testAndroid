@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".viewBinding.TestViewBindingActivity"
+            android:exported="false" />
+        <activity
             android:name=".dataBinding.TestDateBindingActivity"
             android:exported="false" />
         <activity
@@ -43,15 +46,17 @@
         <activity android:name=".testleak.TestLeak1Activity" />
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".applink.AppLinkActivity" android:exported="true">
+        <activity
+            android:name=".applink.AppLinkActivity"
+            android:exported="true">
 
             <!-- 这个必须要有 -->
             <tools:validation testUrl="https://example.test.com" />
@@ -71,11 +76,11 @@
         <activity
             android:name=".activityResult.TestBActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
+            android:exported="true"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/wdb_ui_Theme.AppCompat.Translucent.NoAnimation"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="true">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -90,11 +95,11 @@
         <activity
             android:name=".activityResult.TestCActivity"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|locale|layoutDirection|fontScale|screenLayout|density"
+            android:exported="true"
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/wdb_ui_Theme.AppCompat.Translucent.NoAnimation"
-            android:windowSoftInputMode="adjustResize"
-            android:exported="true">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

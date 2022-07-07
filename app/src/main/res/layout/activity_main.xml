@@ -120,6 +120,13 @@
                android:layout_height="wrap_content"
                android:onClick="goToDataBinding"
                android:text="dataBinding测试" />
+
+           <Button
+               android:id="@+id/go_to_viewBinding"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:onClick="goToViewBinding"
+               android:text="viewBinding测试" />
        </LinearLayout>
    </ScrollView>
 
