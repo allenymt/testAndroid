@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'privacy-sentry-plugin'
 apply plugin: "kotlin-noarg"
-
+apply plugin: "kotlin-kapt"
 noArg {
     //true 会执行init块代码 默认为false
     invokeInitializers = true
@@ -55,6 +55,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+    }
 }
 
 dependencies {
@@ -85,11 +89,17 @@ dependencies {
 
     implementation "androidx.startup:startup-runtime:1.1.0-beta01"
     implementation "androidx.work:work-runtime-ktx:2.7.1"
+
+
+    implementation "androidx.room:room-ktx:2.4.2"
+    kapt "androidx.room:room-compiler:2.4.2"
+    //Room不能在主线程即UI线程上操作，可以使用lifecycleScope在协程作用域中操作
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+
 }
 
 // 黑名单配置，可以设置这部分包名不会被修改字节码
 privacy {
     blackList = []
-
-
 }

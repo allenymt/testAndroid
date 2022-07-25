@@ -20,7 +20,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".WorkManagerTestActivity"
+            android:name=".room.RoomTestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".workmanager.WorkManagerTestActivity"
             android:exported="false" />
         <activity
             android:name=".viewBinding.TestViewBindingActivity"
@@ -117,7 +120,7 @@
         <activity android:name=".window_toast.TestWindowToastActivity" />
         <activity android:name=".launch_app.LaunchOtherAppActivity" />
         <activity android:name=".oomDemo.OomDemoActivity" />
-        <activity android:name=".workmanager.WorkManagerTestActivity" />
+
         <service
             android:name=".binder.IComputerService"
             android:process=":remote" />

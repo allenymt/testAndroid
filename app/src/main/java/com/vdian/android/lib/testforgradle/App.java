@@ -7,6 +7,7 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.vdian.android.lib.testforgradle.room.WordDB;
 import com.yl.lib.sentry.hook.PrivacySentry;
 
 /**
@@ -27,5 +28,7 @@ public class App extends Application {
         Log.i("tstApp", "ANDROID_ID is "+Settings.System.getString(getContentResolver(), Settings.Secure.ANDROID_ID));
 
         String aaa = Build.SERIAL;
+
+        WordDB.Companion.getInstance(this);
     }
 }
