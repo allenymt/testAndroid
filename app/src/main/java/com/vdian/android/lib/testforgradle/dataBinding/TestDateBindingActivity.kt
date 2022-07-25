@@ -15,7 +15,6 @@ class TestDateBindingActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.layout_test_databinding)
 
         mainBinding = DataBindingUtil.setContentView<LayoutTestDatabindingBinding>(
             this,

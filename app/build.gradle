@@ -83,6 +83,8 @@ dependencies {
     api 'com.github.tiann:FreeReflection:3.1.0'
     api 'me.weishu.exposed:exposed-xposedapi:0.4.5'
 
+    implementation "androidx.startup:startup-runtime:1.1.0-beta01"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
 }
 
 // 黑名单配置，可以设置这部分包名不会被修改字节码

@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".WorkManagerTestActivity"
+            android:exported="false" />
+        <activity
             android:name=".viewBinding.TestViewBindingActivity"
             android:exported="false" />
         <activity
@@ -114,10 +117,27 @@
         <activity android:name=".window_toast.TestWindowToastActivity" />
         <activity android:name=".launch_app.LaunchOtherAppActivity" />
         <activity android:name=".oomDemo.OomDemoActivity" />
-
+        <activity android:name=".workmanager.WorkManagerTestActivity" />
         <service
             android:name=".binder.IComputerService"
             android:process=":remote" />
+
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="${applicationId}.androidx-startup"
+            android:exported="false"
+            tools:node="merge">
+            <meta-data
+                android:name="com.vdian.android.lib.testforgradle.start_up.CustomInitializer"
+                android:value="androidx.startup" />
+
+            <!-- 这么写可以规避自动初始化 -->
+            <!-- <meta-data -->
+            <!-- android:name="com.vdian.android.lib.testforgradle.start_up.CustomInitializer" -->
+            <!-- android:value="androidx.startup" -->
+            <!-- tools:node="remove" -->
+            <!-- /> -->
+        </provider>
     </application>
 
 </manifest>

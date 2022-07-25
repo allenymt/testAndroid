@@ -46,6 +46,7 @@ import com.vdian.android.lib.testforgradle.thread.TestThreadActivity;
 import com.vdian.android.lib.testforgradle.thread_dump.TestThreadDumpActivity;
 import com.vdian.android.lib.testforgradle.touch.TestTouchActivity;
 import com.vdian.android.lib.testforgradle.viewBinding.TestViewBindingActivity;
+import com.vdian.android.lib.testforgradle.workmanager.WorkManagerTestActivity;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -399,6 +400,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToViewBinding(View view) {
         startActivity(new Intent(MainActivity.this, TestViewBindingActivity.class));
+    }
+
+    public void goToWorkManager(View view) {
+        startActivity(new Intent(MainActivity.this, WorkManagerTestActivity.class));
     }
 
     @Override

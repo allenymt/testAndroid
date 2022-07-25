@@ -22,6 +22,12 @@ class TestDelegation {
         println(lazyProp)
     }
 }
+
+输出结果如下
+Hello，第一次调用才会执行我！
+西哥！
+西哥！
+西哥！
 ```
 
 编译后
