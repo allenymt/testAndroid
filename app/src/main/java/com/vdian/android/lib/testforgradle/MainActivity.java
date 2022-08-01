@@ -17,6 +17,7 @@ import androidx.core.app.ActivityCompat;
 import com.vdian.android.lib.testforgradle.activityResult.TestBActivity;
 import com.vdian.android.lib.testforgradle.binder.RemoteTestActivity;
 import com.vdian.android.lib.testforgradle.dataBinding.TestDateBindingActivity;
+import com.vdian.android.lib.testforgradle.datastore.TestDataStoreActivity;
 import com.vdian.android.lib.testforgradle.directory.TestAndroidFileDirectory;
 import com.vdian.android.lib.testforgradle.ktl.coroutines.TestCoroutinesActivity;
 import com.vdian.android.lib.testforgradle.ktl.inline.TestNoInline;
@@ -242,6 +243,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToPaging3(View view) {
         startActivity(new Intent(MainActivity.this, PagingTestActivity.class));
+    }
+
+    public void goToDataStore(View view) {
+        startActivity(new Intent(MainActivity.this, TestDataStoreActivity.class));
     }
 
     @Override

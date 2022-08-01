@@ -151,6 +151,13 @@
                 android:onClick="goToPaging3"
                 android:text="pageing3测试" />
 
+            <Button
+                android:id="@+id/go_to_data_store"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToDataStore"
+                android:text="DataStore测试" />
+
         </LinearLayout>
     </ScrollView>
 

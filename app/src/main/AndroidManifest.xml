@@ -20,6 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
+            android:name=".datastore.TestDataStoreActivity"
+            android:exported="false" />
+        <activity
             android:name=".pageing3.PagingTestActivity"
             android:exported="false" />
         <activity
