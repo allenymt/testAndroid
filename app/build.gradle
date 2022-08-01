@@ -97,6 +97,15 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
 
+    implementation 'androidx.paging:paging-runtime:3.1.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+//打印http请求日志
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
+//用到协程中的flow
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
+//下拉刷新
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01"
 }
 
 // 黑名单配置，可以设置这部分包名不会被修改字节码

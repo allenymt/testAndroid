@@ -24,6 +24,7 @@ import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
 import com.vdian.android.lib.testforgradle.location.LocationTestActivity;
 import com.vdian.android.lib.testforgradle.memory.TestMemory;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
+import com.vdian.android.lib.testforgradle.pageing3.PagingTestActivity;
 import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
 import com.vdian.android.lib.testforgradle.rom.AppInstallUtil;
 import com.vdian.android.lib.testforgradle.rom.RomCheckActivity;
@@ -237,6 +238,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToRoom(View view) {
         startActivity(new Intent(MainActivity.this, RoomTestActivity.class));
+    }
+
+    public void goToPaging3(View view) {
+        startActivity(new Intent(MainActivity.this, PagingTestActivity.class));
     }
 
     @Override

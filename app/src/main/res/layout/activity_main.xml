@@ -6,144 +6,152 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-   <ScrollView
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:orientation="vertical">
-           <Button
-               android:id="@+id/test1"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="20dp"
-               android:onClick="testAnr"
-               android:text="testAnr" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-           <Button
-               android:id="@+id/test2"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="testAnr2"
-               android:text="testAnr2" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
+            <Button
+                android:id="@+id/test1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:onClick="testAnr"
+                android:text="testAnr" />
 
-           <Button
-               android:id="@+id/go_to_link"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="toLink"
-               android:text="app-link测试" />
-
-           <Button
-               android:id="@+id/test3"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="testViewModel"
-               android:text="viewModel测试" />
+            <Button
+                android:id="@+id/test2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="testAnr2"
+                android:text="testAnr2" />
 
 
-           <Button
-               android:id="@+id/test_touch"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToTouchAc"
-               android:text="touch测试" />
+            <Button
+                android:id="@+id/go_to_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="toLink"
+                android:text="app-link测试" />
 
-           <Button
-               android:id="@+id/test_launch"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToLaunchAc"
-               android:text="启动其他APP" />
-
-           <Button
-               android:id="@+id/test_view"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToSelfView"
-               android:text="自定义view" />
-
-           <Button
-               android:id="@+id/oom_test_btn"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToOomDemo"
-               android:text="oom测试" />
-
-           <Button
-               android:id="@+id/go_to_thread"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToThread"
-               android:text="go_to_thread" />
-
-           <Button
-               android:id="@+id/go_to_binder"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToTestBinder"
-               android:text="binder测试" />
-
-           <Button
-               android:id="@+id/go_to_thread_dump"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToTestThreadDump"
-               android:text="线程dump测试" />
-
-           <Button
-               android:id="@+id/go_to_rom_check"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToRomCheck"
-               android:text="checkRom" />
-
-           <Button
-               android:id="@+id/go_to_coroutines"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToCoroutines"
-               android:text="协程测试" />
-
-           <Button
-               android:id="@+id/go_to_location"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToLocation"
-               android:text="定位测试" />
-
-           <Button
-               android:id="@+id/go_to_dataBinding"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToDataBinding"
-               android:text="dataBinding测试" />
-
-           <Button
-               android:id="@+id/go_to_viewBinding"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToViewBinding"
-               android:text="viewBinding测试" />
-
-           <Button
-               android:id="@+id/go_to_workManager"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToWorkManager"
-               android:text="WorkManager测试" />
-
-           <Button
-               android:id="@+id/go_to_room"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:onClick="goToRoom"
-               android:text="Room测试" />
+            <Button
+                android:id="@+id/test3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="testViewModel"
+                android:text="viewModel测试" />
 
 
-       </LinearLayout>
-   </ScrollView>
+            <Button
+                android:id="@+id/test_touch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTouchAc"
+                android:text="touch测试" />
+
+            <Button
+                android:id="@+id/test_launch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToLaunchAc"
+                android:text="启动其他APP" />
+
+            <Button
+                android:id="@+id/test_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToSelfView"
+                android:text="自定义view" />
+
+            <Button
+                android:id="@+id/oom_test_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToOomDemo"
+                android:text="oom测试" />
+
+            <Button
+                android:id="@+id/go_to_thread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToThread"
+                android:text="go_to_thread" />
+
+            <Button
+                android:id="@+id/go_to_binder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestBinder"
+                android:text="binder测试" />
+
+            <Button
+                android:id="@+id/go_to_thread_dump"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestThreadDump"
+                android:text="线程dump测试" />
+
+            <Button
+                android:id="@+id/go_to_rom_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToRomCheck"
+                android:text="checkRom" />
+
+            <Button
+                android:id="@+id/go_to_coroutines"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToCoroutines"
+                android:text="协程测试" />
+
+            <Button
+                android:id="@+id/go_to_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToLocation"
+                android:text="定位测试" />
+
+            <Button
+                android:id="@+id/go_to_dataBinding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToDataBinding"
+                android:text="dataBinding测试" />
+
+            <Button
+                android:id="@+id/go_to_viewBinding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToViewBinding"
+                android:text="viewBinding测试" />
+
+            <Button
+                android:id="@+id/go_to_workManager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToWorkManager"
+                android:text="WorkManager测试" />
+
+            <Button
+                android:id="@+id/go_to_room"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToRoom"
+                android:text="Room测试" />
+
+            <Button
+                android:id="@+id/go_to_paging"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToPaging3"
+                android:text="pageing3测试" />
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>
