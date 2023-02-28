@@ -34,6 +34,8 @@ public class App extends Application {
         WordDB.Companion.getInstance(this);
 
         AppStatusManager.getInstance().register(this);
-        VivoBackgroundSentry.Companion.getInstance().init(this);
+
+        // 测试进程自启动，验证了不行
+//        VivoBackgroundSentry.Companion.getInstance().init(this);
     }
 }
