@@ -3,8 +3,9 @@ package com.vdian.android.lib.testforgradle.single;
 /**
  * @author yulun
  * @since 2022-06-22 15:45
+ * 一到很有意思的面试题，要给出count1和count2的最终值
+ * 考察的是类的初始化顺序
  */
-
 public class TestClassInit {
     private static TestClassInit singleTon = new TestClassInit();
     public static int count1;

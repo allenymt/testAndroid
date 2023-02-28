@@ -12,16 +12,16 @@ class TestThreadActivity : AppCompatActivity() {
     }
 
     fun printABC(v: View){
-//        WaitTest test =  new WaitTest();
-//        test.main(args);
-//        YieldTest.main(args);
-//        Producer producer = new Producer();
-//        producer.main();
+        var test =  WaitTest()
+        test.main(null)
+        YieldTest.main(null)
+        var producer =  Producer()
+        producer.main()
 
-//        ProducerNew producerNew = new ProducerNew();
-//        producerNew.main();
+        var producerNew =  ProducerNew()
+        producerNew.main()
 
-//        MutiThreadCondition.main(null);
+        MutiThreadCondition.main(null)
         val testPrintAbc = TestPrintAbc()
         testPrintAbc.main()
     }

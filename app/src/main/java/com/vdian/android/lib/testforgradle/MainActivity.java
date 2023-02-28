@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.vdian.android.lib.testforgradle.activityResult.TestBActivity;
+import com.vdian.android.lib.testforgradle.applink.AppLinkActivity;
 import com.vdian.android.lib.testforgradle.binder.RemoteTestActivity;
 import com.vdian.android.lib.testforgradle.dataBinding.TestDateBindingActivity;
 import com.vdian.android.lib.testforgradle.datastore.TestDataStoreActivity;
@@ -72,7 +73,68 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // 测试类中 变量 静态变量，构造函数等的初始化顺序
         TestClassInit.Test.main();
+
+        // 测试hash值
+        testHash();
+
+        // 测试类加载
+        testClassLoader();
+
+        // 输出Android
+        TestAndroidFileDirectory.testPrintFile(this);
+
+        // 测试读取内存
+        TestMemory.testMemory(this);
+
+        // 反射测试
+        TestReflexAction.test();
+
+        // 测试是否鸿蒙
+        Util.Util.INSTANCE.isOhos();
+
+        // 测试跟踪APP安装时间
+        AppInstallUtil.trackAppInstallTime(getApplicationContext());
+
+        // 内联测试
+        new TestNoInline().main();
+
+        // kotlin class 和 java class 对比
+        new JAndKClassTest().testA();
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void testCatchException(View view) {
+        Util.Util.INSTANCE.testTryCache(mHandler);
+    }
+
+    public void toLink(View view) {
+        startActivity(new Intent(MainActivity.this, AppLinkActivity.class));
+    }
+
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        int t = 0;
+        int f = 0;
+        for (int i = 0; i < 10000; i++) {
+            if (tryDownCdnMax()) {
+                t++;
+            } else {
+                f++;
+            }
+        }
+        android.util.Log.e("yulun", "t is " + t + "  f is " + f);
+        return super.dispatchTouchEvent(ev);
+    }
+
+    private void testHash(){
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -92,59 +154,22 @@ public class MainActivity extends AppCompatActivity {
                 android.util.Log.i("yulun ut_hash", "ut_hash is " + ut_hash);
             }
         }, 0);
+    }
+
+    private void testClassLoader(){
         try {
             getClassLoader().loadClass("a.b.c.d.d");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         try {
             Class.forName("comn.xx.xx.abc");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        TestAndroidFileDirectory.testPrintFile(this);
-        TestMemory.testMemory(this);
-
-        TestReflexAction.test();
-
-        Util.Util.INSTANCE.isOhos();
-
-        AppInstallUtil.trackAppInstallTime(getApplicationContext());
-
-        new TestNoInline().main();
-        new JAndKClassTest().testA();
     }
 
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    public void testAnr(View view) {
-        Util.Util.INSTANCE.testTryCache(mHandler);
-    }
-
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        int t = 0;
-        int f = 0;
-        for (int i = 0; i < 10000; i++) {
-            if (tryDownCdnMax()) {
-                t++;
-            } else {
-                f++;
-            }
-        }
-        android.util.Log.e("yulun", "t is " + t + "  f is " + f);
-        return super.dispatchTouchEvent(ev);
-    }
-
-
-    public void testAnr2(View view) {
+    public void testLeak(View view) {
         android.util.Log.i("testFinalize", "test anr222");
         startActivity(new Intent(MainActivity.this, TestLeak1Activity.class));
     }

@@ -20,15 +20,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:onClick="testAnr"
-                android:text="testAnr" />
+                android:onClick="testCatchException"
+                android:text="测试异常捕获" />
 
             <Button
                 android:id="@+id/test2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="testAnr2"
-                android:text="testAnr2" />
+                android:onClick="testLeak"
+                android:text="测试内存泄露" />
 
 
             <Button
@@ -36,6 +36,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="toLink"
+                android:textAllCaps="false"
                 android:text="app-link测试" />
 
             <Button
@@ -43,6 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="testViewModel"
+                android:textAllCaps="false"
                 android:text="viewModel测试" />
 
 
@@ -50,6 +52,7 @@
                 android:id="@+id/test_touch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAllCaps="false"
                 android:onClick="goToTouchAc"
                 android:text="touch测试" />
 
@@ -65,6 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="goToSelfView"
+                android:textAllCaps="false"
                 android:text="自定义view" />
 
             <Button
@@ -72,20 +76,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="goToOomDemo"
+                android:textAllCaps="false"
                 android:text="oom测试" />
 
             <Button
                 android:id="@+id/go_to_thread"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAllCaps="false"
                 android:onClick="goToThread"
-                android:text="go_to_thread" />
+                android:text="多线程demo" />
 
             <Button
                 android:id="@+id/go_to_binder"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="goToTestBinder"
+                android:textAllCaps="false"
                 android:text="binder测试" />
 
             <Button
@@ -93,6 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="goToTestThreadDump"
+                android:textAllCaps="false"
                 android:text="线程dump测试" />
 
             <Button
@@ -100,7 +108,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="goToRomCheck"
-                android:text="checkRom" />
+                android:textAllCaps="false"
+                android:text="rom检测测试" />
 
             <Button
                 android:id="@+id/go_to_coroutines"
@@ -121,6 +130,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="goToDataBinding"
+                android:textAllCaps="false"
                 android:text="dataBinding测试" />
 
             <Button
@@ -128,6 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="goToViewBinding"
+                android:textAllCaps="false"
                 android:text="viewBinding测试" />
 
             <Button
@@ -135,6 +146,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="goToWorkManager"
+                android:textAllCaps="false"
                 android:text="WorkManager测试" />
 
             <Button
@@ -142,6 +154,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="goToRoom"
+                android:textAllCaps="false"
                 android:text="Room测试" />
 
             <Button
@@ -149,6 +162,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="goToPaging3"
+                android:textAllCaps="false"
                 android:text="pageing3测试" />
 
             <Button
@@ -156,6 +170,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="goToDataStore"
+                android:textAllCaps="false"
                 android:text="DataStore测试" />
 
         </LinearLayout>
