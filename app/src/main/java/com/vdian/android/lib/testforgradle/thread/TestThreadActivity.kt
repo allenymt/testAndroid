@@ -12,8 +12,9 @@ class TestThreadActivity : AppCompatActivity() {
     }
 
     fun printABC(v: View){
-        var test =  WaitTest()
-        test.main(null)
+        // 测试哪个放开哪个
+//        var test =  WaitTest()
+//        test.main(null)
 //        YieldTest.main(null)
 //        var producer =  Producer()
 //        producer.main()
@@ -22,7 +23,8 @@ class TestThreadActivity : AppCompatActivity() {
 //        producerNew.main()
 //
 //        MutiThreadCondition.main(null)
-//        val testPrintAbc = TestPrintAbc()
-//        testPrintAbc.main()
+
+        val testPrintAbc = TestPrintAbc()
+        testPrintAbc.main()
     }
 }
