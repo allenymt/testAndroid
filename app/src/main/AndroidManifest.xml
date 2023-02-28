@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.vdian.android.lib.testforgradle">
+    package="com.vdian.android.lib.testforgradle" >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -18,7 +18,19 @@
         android:largeHeap="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme" >
+        <service
+            android:name=".backsentry.BackgroundReStartService"
+            android:enabled="true"
+            android:persistent="true"
+            android:exported="true" >
+        </service>
+        <service
+            android:name=".backsentry.BackgroundReStartRemoteService"
+            android:enabled="true"
+            android:exported="true"
+            android:process=":background_sentry" />
+
         <activity
             android:name=".datastore.TestDataStoreActivity"
             android:exported="false" />
@@ -59,7 +71,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:theme="@style/AppTheme">
+            android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -68,12 +80,12 @@
         </activity>
         <activity
             android:name=".applink.AppLinkActivity"
-            android:exported="true">
+            android:exported="true" >
 
             <!-- 这个必须要有 -->
             <tools:validation testUrl="https://example.test.com" />
 
-            <intent-filter android:autoVerify="true">
+            <intent-filter android:autoVerify="true" >
                 <action android:name="android.intent.action.VIEW" />
 
                 <category android:name="android.intent.category.DEFAULT" />
@@ -92,7 +104,7 @@
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/wdb_ui_Theme.AppCompat.Translucent.NoAnimation"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -111,7 +123,7 @@
             android:hardwareAccelerated="true"
             android:screenOrientation="portrait"
             android:theme="@style/wdb_ui_Theme.AppCompat.Translucent.NoAnimation"
-            android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
@@ -135,7 +147,7 @@
             android:name="androidx.startup.InitializationProvider"
             android:authorities="${applicationId}.androidx-startup"
             android:exported="false"
-            tools:node="merge">
+            tools:node="merge" >
             <meta-data
                 android:name="com.vdian.android.lib.testforgradle.start_up.CustomInitializer"
                 android:value="androidx.startup" />

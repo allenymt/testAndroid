@@ -35,6 +35,7 @@ import com.vdian.android.lib.testforgradle.single.TestClassInit;
 import com.vdian.android.lib.testforgradle.testclass.JAndKClassTest;
 import com.vdian.android.lib.testforgradle.testleak.TestLeak1Activity;
 import com.vdian.android.lib.testforgradle.thread.TestThreadActivity;
+import com.vdian.android.lib.testforgradle.thread.signle.TestSingle;
 import com.vdian.android.lib.testforgradle.thread_dump.TestThreadDumpActivity;
 import com.vdian.android.lib.testforgradle.touch.TestTouchActivity;
 import com.vdian.android.lib.testforgradle.viewBinding.TestViewBindingActivity;
@@ -201,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        TestSingle.main();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             String[] per = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_NETWORK_STATE};
             ActivityCompat.requestPermissions(this, per, 1000);

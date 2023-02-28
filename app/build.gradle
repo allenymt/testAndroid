@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
-apply plugin: 'privacy-sentry-plugin'
+//apply plugin: 'privacy-sentry-plugin'
 apply plugin: "kotlin-noarg"
 apply plugin: "kotlin-kapt"
 noArg {
@@ -111,6 +111,6 @@ dependencies {
 }
 
 // 黑名单配置，可以设置这部分包名不会被修改字节码
-privacy {
-    blackList = []
-}
+//privacy {
+//    blackList = []
+//}

@@ -7,6 +7,8 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import com.vdian.android.lib.testforgradle.backsentry.AppStatusManager;
+import com.vdian.android.lib.testforgradle.backsentry.VivoBackgroundSentry;
 import com.vdian.android.lib.testforgradle.room.WordDB;
 import com.yl.lib.sentry.hook.PrivacySentry;
 
@@ -20,7 +22,7 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-            Log.i("tstApp", Application.getProcessName());
+            LogUtil.Log.INSTANCE.log("App onCreate "+Application.getProcessName());
         }
         PrivacySentry.Privacy.INSTANCE.initTransform(this);
         String userAgent = System.getProperty("http.agent");
@@ -30,5 +32,8 @@ public class App extends Application {
         String aaa = Build.SERIAL;
 
         WordDB.Companion.getInstance(this);
+
+        AppStatusManager.getInstance().register(this);
+        VivoBackgroundSentry.Companion.getInstance().init(this);
     }
 }
