@@ -1,6 +1,7 @@
 package com.vdian.android.lib.testforgradle.reflex;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 /**
  * @author yulun
@@ -14,17 +15,20 @@ public class TestReflexAction {
 
         //test final int
         try {
-//            java.lang.String name = "1234";
-//            Field strField = java.lang.String.class.getDeclaredField("value");
-//            strField.setAccessible(true);
-//            char[] data = (char[])strField.get(name);
-//            data[4] = 'r';
-//            System.out.println("1231231__"+name);
-
+            // final , 编译期常量能改
             Field fieldA = TestReflex.class.getDeclaredField("aaFinal");
             fieldA.setAccessible(true);
             fieldA.set(testReflex, 2);
-            System.out.println("1231231__"+testReflex.getAaFinal()+"__"+fieldA.get(testReflex));
+            System.out.println("1231231__" + testReflex.getAaFinal() + "__" + fieldA.get(testReflex));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            // static final 也能改
+            Field fieldA = TestReflex.class.getDeclaredField("abddd");
+            fieldA.setAccessible(true);
+            fieldA.set(testReflex, 2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -44,7 +48,7 @@ public class TestReflexAction {
             Field fieldA = TestReflex.class.getDeclaredField("bbFinal");
             fieldA.setAccessible(true);
             fieldA.set(testReflex, "sadfsdaf");
-            System.out.println("1231231"+testReflex.getBbFinal());
+            System.out.println("1231231" + testReflex.getBbFinal());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -73,5 +77,15 @@ public class TestReflexAction {
             e.printStackTrace();
         }
 
+        KtTestReflex.KtTestReflex.INSTANCE.test();
+        try {
+            Class refelex = Class.forName("com.vdian.android.lib.testforgradle.reflex.Test");
+            Method m = refelex.getDeclaredMethod("testReturnStr");
+            m.setAccessible(true);
+            Object ss = m.invoke(null, new Object[1]);
+            android.util.Log.e("JavaTestReflex", ss.toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

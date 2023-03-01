@@ -6,90 +6,182 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <Button
-        android:id="@+id/test1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:onClick="testAnr"
-        android:text="Hello World!" />
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <Button
-        android:id="@+id/test2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="testAnr2"
-        android:text="Hello World!22" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
+            <Button
+                android:id="@+id/test1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:onClick="testCatchException"
+                android:text="测试异常捕获" />
 
-    <Button
-        android:id="@+id/go_to_link"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="toLink"
-        android:text="go_to_link_test" />
-
-    <Button
-        android:id="@+id/test3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="testViewModel"
-        android:text="test_View_Model" />
+            <Button
+                android:id="@+id/test2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="testLeak"
+                android:text="测试内存泄露" />
 
 
-    <Button
-        android:id="@+id/test_touch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="goToTouchAc"
-        android:text="go_to_touch_ac" />
+            <Button
+                android:id="@+id/go_to_link"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="toLink"
+                android:textAllCaps="false"
+                android:text="app-link测试" />
 
-    <Button
-        android:id="@+id/test_launch"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="goToLaunchAc"
-        android:text="go_to_launch_ac" />
+            <Button
+                android:id="@+id/test3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="testViewModel"
+                android:textAllCaps="false"
+                android:text="viewModel测试" />
 
-    <Button
-        android:id="@+id/test_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="goToSelfView"
-        android:text="go_to_self_View" />
 
-    <Button
-        android:id="@+id/oom_test_btn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="goToOomDemo"
-        android:text="go_to_oom_ac" />
+            <Button
+                android:id="@+id/test_touch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:onClick="goToTouchAc"
+                android:text="touch测试" />
 
-    <Button
-        android:id="@+id/go_to_thread"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="goToThread"
-        android:text="go_to_thread" />
+            <Button
+                android:id="@+id/test_launch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToLaunchAc"
+                android:text="启动其他APP" />
 
-    <Button
-        android:id="@+id/go_to_binder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="goToTestBinder"
-        android:text="go_to_test_binder" />
+            <Button
+                android:id="@+id/test_view"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToSelfView"
+                android:textAllCaps="false"
+                android:text="自定义view" />
 
-    <Button
-        android:id="@+id/go_to_thread_dump"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="goToTestThreadDump"
-        android:text="go_to_thread_dump" />
+            <Button
+                android:id="@+id/oom_test_btn"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToOomDemo"
+                android:textAllCaps="false"
+                android:text="oom测试" />
 
-    <Button
-        android:id="@+id/go_to_rom_check"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:onClick="goToRomCheck"
-        android:text="go_to_rom_check" />
+            <Button
+                android:id="@+id/go_to_thread"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAllCaps="false"
+                android:onClick="goToThread"
+                android:text="多线程demo" />
+
+            <Button
+                android:id="@+id/go_to_binder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestBinder"
+                android:textAllCaps="false"
+                android:text="binder测试" />
+
+            <Button
+                android:id="@+id/go_to_thread_dump"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestThreadDump"
+                android:textAllCaps="false"
+                android:text="线程dump测试" />
+
+            <Button
+                android:id="@+id/go_to_rom_check"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToRomCheck"
+                android:textAllCaps="false"
+                android:text="rom检测测试" />
+
+            <Button
+                android:id="@+id/go_to_coroutines"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToCoroutines"
+                android:text="协程测试" />
+
+            <Button
+                android:id="@+id/go_to_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToLocation"
+                android:text="定位测试" />
+
+            <Button
+                android:id="@+id/go_to_dataBinding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToDataBinding"
+                android:textAllCaps="false"
+                android:text="dataBinding测试" />
+
+            <Button
+                android:id="@+id/go_to_viewBinding"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToViewBinding"
+                android:textAllCaps="false"
+                android:text="viewBinding测试" />
+
+            <Button
+                android:id="@+id/go_to_workManager"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToWorkManager"
+                android:textAllCaps="false"
+                android:text="WorkManager测试" />
+
+            <Button
+                android:id="@+id/go_to_room"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToRoom"
+                android:textAllCaps="false"
+                android:text="Room测试" />
+
+            <Button
+                android:id="@+id/go_to_paging"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToPaging3"
+                android:textAllCaps="false"
+                android:text="pageing3测试" />
+
+            <Button
+                android:id="@+id/go_to_data_store"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToDataStore"
+                android:textAllCaps="false"
+                android:text="DataStore测试" />
+
+            <Button
+                android:id="@+id/test_ac_launch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestAcLaunch"
+                android:textAllCaps="false"
+                android:text="测试AC启动模式" />
+
+        </LinearLayout>
+    </ScrollView>
+
 </LinearLayout>

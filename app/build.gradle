@@ -1,17 +1,35 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+//apply plugin: 'privacy-sentry-plugin'
+apply plugin: "kotlin-noarg"
+apply plugin: "kotlin-kapt"
+noArg {
+    //true 会执行init块代码 默认为false
+    invokeInitializers = true
+    annotations "com.vdian.android.lib.testforgradle.dataBinding.NoArg"
+}
+
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     defaultConfig {
         applicationId "com.vdian.android.lib.testforgradle"
         minSdkVersion 23
-        targetSdkVersion 28
+        targetSdkVersion 31
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
+
+    dataBinding {
+        enabled = true
+    }
+
+    viewBinding {
+        enabled = true
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -38,10 +56,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
-//    }
+    packagingOptions {
+        exclude 'META-INF/atomicfu.kotlin_module'
+    }
 }
 
 dependencies {
@@ -50,10 +67,50 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
     implementation 'com.google.android.material:material:1.4.0'
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.0"
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
+
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
+    def privacyVersion = "1.0.7"
+    implementation "com.github.allenymt.PrivacySentry:hook-sentry:$privacyVersion"
+    implementation "com.github.allenymt.PrivacySentry:privacy-annotation:$privacyVersion"
+    implementation "com.github.allenymt.PrivacySentry:privacy-proxy:$privacyVersion"
 //    implementation project(path: ':flutter')
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
     implementation "com.alibaba:fastjson:1.1.68.android"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    api 'com.github.tiann:epic:0.11.2@aar'
+    api 'com.github.tiann:FreeReflection:3.1.0'
+    api 'me.weishu.exposed:exposed-xposedapi:0.4.5'
+
+    implementation "androidx.startup:startup-runtime:1.1.0-beta01"
+    implementation "androidx.work:work-runtime-ktx:2.7.1"
+
+
+    implementation "androidx.room:room-ktx:2.4.2"
+    kapt "androidx.room:room-compiler:2.4.2"
+    //Room不能在主线程即UI线程上操作，可以使用lifecycleScope在协程作用域中操作
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
+
+    implementation 'androidx.paging:paging-runtime:3.1.1'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+//打印http请求日志
+    implementation "com.squareup.okhttp3:logging-interceptor:4.9.3"
+//用到协程中的flow
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
+//下拉刷新
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.2.0-alpha01"
+
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
 }
+
+// 黑名单配置，可以设置这部分包名不会被修改字节码
+//privacy {
+//    blackList = []
+//}

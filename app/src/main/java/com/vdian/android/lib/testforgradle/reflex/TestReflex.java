@@ -5,6 +5,7 @@ package com.vdian.android.lib.testforgradle.reflex;
  * @sinice 2020-04-24 11:38
  */
 public class TestReflex {
+    public static final int  abddd= 543;
     final String bbFinal = "bb";
     private final int aaFinal = 1;
     private int aNormal = 2;

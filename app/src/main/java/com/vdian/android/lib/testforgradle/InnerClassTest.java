@@ -14,6 +14,7 @@ public class InnerClassTest {
     public InnerClassTest() {
         InnerClassA inner = new InnerClassA(new InnerClassTest());
         int v = inner.x2;
+
     }
 
     //开放一个静态方法，可以访问这个类的私有变量
