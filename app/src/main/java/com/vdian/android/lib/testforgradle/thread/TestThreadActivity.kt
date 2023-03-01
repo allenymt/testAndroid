@@ -1,9 +1,10 @@
 package com.vdian.android.lib.testforgradle.thread
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import com.vdian.android.lib.testforgradle.R
+import com.vdian.android.lib.testforgradle.thread.cas.CasTest
 
 class TestThreadActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -11,7 +12,7 @@ class TestThreadActivity : AppCompatActivity() {
         setContentView(R.layout.activity_test_thread)
     }
 
-    fun printABC(v: View){
+    fun printABC(v: View) {
         // 测试哪个放开哪个
 //        var test =  WaitTest()
 //        test.main(null)
@@ -24,7 +25,11 @@ class TestThreadActivity : AppCompatActivity() {
 //
 //        MutiThreadCondition.main(null)
 
-        val testPrintAbc = TestPrintAbc()
-        testPrintAbc.main()
+        // 多线程顺序打印 ABC
+//        val testPrintAbc = TestPrintAbc()
+//        testPrintAbc.main()
+
+        var cas = CasTest()
+        cas.main()
     }
 }

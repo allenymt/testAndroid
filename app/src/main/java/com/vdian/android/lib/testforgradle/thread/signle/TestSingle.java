@@ -3,6 +3,7 @@ package com.vdian.android.lib.testforgradle.thread.signle;
 /**
  * @author yulun
  * @since 2023-01-16 16:31
+ * 多线程测试单例
  */
 public class TestSingle {
     private static TestSingle instance;
