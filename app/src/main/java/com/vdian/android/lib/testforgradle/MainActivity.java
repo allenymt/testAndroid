@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import com.vdian.android.lib.testforgradle.activityResult.TestBActivity;
+import com.vdian.android.lib.testforgradle.activityResult.lauchmodel.TestSingleTaskActivity;
 import com.vdian.android.lib.testforgradle.applink.AppLinkActivity;
 import com.vdian.android.lib.testforgradle.binder.RemoteTestActivity;
 import com.vdian.android.lib.testforgradle.dataBinding.TestDateBindingActivity;
@@ -274,6 +275,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToDataStore(View view) {
         startActivity(new Intent(MainActivity.this, TestDataStoreActivity.class));
+    }
+
+    public void goToTestAcLaunch(View view) {
+        startActivity(new Intent(MainActivity.this, TestSingleTaskActivity.class));
     }
 
     @Override

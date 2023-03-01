@@ -173,6 +173,14 @@
                 android:textAllCaps="false"
                 android:text="DataStore测试" />
 
+            <Button
+                android:id="@+id/test_ac_launch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestAcLaunch"
+                android:textAllCaps="false"
+                android:text="测试AC启动模式" />
+
         </LinearLayout>
     </ScrollView>
 
