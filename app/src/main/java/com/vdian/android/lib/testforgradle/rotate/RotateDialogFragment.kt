@@ -2,6 +2,7 @@ package com.vdian.android.lib.testforgradle.rotate
 
 import android.app.Activity
 import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -24,17 +25,20 @@ class RotateDialogFragment : DialogFragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
-
+    val TAG = "RotateDialogFragment"
     override fun onAttachFragment(childFragment: Fragment) {
         super.onAttachFragment(childFragment)
+        log("RotateDialogFragment-onAttachFragment")
     }
 
     override fun onAttach(activity: Activity) {
         super.onAttach(activity)
+        log("RotateDialogFragment-onAttach-activity-${activity}")
     }
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
+        log("RotateDialogFragment-onAttach")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,18 +47,72 @@ class RotateDialogFragment : DialogFragment() {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+        log("RotateDialogFragment-onCreate")
     }
 
-    override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        log("RotateDialogFragment-onCreateView")
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_rotate_dialog, container, false)
+    }
+
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        log("RotateDialogFragment-onActivityCreated")
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        log("RotateDialogFragment-onSaveInstanceState")
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        log("RotateDialogFragment-onConfigurationChanged")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        log("RotateDialogFragment-onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        log("RotateDialogFragment-onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        log("RotateDialogFragment-onPause")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        log("RotateDialogFragment-onStop")
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        log("RotateDialogFragment-onDestroyView")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        log("RotateDialogFragment-onDestroy")
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        log("RotateDialogFragment-onDetach")
+    }
+
+    private fun log(msg: String) {
+        android.util.Log.i(TAG, "$msg")
     }
 
     companion object {

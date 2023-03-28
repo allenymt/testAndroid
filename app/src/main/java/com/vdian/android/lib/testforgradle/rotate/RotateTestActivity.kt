@@ -104,7 +104,8 @@ class RotateTestActivity : AppCompatActivity() {
     fun showDialog(view: View) {
         var dialogFragment = RotateDialogFragment.newInstance("param1", "param2")
         // 官方是推荐 不保存状态的Fragment+ViewModel来处理横竖屏的问题
-        dialogFragment.retainInstance = true
+        // 设置了这个属性，可以不让fragment重建，但有个前提是Ac不会重建的情况下才会生效
+//        dialogFragment.retainInstance = true
         dialogFragment.show(supportFragmentManager, "dialog")
     }
 }
