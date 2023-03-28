@@ -73,6 +73,7 @@ class RotateTestActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
+        outState.putString("yl","1")
         log("RotateTestActivity-onSaveInstanceState-$outState")
     }
 
