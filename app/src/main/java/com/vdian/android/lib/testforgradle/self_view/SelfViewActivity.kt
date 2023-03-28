@@ -18,10 +18,11 @@ class SelfViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_self_view)
         selfTestView = findViewById(R.id.self_red_view)
         wm = getSystemService(Context.WINDOW_SERVICE) as WindowManager
+
     }
 
     fun onBtnClick(view: View) {
-        selfTestView?.animate()?.setDuration(300)?.scaleX(0.5f)?.scaleY(0.5f)?.start()
+//        selfTestView?.animate()?.setDuration(300)?.scaleX(0.5f)?.scaleY(0.5f)?.start()
 
         var startTime = SystemClock.elapsedRealtimeNanos()
 

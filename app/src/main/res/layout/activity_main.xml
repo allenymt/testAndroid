@@ -181,6 +181,14 @@
                 android:textAllCaps="false"
                 android:text="测试AC启动模式" />
 
+            <Button
+                android:id="@+id/test_ac_rotate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestAcRotate"
+                android:textAllCaps="false"
+                android:text="测试AC屏幕旋转" />
+
         </LinearLayout>
     </ScrollView>
 

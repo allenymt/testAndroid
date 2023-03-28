@@ -19,11 +19,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity
+            android:name=".rotate.RotateTestActivity"
+            android:exported="false" />
+
         <service
             android:name=".backsentry.BackgroundReStartService"
             android:enabled="true"
             android:exported="true"
-            android:persistent="true"></service>
+            android:persistent="true" />
         <service
             android:name=".backsentry.BackgroundReStartRemoteService"
             android:enabled="true"
@@ -32,11 +36,9 @@
 
         <activity
             android:name=".activityResult.lauchmodel.TestSingleTaskActivity"
-            android:theme="@style/Theme.AppCompat"
-            android:launchMode="singleTask" />
-
+            android:launchMode="singleTask"
+            android:theme="@style/Theme.AppCompat" />
         <activity android:name=".activityResult.lauchmodel.TestStandardActivity" />
-
         <activity
             android:name=".datastore.TestDataStoreActivity"
             android:exported="false" />

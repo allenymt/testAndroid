@@ -32,6 +32,7 @@ import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
 import com.vdian.android.lib.testforgradle.rom.AppInstallUtil;
 import com.vdian.android.lib.testforgradle.rom.RomCheckActivity;
 import com.vdian.android.lib.testforgradle.room.RoomTestActivity;
+import com.vdian.android.lib.testforgradle.rotate.RotateTestActivity;
 import com.vdian.android.lib.testforgradle.self_view.SelfViewActivity;
 import com.vdian.android.lib.testforgradle.single.TestClassInit;
 import com.vdian.android.lib.testforgradle.testclass.JAndKClassTest;
@@ -205,6 +206,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToTestThreadDump(View view) {
         startActivity(new Intent(MainActivity.this, TestThreadDumpActivity.class));
+
+    }
+
+    public void goToTestAcRotate(View view) {
+        startActivity(new Intent(MainActivity.this, RotateTestActivity.class));
 
     }
 

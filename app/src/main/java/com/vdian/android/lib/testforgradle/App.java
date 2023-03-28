@@ -1,6 +1,7 @@
 package com.vdian.android.lib.testforgradle;
 
 import android.app.Application;
+import android.content.Context;
 import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
@@ -17,6 +18,11 @@ import com.yl.lib.sentry.hook.PrivacySentry;
  * @sinice 2021-04-08 11:42
  */
 public class App extends Application {
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+    }
 
     @Override
     public void onCreate() {
