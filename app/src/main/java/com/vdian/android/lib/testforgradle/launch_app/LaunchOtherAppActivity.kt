@@ -54,10 +54,10 @@ class LaunchOtherAppActivity : AppCompatActivity() {
             https://wdb-applink.weidian.com/?targetUrl=https%3A%2F%2Fweidian.com%2Fitem.html%3FitemID%3D2675728831%26wfr%3Dhongbaowt%26ffr%3Dhongbaowt
              */
 
-//            intent.data = Uri.parse("weidianbuyer://wdb/goods_detail?itemId=2675728831&wfr=hongbaowt&ffr=hongbaowt")
+            intent.data = Uri.parse("weidianbuyer://wdb/goods_detail?itemId=2675728831&wfr=hongbaowt&ffr=hongbaowt")
 //            intent.data = Uri.parse("weidianbuyer://wdb/goods_detail?itemId=4420472834")
-            intent.data =
-                Uri.parse("https://h5.weidian.com/m/weidian-buyer/cross-app/index.html?ckey=CK1370428950809&redirectUrl=weidianbuyer://wdb/follow?tabId=1000001&groupId=1?h5=1&ckey=CK1370428950809")
+//            intent.data =
+//                Uri.parse("https://h5.weidian.com/m/weidian-buyer/cross-app/index.html?ckey=CK1370428950809&redirectUrl=weidianbuyer://wdb/follow?tabId=1000001&groupId=1?h5=1&ckey=CK1370428950809")
 
             intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             startActivity(intent)
