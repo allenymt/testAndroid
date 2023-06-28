@@ -19,9 +19,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-        <!--不加这一行,屏幕旋转是默认 ac+fragment都会重建-->
-        <!--  android:configChanges="orientation|screenSize"          -->
+        <activity
+            android:name=".surface.SurfaceTestActivity"
+            android:exported="false" />
+        <!-- 不加这一行,屏幕旋转是默认 ac+fragment都会重建 -->
+        <!-- android:configChanges="orientation|screenSize" -->
         <activity
             android:name=".rotate.RotateTestActivity"
             android:configChanges="orientation|screenSize"

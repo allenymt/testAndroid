@@ -35,6 +35,7 @@ import com.vdian.android.lib.testforgradle.room.RoomTestActivity;
 import com.vdian.android.lib.testforgradle.rotate.RotateTestActivity;
 import com.vdian.android.lib.testforgradle.self_view.SelfViewActivity;
 import com.vdian.android.lib.testforgradle.single.TestClassInit;
+import com.vdian.android.lib.testforgradle.surface.SurfaceTestActivity;
 import com.vdian.android.lib.testforgradle.testclass.JAndKClassTest;
 import com.vdian.android.lib.testforgradle.testleak.TestLeak1Activity;
 import com.vdian.android.lib.testforgradle.thread.TestThreadActivity;
@@ -211,6 +212,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToTestAcRotate(View view) {
         startActivity(new Intent(MainActivity.this, RotateTestActivity.class));
+
+    }
+
+    public void goToTestSurface(View view) {
+        startActivity(new Intent(MainActivity.this, SurfaceTestActivity.class));
 
     }
 

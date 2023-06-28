@@ -72,7 +72,7 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.4.0"
 
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9'
-    def privacyVersion = "1.0.7"
+    def privacyVersion = "1.2.7"
     implementation "com.github.allenymt.PrivacySentry:hook-sentry:$privacyVersion"
     implementation "com.github.allenymt.PrivacySentry:privacy-annotation:$privacyVersion"
     implementation "com.github.allenymt.PrivacySentry:privacy-proxy:$privacyVersion"

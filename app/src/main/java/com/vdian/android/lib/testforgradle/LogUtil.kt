@@ -9,5 +9,9 @@ class LogUtil {
        fun log(msg:String){
            android.util.Log.d("JustTest",msg)
        }
+
+        fun d(tag:String , msg:String){
+            android.util.Log.d("JustTest-$tag",msg)
+        }
     }
 }
