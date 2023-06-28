@@ -4,24 +4,21 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
 import com.vdian.android.lib.testforgradle.databinding.ActivitySurfaceTestBinding
+import com.vdian.android.lib.testforgradle.databinding.ActivityTextureTestBinding
 
-class SurfaceTestActivity : AppCompatActivity() {
-    var viewBinding: ActivitySurfaceTestBinding? = null
-    var testSurfaceView: MySurfaceView? = null
+class TextureTestActivity : AppCompatActivity() {
+    var viewBinding: ActivityTextureTestBinding? = null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewBinding = ActivitySurfaceTestBinding.inflate(layoutInflater)
+        viewBinding = ActivityTextureTestBinding.inflate(layoutInflater)
         setContentView(viewBinding?.root)
-        testSurfaceView = viewBinding?.testSurface
     }
 
     override fun onResume() {
         super.onResume()
-        testSurfaceView?.start()
     }
 
     override fun onStop() {
         super.onStop()
-        testSurfaceView?.stop()
     }
 }

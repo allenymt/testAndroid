@@ -36,6 +36,7 @@ import com.vdian.android.lib.testforgradle.rotate.RotateTestActivity;
 import com.vdian.android.lib.testforgradle.self_view.SelfViewActivity;
 import com.vdian.android.lib.testforgradle.single.TestClassInit;
 import com.vdian.android.lib.testforgradle.surface.SurfaceTestActivity;
+import com.vdian.android.lib.testforgradle.surface.TextureTestActivity;
 import com.vdian.android.lib.testforgradle.testclass.JAndKClassTest;
 import com.vdian.android.lib.testforgradle.testleak.TestLeak1Activity;
 import com.vdian.android.lib.testforgradle.thread.TestThreadActivity;
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity {
         return super.dispatchTouchEvent(ev);
     }
 
-    private void testHash(){
+    private void testHash() {
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -159,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
         }, 0);
     }
 
-    private void testClassLoader(){
+    private void testClassLoader() {
         try {
             getClassLoader().loadClass("a.b.c.d.d");
         } catch (Exception e) {
@@ -220,6 +221,12 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void goToTestTexture(View view) {
+        startActivity(new Intent(MainActivity.this, TextureTestActivity.class));
+
+    }
+
+
     public boolean tryDownCdnMax() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
@@ -245,6 +252,13 @@ public class MainActivity extends AppCompatActivity {
             String[] per = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_NETWORK_STATE};
             ActivityCompat.requestPermissions(this, per, 1000);
         }
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            String[] per = {android.Manifest.permission.CAMERA};
+            ActivityCompat.requestPermissions(this, per, 1000);
+        }
+
+
     }
 
     public void testViewModel(View v) {
