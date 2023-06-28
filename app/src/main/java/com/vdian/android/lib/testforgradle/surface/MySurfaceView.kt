@@ -116,7 +116,8 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
                             }
                             if (cost > 0) {
                                 /// TODO 不做帧率控制，在销毁时总是碰到 时差不同步的问题，引起unlockCanvasAndPost失败，这里有好的方法吗？
-                                // 说白了，就是darw频率太高，当有改变状态值时，上一次draw还在进行中，状态控制和draw是异步进行的
+                                // 说白了，就是darw频率太高，当有改变状态值时，上一次draw还在进行中，状态控制和draw是异步进行的,   其实换个角度想
+                                // android设置16ms一帧也是要道理的，这里做个控制就行了
                                 SystemClock.sleep(cost)
                             }
                         }
