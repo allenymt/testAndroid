@@ -1,4 +1,6 @@
-package com.vdian.android.lib.testforgradle;
+package com.vdian.android.lib.testforgradle.util;
+
+import com.vdian.android.lib.testforgradle.MainActivity;
 
 /**
  * @author yulun

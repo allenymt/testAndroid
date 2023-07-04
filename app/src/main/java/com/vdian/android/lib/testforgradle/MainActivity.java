@@ -35,24 +35,21 @@ import com.vdian.android.lib.testforgradle.room.RoomTestActivity;
 import com.vdian.android.lib.testforgradle.rotate.RotateTestActivity;
 import com.vdian.android.lib.testforgradle.self_view.SelfViewActivity;
 import com.vdian.android.lib.testforgradle.single.TestClassInit;
-import com.vdian.android.lib.testforgradle.surface.SurfaceTestActivity;
-import com.vdian.android.lib.testforgradle.surface.TextureTestActivity;
+import com.vdian.android.lib.testforgradle.surface.SurfaceNavigationActivity;
 import com.vdian.android.lib.testforgradle.testclass.JAndKClassTest;
 import com.vdian.android.lib.testforgradle.testleak.TestLeak1Activity;
 import com.vdian.android.lib.testforgradle.thread.TestThreadActivity;
 import com.vdian.android.lib.testforgradle.thread.signle.TestSingle;
 import com.vdian.android.lib.testforgradle.thread_dump.TestThreadDumpActivity;
 import com.vdian.android.lib.testforgradle.touch.TestTouchActivity;
+import com.vdian.android.lib.testforgradle.util.TestFinalize;
+import com.vdian.android.lib.testforgradle.util.Util;
 import com.vdian.android.lib.testforgradle.viewBinding.TestViewBindingActivity;
 import com.vdian.android.lib.testforgradle.workmanager.WorkManagerTestActivity;
 
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Random;
-
 public class MainActivity extends AppCompatActivity {
 
-    static TestFinalize quote;
+    public static TestFinalize quote;
 
 
     Handler mHandler = new Handler(new Handler.Callback() {
@@ -61,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     });
-    private int priInt = 1;
 
     @Override
     protected void onPostResume() {
@@ -79,12 +75,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // 测试类中 变量 静态变量，构造函数等的初始化顺序
         TestClassInit.Test.main();
-
-        // 测试hash值
-        testHash();
-
-        // 测试类加载
-        testClassLoader();
 
         // 输出Android
         TestAndroidFileDirectory.testPrintFile(this);
@@ -114,63 +104,40 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        return super.dispatchTouchEvent(ev);
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        TestSingle.main();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            String[] per = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_NETWORK_STATE};
+            ActivityCompat.requestPermissions(this, per, 1000);
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            String[] per = {android.Manifest.permission.CAMERA};
+            ActivityCompat.requestPermissions(this, per, 1000);
+        }
+    }
+
+
     public void testCatchException(View view) {
         Util.Util.INSTANCE.testTryCache(mHandler);
     }
 
     public void toLink(View view) {
         startActivity(new Intent(MainActivity.this, AppLinkActivity.class));
-    }
-
-
-    @Override
-    public boolean dispatchTouchEvent(MotionEvent ev) {
-        int t = 0;
-        int f = 0;
-        for (int i = 0; i < 10000; i++) {
-            if (tryDownCdnMax()) {
-                t++;
-            } else {
-                f++;
-            }
-        }
-        android.util.Log.e("yulun", "t is " + t + "  f is " + f);
-        return super.dispatchTouchEvent(ev);
-    }
-
-    private void testHash() {
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                int ut_hash = 0;
-                int ut_hash1 = ut_hash + priInt;
-                ut_hash = ut_hash | 1;
-                android.util.Log.i("yulun ut_hash", "ut_hash is " + ut_hash);
-                ut_hash = ut_hash | 1 << 1;
-                android.util.Log.i("yulun ut_hash", "ut_hash is " + ut_hash);
-                ut_hash = ut_hash | 1 << 2;
-                android.util.Log.i("yulun ut_hash", "ut_hash is " + ut_hash);
-//                ut_hash = ut_hash | 1 << 3;
-//                android.util.Log.i("yulun ut_hash", "ut_hash is "+ ut_hash);
-                ut_hash = ut_hash | 1 << 4;
-                android.util.Log.i("yulun ut_hash", "ut_hash is " + ut_hash);
-                ut_hash = ut_hash | 1 << 5;
-                android.util.Log.i("yulun ut_hash", "ut_hash is " + ut_hash);
-            }
-        }, 0);
-    }
-
-    private void testClassLoader() {
-        try {
-            getClassLoader().loadClass("a.b.c.d.d");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            Class.forName("comn.xx.xx.abc");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     public void testLeak(View view) {
@@ -213,51 +180,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToTestAcRotate(View view) {
         startActivity(new Intent(MainActivity.this, RotateTestActivity.class));
-
-    }
-
-    public void goToTestSurface(View view) {
-        startActivity(new Intent(MainActivity.this, SurfaceTestActivity.class));
-
-    }
-
-    public void goToTestTexture(View view) {
-        startActivity(new Intent(MainActivity.this, TextureTestActivity.class));
-
-    }
-
-
-    public boolean tryDownCdnMax() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if (hour < 20 || hour > 22) {
-            return false;
-        }
-        Random random = new Random();
-        random.setSeed(System.currentTimeMillis());
-        return random.nextInt(100) % 2 == 0;
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        TestSingle.main();
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            String[] per = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_NETWORK_STATE};
-            ActivityCompat.requestPermissions(this, per, 1000);
-        }
-
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-            String[] per = {android.Manifest.permission.CAMERA};
-            ActivityCompat.requestPermissions(this, per, 1000);
-        }
-
 
     }
 
@@ -305,6 +227,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToTestAcLaunch(View view) {
         startActivity(new Intent(MainActivity.this, TestSingleTaskActivity.class));
+    }
+
+    public void goToTestSurfaceNavigation(View view) {
+        startActivity(new Intent(MainActivity.this, SurfaceNavigationActivity.class));
     }
 
     @Override

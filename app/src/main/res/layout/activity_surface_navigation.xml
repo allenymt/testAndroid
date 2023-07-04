@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".surface.SurfaceNavigationActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <Button
+                android:id="@+id/test_surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestSurface"
+                android:textAllCaps="false"
+                android:text="测试Surface纹理相关" />
+
+            <Button
+                android:id="@+id/test_camera_texture"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestCameraTexture"
+                android:textAllCaps="false"
+                android:text="测试相机预览+texture" />
+
+            <Button
+                android:id="@+id/test_camera_surface"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestCameraSurface"
+                android:textAllCaps="false"
+                android:text="测试相机预览+surface" />
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

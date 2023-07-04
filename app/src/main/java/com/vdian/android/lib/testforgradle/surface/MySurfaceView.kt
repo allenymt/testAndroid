@@ -6,7 +6,7 @@ import android.os.SystemClock
 import android.util.AttributeSet
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import com.vdian.android.lib.testforgradle.LogUtil
+import com.vdian.android.lib.testforgradle.util.LogUtil
 import java.lang.Math.sin
 
 /**

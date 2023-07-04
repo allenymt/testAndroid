@@ -4,7 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.Binder
 import android.os.IBinder
-import com.vdian.android.lib.testforgradle.LogUtil
+import com.vdian.android.lib.testforgradle.util.LogUtil
 
 /**
  * 用于拉起主进程，存活在主进程里

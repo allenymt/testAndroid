@@ -1,4 +1,4 @@
-package com.vdian.android.lib.testforgradle.fastjson;
+package com.vdian.android.lib.testforgradle.jsonparser.fastjson;
 
 import java.io.Serializable;
 

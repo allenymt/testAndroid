@@ -1,6 +1,4 @@
-package com.vdian.android.lib.testforgradle;
-
-import java.lang.reflect.Field;
+package com.vdian.android.lib.testforgradle.testclass;
 
 /**
  * @author yulun

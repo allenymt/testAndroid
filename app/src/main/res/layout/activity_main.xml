@@ -193,18 +193,11 @@
                 android:id="@+id/test_surface"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="goToTestSurface"
+                android:onClick="goToTestSurfaceNavigation"
                 android:textAllCaps="false"
-                android:text="测试Surface纹理相关" />
+                android:text="测试Surface和纹理相关" />
 
 
-            <Button
-                android:id="@+id/test_texture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToTestTexture"
-                android:textAllCaps="false"
-                android:text="测试相机预览相关" />
         </LinearLayout>
     </ScrollView>
 

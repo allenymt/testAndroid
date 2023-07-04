@@ -1,4 +1,4 @@
-package com.vdian.android.lib.testforgradle
+package com.vdian.android.lib.testforgradle.util
 
 import android.content.Context
 import android.content.Intent
@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.view.View
+import com.vdian.android.lib.testforgradle.R
 import com.vdian.android.lib.testforgradle.applink.AppLinkTestDomainActivity
 import com.vdian.android.lib.testforgradle.rom.RomChecker
 import com.vdian.android.lib.testforgradle.single.TestStaticInnerSingle

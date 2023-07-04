@@ -7,7 +7,7 @@ import android.os.Handler
 import android.os.HandlerThread
 import android.os.SystemClock
 import androidx.core.content.ContextCompat
-import com.vdian.android.lib.testforgradle.LogUtil
+import com.vdian.android.lib.testforgradle.util.LogUtil
 import com.yl.lib.sentry.hook.util.MainProcessUtil
 import java.util.concurrent.atomic.AtomicBoolean
 

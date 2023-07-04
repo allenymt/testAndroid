@@ -6,11 +6,9 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
-import androidx.annotation.RequiresApi;
-
 import com.vdian.android.lib.testforgradle.backsentry.AppStatusManager;
-import com.vdian.android.lib.testforgradle.backsentry.VivoBackgroundSentry;
 import com.vdian.android.lib.testforgradle.room.WordDB;
+import com.vdian.android.lib.testforgradle.util.LogUtil;
 import com.yl.lib.sentry.hook.PrivacySentry;
 
 /**

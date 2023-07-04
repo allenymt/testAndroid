@@ -1,4 +1,4 @@
-package com.vdian.android.lib.testforgradle;
+package com.vdian.android.lib.testforgradle.thread;
 
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;

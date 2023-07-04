@@ -6,7 +6,7 @@ import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import androidx.core.content.ContextCompat
-import com.vdian.android.lib.testforgradle.LogUtil
+import com.vdian.android.lib.testforgradle.util.LogUtil
 
 /**
  * 后台监听进程
