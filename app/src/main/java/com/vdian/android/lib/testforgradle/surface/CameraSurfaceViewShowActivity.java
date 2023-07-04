@@ -15,6 +15,8 @@ import java.io.IOException;
 /**
  * @author yulun
  * @since 2023-07-04 15:19
+ * SurfaceView预览相机视图不支持透明度，可以设置缩放旋转属性。
+ * 如果需要做动画特效的话不推荐使用SurfaceView显示视图。可以使用TextureView或者GlSurfaceView来显示。
  */
 public class CameraSurfaceViewShowActivity extends  AppCompatActivity implements SurfaceHolder.Callback {
     SurfaceView mSurfaceView;
@@ -73,11 +75,11 @@ public class CameraSurfaceViewShowActivity extends  AppCompatActivity implements
     }
 
     public void onViewClicked(View view) {
-//        PropertyValuesHolder valuesHolder2 = PropertyValuesHolder.ofFloat("rotationX", 0.0f, 360.0f, 0.0F);
-//        PropertyValuesHolder valuesHolder = PropertyValuesHolder.ofFloat("rotationY", 0.0f, 360.0f, 0.0F);
-        PropertyValuesHolder valuesHolder1 = PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.5f,1.0f);
-        PropertyValuesHolder valuesHolder3 = PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.5f,1.0f);
-        ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mSurfaceView ,valuesHolder1,valuesHolder3);
+        PropertyValuesHolder valuesHolderRx = PropertyValuesHolder.ofFloat("rotationX", 0.0f, 360.0f, 0.0F);
+        PropertyValuesHolder valuesHolderRy = PropertyValuesHolder.ofFloat("rotationY", 0.0f, 360.0f, 0.0F);
+        PropertyValuesHolder valuesHolderSx = PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.5f,1.0f);
+        PropertyValuesHolder valuesHolderSy = PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.5f,1.0f);
+        ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mSurfaceView ,valuesHolderRx,valuesHolderRy,valuesHolderSx,valuesHolderSy);
         objectAnimator.setDuration(5000).start();
     }
 
