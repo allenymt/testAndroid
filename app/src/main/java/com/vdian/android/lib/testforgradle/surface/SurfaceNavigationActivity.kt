@@ -26,4 +26,12 @@ class SurfaceNavigationActivity : AppCompatActivity() {
     fun goToTestCameraSurface(view: View?) {
         startActivity(Intent(this, CameraSurfaceViewShowActivity::class.java))
     }
+
+    fun goToTestCameraTexture2(view: View?) {
+        startActivity(Intent(this, CameraTextureViewShowActivity::class.java))
+    }
+
+    fun goToTestCameraGlSurface(view: View?) {
+        startActivity(Intent(this, CameraGlSurfaceShowActivity::class.java))
+    }
 }

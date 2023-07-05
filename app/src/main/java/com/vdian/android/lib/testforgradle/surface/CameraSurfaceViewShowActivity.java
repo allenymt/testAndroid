@@ -28,7 +28,7 @@ public class CameraSurfaceViewShowActivity extends  AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_base_camera);
+        setContentView(R.layout.activity_surface_camera);
         mSurfaceView = findViewById(R.id.mSurface);
         mHolder = mSurfaceView.getHolder();
         mHolder.addCallback(this);
