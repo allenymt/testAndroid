@@ -14,6 +14,8 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import com.vdian.android.lib.testforgradle.R;
+import com.vdian.android.lib.testforgradle.util.TestUtil;
+
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -26,15 +28,15 @@ import javax.microedition.khronos.opengles.GL10;
  * @since 2023-07-04 17:22
  *
  * 基本步骤
- * 在xml中添加GlSurfaceView
- * 创建渲染器类实现GlSurfaceView.Renderer
- * 清除画布，并创建一个纹理并绑定到。
- * 创建一个用来最后显示的SurfaceTexture来显示处理后的数据。
- * 创建Opengl ES程序并添加着色器到该程序中，创建openGl程序的可执行文件，并释放shader资源。
- * 打开摄像头，并配置相关属性。设置预览视图，并开启预览。
- * 添加程序到ES环境中，并设置及启用各类句柄。
- * 在onDrawFrame中进行画布的清理及绘制最新的数据到纹理图形中。
- * 设置一个SurfaceTexture.OnFrameAvailableListener的回调来通知GlSurfaceview渲染新的帧数据。
+ * 1. 在xml中添加GlSurfaceView
+ * 2. 创建渲染器类实现GlSurfaceView.Renderer
+ * 3. 清除画布，并创建一个纹理并绑定到。
+ * 4. 创建一个用来最后显示的SurfaceTexture来显示处理后的数据。
+ * 5. 创建Opengl ES程序并添加着色器到该程序中，创建openGl程序的可执行文件，并释放shader资源。
+ * 6. 打开摄像头，并配置相关属性。设置预览视图，并开启预览。
+ * 7. 添加程序到ES环境中，并设置及启用各类句柄。
+ * 8. 在onDrawFrame中进行画布的清理及绘制最新的数据到纹理图形中。
+ * 9. 设置一个SurfaceTexture.OnFrameAvailableListener的回调来通知GlSurfaceView渲染新的帧数据。
  *
  * 建议： GlSurfaceView作用简单的理解OpenGl对相机数据进行处理完之后的显示。我们需要明白的是渲染器的渲染周期及渲染方法的调用时机。
  *
@@ -120,6 +122,7 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
         }
     }
 
+    // 自定义的render
     public class MyRender implements GLSurfaceView.Renderer {
         private final String vertexShaderCode = "uniform mat4 textureTransform;\n" +
                 "attribute vec2 inputTextureCoordinate;\n" +
@@ -146,18 +149,20 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
         private FloatBuffer mTexBuffer;
         private float[] mPosCoordinate = {-1, -1, -1, 1, 1, -1, 1, 1};
         private float[] mTexCoordinateBackRight = {1, 1, 0, 1, 1, 0, 0, 0};//顺时针转90并沿Y轴翻转  后摄像头正确，前摄像头上下颠倒
-        private float[] mTexCoordinateForntRight = {0, 1, 1, 1, 0, 0, 1, 0};//顺时针旋转90  后摄像头上下颠倒了，前摄像头正确
+        private float[] mTexCoordinateFrontRight = {0, 1, 1, 1, 0, 0, 1, 0};//顺时针旋转90  后摄像头上下颠倒了，前摄像头正确
 
         public int mProgram;
         public boolean mActivityProgram = false;
 
         public MyRender() {
+            //TODO  这里矩阵的初始化是干什么的？ 看源码是先全部重置为0，然后间隔6个置为1，这样是什么意思？
             Matrix.setIdentityM(mProjectMatrix, 0);
             Matrix.setIdentityM(mCameraMatrix, 0);
             Matrix.setIdentityM(mMVPMatrix, 0);
             Matrix.setIdentityM(mTempMatrix, 0);
         }
 
+        // ToDo 字面意思看，是加载shader
         private int loadShader(int type, String shaderCode) {
             int shader = GLES20.glCreateShader(type);
             // 添加上面编写的着色器代码并编译它
@@ -166,14 +171,16 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
             return shader;
         }
 
+        // surface被创建时，执行这个
+        // 还是要理解，openGL中Program， shader, vertex, fragment的关系
         private void createProgram() {
             //通常做法
-//            String vertexSource = AssetsUtils.read(CameraGlSurfaceShowActivity.this, "vertex_texture.glsl");
-//            int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexSource);
-//            String fragmentSource = AssetsUtils.read(CameraGlSurfaceShowActivity.this, "fragment_texture.glsl");
-//            int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentSource);
-            int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
-            int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
+            String vertexSource = TestUtil.read(CameraGlSurfaceShowActivity.this, "vertex_texture.glsl");
+            int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexSource);
+            String fragmentSource = TestUtil.read(CameraGlSurfaceShowActivity.this, "fragment_texture.glsl");
+            int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentSource);
+//            int vertexShader = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode);
+//            int fragmentShader = loadShader(GLES20.GL_FRAGMENT_SHADER, fragmentShaderCode);
             // 创建空的OpenGL ES程序
             mProgram = GLES20.glCreateProgram();
 
@@ -191,6 +198,7 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
             GLES20.glDeleteShader(fragmentShader);
         }
 
+        // java的数据格式 和 opengl的不一样，这里需要转换一次
         private FloatBuffer convertToFloatBuffer(float[] buffer) {
             FloatBuffer fb = ByteBuffer.allocateDirect(buffer.length * 4)
                     .order(ByteOrder.nativeOrder())
@@ -200,6 +208,8 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
             return fb;
         }
 
+
+        /**这一坨变量干嘛的。等待理解**/
         private int uPosHandle;
         private int aTexHandle;
         private int mMVPMatrixHandle;
@@ -207,24 +217,31 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
         private float[] mCameraMatrix = new float[16];
         private float[] mMVPMatrix = new float[16];
         private float[] mTempMatrix = new float[16];
-
+        /**这一坨变量干嘛的。等待理解**/
 
 
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+            // 应该可以理解为清除画布
             GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+            // 创建一个纹理，createOESTextureObject这个方法里的代码完全没理解
             mSurfaceTexture = new SurfaceTexture(createOESTextureObject());
+
+            //  创建openGL es执行程序
             createProgram();
 //            mProgram = ShaderUtils.createProgram(CameraGlSurfaceShowActivity.this, "vertex_texture.glsl", "fragment_texture.glsl");
+            // 打开相机
             camera = Camera.open(camera_status);
             try {
+                 // 设定相机预览的画布
                 camera.setPreviewTexture(mSurfaceTexture);
+                // 开始预览相机
                 camera.startPreview();
             } catch (IOException e) { 
                 e.printStackTrace();
             }
+            //添加程序到ES环境中
             activeProgram();
-
         }
 
         //添加程序到ES环境中
@@ -232,19 +249,23 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
             // 将程序添加到OpenGL ES环境
             GLES20.glUseProgram(mProgram);
 
+            // 设置回调监听
             mSurfaceTexture.setOnFrameAvailableListener(CameraGlSurfaceShowActivity.this);
-            // 获取顶点着色器的位置的句柄
+            // 获取顶点着色器的位置的句柄，这里也没看懂
             uPosHandle = GLES20.glGetAttribLocation(mProgram, "position");
             aTexHandle = GLES20.glGetAttribLocation(mProgram, "inputTextureCoordinate");
             mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "textureTransform");
 
             mPosBuffer = convertToFloatBuffer(mPosCoordinate);
             if(camera_status == 0){
+                // 后置摄像头
                 mTexBuffer = convertToFloatBuffer(mTexCoordinateBackRight);
             }else{
-                mTexBuffer = convertToFloatBuffer(mTexCoordinateForntRight);
+                // 前置摄像头
+                mTexBuffer = convertToFloatBuffer(mTexCoordinateFrontRight);
             }
 
+            // 这两行又看不懂啦
             GLES20.glVertexAttribPointer(uPosHandle, 2, GLES20.GL_FLOAT, false, 0, mPosBuffer);
             GLES20.glVertexAttribPointer(aTexHandle, 2, GLES20.GL_FLOAT, false, 0, mTexBuffer);
 
@@ -253,9 +274,13 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
             GLES20.glEnableVertexAttribArray(aTexHandle);
         }
 
+        // 画布Surface 发生改变的时候
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
+            // 可以理解为，重新设置画布大小
             GLES20.glViewport(0, 0, width, height);
+
+            // 这里也没看懂
             Matrix.scaleM(mMVPMatrix,0,1,-1,1);
             float ratio = (float) width / height;
             Matrix.orthoM(mProjectMatrix, 0, -1, 1, -ratio, ratio, 1, 7);// 3和7代表远近视点与眼睛的距离，非坐标点
@@ -263,12 +288,16 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
             Matrix.multiplyMM(mMVPMatrix, 0, mProjectMatrix, 0, mCameraMatrix, 0);
         }
 
+        // 执行绘画
         @Override
         public void onDrawFrame(GL10 gl) {
+            // 加这一段，主要是为了切换摄像头的时候， 需要重新走一遍激活程序的流程
             if(mActivityProgram){
                 activeProgram();
                 mActivityProgram = false;
             }
+
+            // 这里绘画的流程也没大看懂
             if (mSurfaceTexture != null) {
                 GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
                 mSurfaceTexture.updateTexImage();
@@ -278,6 +307,7 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
         }
     }
 
+    // ToDo 这里完全看不懂，需要理解
     public static int createOESTextureObject() {
         int[] tex = new int[1];
         //生成一个纹理

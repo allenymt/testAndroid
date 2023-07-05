@@ -3,6 +3,8 @@ package com.vdian.android.lib.testforgradle.util;
 import android.content.Context;
 import android.os.Handler;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
@@ -61,4 +63,20 @@ public class TestUtil {
             e.printStackTrace();
         }
     }
+
+    public static String read(Context context, String fileName) {
+        String result = null;
+        try {
+            InputStream is = context.getResources().getAssets().open("Shader/" + fileName);
+            int length = is.available();
+            byte[] buffer = new byte[length];
+            is.read(buffer);
+            result = new String(buffer, "utf-8");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
+
 }
