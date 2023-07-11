@@ -12,7 +12,7 @@
         android:layout_height="200dp"
         android:id="@+id/test_surface"/>
 
-    <com.vdian.android.lib.testforgradle.surface.MyGLSurfaceView
+    <com.vdian.android.lib.testforgradle.surface.TestGLSurfaceView
         android:layout_width="match_parent"
         android:layout_height="200dp"/>
 </LinearLayout>
