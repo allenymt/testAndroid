@@ -224,6 +224,7 @@ public class RomTest {
             int count = 0;
             String packageName = context.getPackageName();
             List<PackageInfo> pkgs = PackageUtil.getInstalledPackages(context);
+            List<PackageInfo> pkgsNew = PackageUtil.e(context);
             for (PackageInfo info : pkgs) {
                 if (packageName.equals(info.packageName)) {
                     count++;

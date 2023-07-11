@@ -13,4 +13,11 @@
         android:onClick="isMIUI"
         android:text="isMIUI" />
 
+    <Button
+        android:id="@+id/isParallel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="isParallel"
+        android:text="isParallel" />
+
 </LinearLayout>
