@@ -51,9 +51,13 @@ class Triangle {
      * 顶点着色器代码;
      */
     private val vertexShaderCode =
-        "attribute vec4 vPosition;" +
+    // uMVPMatrix变量是需要用于顶点坐标变换的矩阵
+        // 作为hook入口，用于绘制时传入模型矩阵、观察矩阵、投影矩阵
+        "uniform mat4 uMVPMatrix;" +
+                "attribute vec4 vPosition;" +
                 "void main() {" +
-                "  gl_Position = vPosition;" +
+                // 把vPosition顶点经过矩阵变换后传给gl_Position
+                "  gl_Position = uMVPMatrix * vPosition;" +
                 "}"
 
     /**
@@ -72,6 +76,7 @@ class Triangle {
      */
     private var mProgram: Int
 
+    private var vPMatrixHandle: Int = 0
     init {
         // 编译顶点着色器和片段着色器
         val vertexShader: Int = loadShader(GLES20.GL_VERTEX_SHADER, vertexShaderCode) // 顶点着色器
@@ -107,24 +112,30 @@ class Triangle {
     /**
      * 实际绘制时执行的方法
      **/
-    fun draw() {
-        // 激活着色器程序,把程序添加到OpenGL ES环境
+    fun draw(mvpMatrix: FloatArray) {
+        // 激活着色器程序
         GLES20.glUseProgram(mProgram)
         // 获取顶点着色器中的vPosition变量(因为之前已经编译过着色器代码,所以可以从着色器程序中获取);用唯一ID表示
-        val position = GLES20.glGetAttribLocation(mProgram, "vPosition")
+        val positionHandle = GLES20.glGetAttribLocation(mProgram, "vPosition")
+        // 获取顶点着色器代码中的uMVPMatrix变量;用唯一ID表示
+        vPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "uMVPMatrix")
+        // 把模型矩阵、观察矩阵、投影矩阵的计算结果传递给顶点着色器代码中的vPMatrixHandle
+        GLES20.glUniformMatrix4fv(vPMatrixHandle, 1, false, mvpMatrix, 0)
+        // 绘制三角形
+//        GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount)
         // 允许操作顶点对象position
-        GLES20.glEnableVertexAttribArray(position)
-        // 将顶点数据传递给position指向的vPosition变量;将顶点属性与顶点缓冲对象关联
+        GLES20.glEnableVertexAttribArray(positionHandle)
+        // 将顶点数据传递给position指向的vPosition变量
         GLES20.glVertexAttribPointer(
-            position, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
+            positionHandle, COORDS_PER_VERTEX, GLES20.GL_FLOAT,
             false, vertexStride, vertexBuffer)
         // 获取片段着色器中的vColor变量
         val colorHandle = GLES20.glGetUniformLocation(mProgram, "vColor")
         // 通过colorHandle设置绘制的颜色值
         GLES20.glUniform4fv(colorHandle, 1, color, 0)
-        // 绘制顶点数组; 顶点数据和片段数据前面都绑定了
+        // 绘制顶点数组;
         GLES20.glDrawArrays(GLES20.GL_TRIANGLES, 0, vertexCount)
         // 操作完后,取消允许操作顶点对象position
-        GLES20.glDisableVertexAttribArray(position)
+        GLES20.glDisableVertexAttribArray(positionHandle)
     }
 }

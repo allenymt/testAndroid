@@ -47,6 +47,8 @@ import com.vdian.android.lib.testforgradle.util.Util;
 import com.vdian.android.lib.testforgradle.viewBinding.TestViewBindingActivity;
 import com.vdian.android.lib.testforgradle.workmanager.WorkManagerTestActivity;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 public class MainActivity extends AppCompatActivity {
 
     public static TestFinalize quote;
@@ -73,6 +75,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        TestMath.main();
+
         // 测试类中 变量 静态变量，构造函数等的初始化顺序
         TestClassInit.Test.main();
 
@@ -96,6 +101,17 @@ public class MainActivity extends AppCompatActivity {
 
         // kotlin class 和 java class 对比
         new JAndKClassTest().testA();
+
+        System.out.println("ios");
+        System.out.println("AppID(应用ID)");
+        System.out.println(RandomStringUtils.randomAlphanumeric(18).toLowerCase());
+        System.out.println("AppSecret(应用密钥)");
+        System.out.println(RandomStringUtils.randomAlphanumeric(32).toLowerCase());
+        System.out.println("android");
+        System.out.println("AppID(应用ID)");
+        System.out.println(RandomStringUtils.randomAlphanumeric(18).toLowerCase());
+        System.out.println("AppSecret(应用密钥)");
+        System.out.println(RandomStringUtils.randomAlphanumeric(32).toLowerCase());
     }
 
 
