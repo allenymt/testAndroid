@@ -21,6 +21,7 @@ import com.vdian.android.lib.testforgradle.binder.RemoteTestActivity;
 import com.vdian.android.lib.testforgradle.dataBinding.TestDateBindingActivity;
 import com.vdian.android.lib.testforgradle.datastore.TestDataStoreActivity;
 import com.vdian.android.lib.testforgradle.directory.TestAndroidFileDirectory;
+import com.vdian.android.lib.testforgradle.go_market.TestGoMarketActivity;
 import com.vdian.android.lib.testforgradle.ktl.coroutines.TestCoroutinesActivity;
 import com.vdian.android.lib.testforgradle.ktl.inline.TestNoInline;
 import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
@@ -248,6 +249,11 @@ public class MainActivity extends AppCompatActivity {
     public void goToTestSurfaceNavigation(View view) {
         startActivity(new Intent(MainActivity.this, SurfaceNavigationActivity.class));
     }
+
+    public void goToTestGoMarketActivity(View view) {
+        startActivity(new Intent(MainActivity.this, TestGoMarketActivity.class));
+    }
+
 
     @Override
     public void onAttachedToWindow() {

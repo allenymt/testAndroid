@@ -14,6 +14,13 @@
         android:text="isMIUI" />
 
     <Button
+        android:id="@+id/is_emui"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="isEMUI"
+        android:text="isEMUI" />
+
+    <Button
         android:id="@+id/isParallel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

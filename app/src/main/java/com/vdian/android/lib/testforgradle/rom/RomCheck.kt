@@ -10,13 +10,12 @@ import java.io.IOException
 import java.io.InputStreamReader
 import java.lang.Exception
 import java.lang.StringBuilder
-import java.util.HashMap
 
 /**
  * @author yulun
  * @sinice 2021-09-13 11:39
  */
-class RomChecker {
+class RomCheck {
     companion object{
         const val ROM_MIUI = "MIUI"
         const val ROM_EMUI = "EMUI"

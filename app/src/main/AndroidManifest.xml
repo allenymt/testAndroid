@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
     <uses-feature android:glEsVersion="0x00020000" android:required="true" />
 
     <application
@@ -98,6 +99,8 @@
         <activity android:name=".touch.TestTouchActivity" />
         <activity android:name=".applink.AppLinkTestDomainActivity" />
         <activity android:name=".testleak.TestLeak1Activity" />
+        <activity android:name=".go_market.TestGoMarketActivity" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

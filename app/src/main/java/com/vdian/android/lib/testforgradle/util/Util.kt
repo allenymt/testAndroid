@@ -13,7 +13,7 @@ import android.text.TextUtils
 import android.view.View
 import com.vdian.android.lib.testforgradle.R
 import com.vdian.android.lib.testforgradle.applink.AppLinkTestDomainActivity
-import com.vdian.android.lib.testforgradle.rom.RomChecker
+import com.vdian.android.lib.testforgradle.rom.RomCheck
 import com.vdian.android.lib.testforgradle.single.TestStaticInnerSingle
 import java.net.URI
 import java.net.URLDecoder
@@ -30,7 +30,7 @@ class Util {
          * @return
          */
         fun isOhos(): Boolean {
-            return RomChecker.isOhos()
+            return RomCheck.isOhos()
         }
 
         fun getStatusBarHeight(context: Context): Int {

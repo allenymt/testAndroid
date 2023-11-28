@@ -197,6 +197,14 @@
                 android:textAllCaps="false"
                 android:text="测试Surface和纹理相关" />
 
+            <Button
+                android:id="@+id/test_go_market"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestGoMarketActivity"
+                android:textAllCaps="false"
+                android:text="跳转应用市场" />
+
 
         </LinearLayout>
     </ScrollView>

@@ -13,12 +13,15 @@ class RomCheckActivity : AppCompatActivity() {
     }
 
     fun isMIUI(view: View) {
-        android.util.Log.i(TAG, "isMIUI ${RomChecker.isMiui()}")
+        android.util.Log.i(TAG, "isMIUI ${RomCheck.isMiui()}")
     }
 
     fun isParallel(view: View) {
         android.util.Log.i(TAG, "isMIUI ${RomTest.isParallel(this)}")
     }
 
+    fun isEMUI(view: View) {
+        android.util.Log.i(TAG, "isEMUI ${RomCheck.isEmui()}")
+    }
 
 }
