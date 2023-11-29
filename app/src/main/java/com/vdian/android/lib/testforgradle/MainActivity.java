@@ -3,6 +3,7 @@ package com.vdian.android.lib.testforgradle;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,6 +22,7 @@ import com.vdian.android.lib.testforgradle.binder.RemoteTestActivity;
 import com.vdian.android.lib.testforgradle.dataBinding.TestDateBindingActivity;
 import com.vdian.android.lib.testforgradle.datastore.TestDataStoreActivity;
 import com.vdian.android.lib.testforgradle.directory.TestAndroidFileDirectory;
+import com.vdian.android.lib.testforgradle.go_market.Rom;
 import com.vdian.android.lib.testforgradle.go_market.TestGoMarketActivity;
 import com.vdian.android.lib.testforgradle.ktl.coroutines.TestCoroutinesActivity;
 import com.vdian.android.lib.testforgradle.ktl.inline.TestNoInline;
@@ -31,6 +33,7 @@ import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
 import com.vdian.android.lib.testforgradle.pageing3.PagingTestActivity;
 import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
 import com.vdian.android.lib.testforgradle.rom.AppInstallUtil;
+import com.vdian.android.lib.testforgradle.rom.RomCheck;
 import com.vdian.android.lib.testforgradle.rom.RomCheckActivity;
 import com.vdian.android.lib.testforgradle.room.RoomTestActivity;
 import com.vdian.android.lib.testforgradle.rotate.RotateTestActivity;
@@ -113,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
         System.out.println(RandomStringUtils.randomAlphanumeric(18).toLowerCase());
         System.out.println("AppSecret(应用密钥)");
         System.out.println(RandomStringUtils.randomAlphanumeric(32).toLowerCase());
+        System.out.println("Android版本：" + Build.VERSION.SDK_INT);
+        System.out.println("64位系统：" + RomCheck.Companion.is64Device());
+        System.out.println("64位进程：" + RomCheck.Companion.is64Process());
     }
 
 
