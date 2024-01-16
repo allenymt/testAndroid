@@ -1,5 +1,6 @@
 package com.vdian.android.lib.testforgradle.util
 
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.res.AssetManager
@@ -11,6 +12,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.text.TextUtils
 import android.view.View
+import android.view.WindowManager
 import com.vdian.android.lib.testforgradle.R
 import com.vdian.android.lib.testforgradle.applink.AppLinkTestDomainActivity
 import com.vdian.android.lib.testforgradle.rom.RomCheck
@@ -185,6 +187,25 @@ class Util {
                 rightEnd++
             }
             return maxLength
+        }
+
+        fun hideSystemUi(context: Activity) {
+            //隐藏虚拟按键，并且全屏
+            if (Build.VERSION.SDK_INT > 11 && Build.VERSION.SDK_INT < 19) { // lower api
+                val v = context.window.decorView
+                v.systemUiVisibility = View.GONE
+            } else if (Build.VERSION.SDK_INT >= 19) {
+                //for new api versions.
+                val decorView = context.window.decorView
+                val uiOptions = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                        or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                        or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                        or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION // hide nav bar
+                        or View.SYSTEM_UI_FLAG_FULLSCREEN // hide status bar
+                        or View.SYSTEM_UI_FLAG_IMMERSIVE)
+                decorView.systemUiVisibility = uiOptions
+                context.window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_NAVIGATION)
+            }
         }
 
     }

@@ -6,6 +6,8 @@ import android.os.Build;
 import android.provider.Settings;
 import android.util.Log;
 
+import androidx.multidex.MultiDex;
+
 import com.vdian.android.lib.testforgradle.backsentry.AppStatusManager;
 import com.vdian.android.lib.testforgradle.room.WordDB;
 import com.vdian.android.lib.testforgradle.util.LogUtil;
@@ -20,6 +22,7 @@ public class App extends Application {
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
+        MultiDex.install(this);
     }
 
     @Override
@@ -35,7 +38,7 @@ public class App extends Application {
 
         String aaa = Build.SERIAL;
 
-        WordDB.Companion.getInstance(this);
+//        WordDB.Companion.getInstance(this);
 
         AppStatusManager.getInstance().register(this);
 

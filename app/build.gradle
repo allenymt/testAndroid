@@ -3,7 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 //apply plugin: 'privacy-sentry-plugin'
 apply plugin: "kotlin-noarg"
-apply plugin: "kotlin-kapt"
+//apply plugin: "kotlin-kapt"
 noArg {
     //true 会执行init块代码 默认为false
     invokeInitializers = true
@@ -19,6 +19,7 @@ android {
         targetSdkVersion 31
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
 
@@ -30,27 +31,34 @@ android {
         enabled = true
     }
 
-    buildTypes {
+    signingConfigs {
         release {
-            minifyEnabled false
+            storeFile file("../privacy")
+            storePassword "123456"
+            keyAlias "privacy"
+            keyPassword "123456"
+            v2SigningEnabled true
+        }
+    }
+
+    buildTypes {
+        debug {
+            debuggable true
+            signingConfig signingConfigs.release //使用release签名
+        }
+        release {
+            debuggable true
+            jniDebuggable false
+            shrinkResources false
+            minifyEnabled true
+            signingConfig signingConfigs.release //使用release签
+            zipAlignEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
 
-    signingConfigs {
-        debug {
-//            keyAlias 'yulun'
-//            keyPassword '123456'
-//            storeFile file('../ylAndroid.jks')
-//            storePassword '123456'
-        }
-        release {
-            keyAlias 'yulun'
-            keyPassword '123456'
-            storeFile file('../ylAndroid.jks')
-            storePassword '123456'
-        }
-    }
+
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -63,6 +71,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.appcompat:appcompat:1.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.lifecycle:lifecycle-extensions:2.0.0'
@@ -92,7 +101,7 @@ dependencies {
 
 
     implementation "androidx.room:room-ktx:2.4.2"
-    kapt "androidx.room:room-compiler:2.4.2"
+//    kapt "androidx.room:room-compiler:2.4.2"
     //Room不能在主线程即UI线程上操作，可以使用lifecycleScope在协程作用域中操作
     implementation "androidx.lifecycle:lifecycle-runtime-ktx:2.4.1"
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.4.1'
