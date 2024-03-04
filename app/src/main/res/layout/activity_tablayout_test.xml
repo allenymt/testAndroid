@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:clipChildren="false">
+
+    <!-- tabRippleColor  去掉点击阴影，否则点击阴影会显示在横线上方-->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_gravity="bottom"
+        android:background="@android:color/white"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        />
+
+</FrameLayout>

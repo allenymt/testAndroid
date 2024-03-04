@@ -93,6 +93,8 @@
         <activity
             android:name=".rom.RomCheckActivity"
             android:exported="true" />
+        <activity android:name=".tablayout.TabLayoutTestActivity"/>
+
         <activity android:name=".thread_dump.TestThreadDumpActivity" />
         <activity android:name=".binder.RemoteTestActivity" />
         <activity android:name=".thread.TestThreadActivity" />

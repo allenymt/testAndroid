@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="app_2dp">2dp</dimen>
+    <dimen name="app_6dp">6dp</dimen>
+    <dimen name="app_50dp">50dp</dimen>
+    <dimen name="app_minus_15dp">-15dp</dimen>
+    <dimen name="app_0dp">0dp</dimen>
+
+    <dimen name="app_12sp">12sp</dimen>
+</resources>

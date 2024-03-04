@@ -46,6 +46,7 @@ import com.vdian.android.lib.testforgradle.rotate.RotateTestActivity;
 import com.vdian.android.lib.testforgradle.self_view.SelfViewActivity;
 import com.vdian.android.lib.testforgradle.single.TestClassInit;
 import com.vdian.android.lib.testforgradle.surface.SurfaceNavigationActivity;
+import com.vdian.android.lib.testforgradle.tablayout.TabLayoutTestActivity;
 import com.vdian.android.lib.testforgradle.testclass.JAndKClassTest;
 import com.vdian.android.lib.testforgradle.testleak.TestLeak1Activity;
 import com.vdian.android.lib.testforgradle.thread.TestThreadActivity;
@@ -274,7 +275,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(new Intent(MainActivity.this, TestGoMarketActivity.class));
     }
 
-
+    public void goToTestTabLayoutActivity(View view) {
+        startActivity(new Intent(MainActivity.this, TabLayoutTestActivity.class));
+    }
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();

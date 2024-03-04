@@ -205,6 +205,13 @@
                 android:textAllCaps="false"
                 android:text="跳转应用市场" />
 
+            <Button
+                android:id="@+id/test_go_tabLayout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestTabLayoutActivity"
+                android:textAllCaps="false"
+                android:text="跳转TabLayout测试页面" />
 
         </LinearLayout>
     </ScrollView>
