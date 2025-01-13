@@ -146,7 +146,15 @@ class TestCoroutineScope {
                 delay(1000)
                 activity.onDestroy()
                 delay(1000)
+
+                coroutineScope {
+                    launch {
+
+                    }
+                }
             }
+
+
         }
 
         //TODO 卧槽这里真没看懂，第二个Unconfined竟然不是main线程运行的？？？？ 不纠结了坑爹
