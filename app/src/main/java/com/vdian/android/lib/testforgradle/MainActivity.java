@@ -35,6 +35,7 @@ import com.vdian.android.lib.testforgradle.ktl.inline.TestNoInline;
 import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
 import com.vdian.android.lib.testforgradle.location.LocationTestActivity;
 import com.vdian.android.lib.testforgradle.memory.TestMemory;
+import com.vdian.android.lib.testforgradle.nfc.NFCTestActivity;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
 import com.vdian.android.lib.testforgradle.pageing3.PagingTestActivity;
 import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
@@ -278,6 +279,11 @@ public class MainActivity extends AppCompatActivity {
     public void goToTestTabLayoutActivity(View view) {
         startActivity(new Intent(MainActivity.this, TabLayoutTestActivity.class));
     }
+
+    public void goToNFC(View view) {
+        startActivity(new Intent(MainActivity.this, NFCTestActivity.class));
+    }
+
     @Override
     public void onAttachedToWindow() {
         super.onAttachedToWindow();
