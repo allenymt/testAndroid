@@ -30,22 +30,28 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
         private const val TAG = "MySurfaceView"
     }
 
+    // 抽象的控制器
     private val surfaceHolder: SurfaceHolder = holder
+    // 画布, 和surface绑定
     private var canvas: Canvas? = null
 
+    // SurfaceView的绘制线程，必须要有自己的线程吗？ 是的，必现要有，例如GLSurfaceView也是如此
     private var mUpdateThread: UpdateThread? = null
+    // 都是标记位
     private var mIsAttached = false
     private var mIsUpdateThreadStarted = false
-
+    // 都是标记位
     @Volatile
     private var canDoDraw = false
 
 
+    // 记录坐标 画笔等
     private var xx = 0f
     private var yy = 400f
     private val path = Path()
     private val paint = Paint()
 
+    // 画布宽高
     private var mSurfaceWidth = 0
     private var mSurfaceHeight = 0
 
@@ -60,11 +66,11 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
         paint.color = Color.RED
     }
 
+    // 创建好了
     override fun surfaceCreated(holder: SurfaceHolder) {
         LogUtil.Log.d(TAG, "surfaceCreated")
         setCanDraw(true)
         clearSurface()
-
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
@@ -96,13 +102,17 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
         stop()
     }
 
+    // 控制是否可以绘制
     private fun setCanDraw(canDraw: Boolean) {
         canDoDraw = canDraw
     }
 
+    // 开始绘制
     @Synchronized
     fun start() {
         if (mIsUpdateThreadStarted) return
+
+        // 创建渲染控制线程
         if (null == mUpdateThread) {
             mUpdateThread = object : UpdateThread("Update Thread") {
                 override fun run() {
@@ -110,6 +120,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
                         while (!isQuited
                             && !currentThread().isInterrupted
                         ) {
+                            // 控制帧率
                             val cost: Long = 16 - draw()
                             if (isQuited) {
                                 break
@@ -144,7 +155,7 @@ class MySurfaceView : SurfaceView, SurfaceHolder.Callback {
         }
     }
 
-
+    // 绘制
     private fun draw(): Long {
         if (!canDoDraw) {
             return 0
