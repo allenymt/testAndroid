@@ -19,7 +19,7 @@ import java.io.IOException;
  * @since 2023-07-04 16:29
  */
 public class CameraTextureViewShowActivity extends AppCompatActivity implements TextureView.SurfaceTextureListener {
-
+    // 其实写法都差不多的，只是Texture和Surface换来换去
     TextureView mCameraTextureView;
     public Camera mCamera;
 
@@ -28,12 +28,14 @@ public class CameraTextureViewShowActivity extends AppCompatActivity implements 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera_surface_texture);
         mCameraTextureView = findViewById(R.id.camera_texture_view);
+        // 设置监听
         mCameraTextureView.setSurfaceTextureListener(this);
     }
 
     @Override
     public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
         try {
+            // Open the Camera in preview mode
             mCamera = Camera.open(0);
             mCamera.setDisplayOrientation(90);
             mCamera.setPreviewTexture(mCameraTextureView.getSurfaceTexture());

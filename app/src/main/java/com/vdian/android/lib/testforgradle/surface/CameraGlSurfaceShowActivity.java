@@ -12,7 +12,9 @@ import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 import android.os.Bundle;
 import android.view.View;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.vdian.android.lib.testforgradle.R;
 import com.vdian.android.lib.testforgradle.util.TestUtil;
 
@@ -20,13 +22,14 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 /**
  * @author yulun
  * @since 2023-07-04 17:22
- *
+ * <p>
  * 基本步骤
  * 1. 在xml中添加GlSurfaceView
  * 2. 创建渲染器类实现GlSurfaceView.Renderer
@@ -37,9 +40,9 @@ import javax.microedition.khronos.opengles.GL10;
  * 7. 添加程序到ES环境中，并设置及启用各类句柄。
  * 8. 在onDrawFrame中进行画布的清理及绘制最新的数据到纹理图形中。
  * 9. 设置一个SurfaceTexture.OnFrameAvailableListener的回调来通知GlSurfaceView渲染新的帧数据。
- *
+ * <p>
  * 建议： GlSurfaceView作用简单的理解OpenGl对相机数据进行处理完之后的显示。我们需要明白的是渲染器的渲染周期及渲染方法的调用时机。
- *
+ * <p>
  * onSurfaceCreated()当surface创建(第一次进入当前页面)或者重新创建(切换后台再进入)的时候调用。
  * onSurfaceChanged()当surface大小发生改变的时候会被调用。
  * onDrawFrame()绘制当前帧数据的时候被调用。
@@ -92,10 +95,10 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_gl_surface_view_animator:
-                PropertyValuesHolder valuesHolder1 = PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.5f,1.0f);
-                PropertyValuesHolder valuesHolder4 = PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.5f,1.0f);
+                PropertyValuesHolder valuesHolder1 = PropertyValuesHolder.ofFloat("scaleX", 1.0f, 0.5f, 1.0f);
+                PropertyValuesHolder valuesHolder4 = PropertyValuesHolder.ofFloat("scaleY", 1.0f, 0.5f, 1.0f);
                 PropertyValuesHolder valuesHolder5 = PropertyValuesHolder.ofFloat("rotationY", 0.0f, 360.0f, 0.0F);
-                ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mCameraGlSurfaceView, valuesHolder1, valuesHolder4,valuesHolder5);
+                ObjectAnimator objectAnimator = ObjectAnimator.ofPropertyValuesHolder(mCameraGlSurfaceView, valuesHolder1, valuesHolder4, valuesHolder5);
                 objectAnimator.setDuration(3000).start();
                 break;
             case R.id.btn_gl_surface_view_switch:
@@ -155,14 +158,13 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
         public boolean mActivityProgram = false;
 
         public MyRender() {
-            //TODO  这里矩阵的初始化是干什么的？ 看源码是先全部重置为0，然后间隔6个置为1，这样是什么意思？
+            // 这里矩阵的初始化是干什么的？ 看源码是先全部重置为0，然后间隔6个置为1，这样是什么意思？
             Matrix.setIdentityM(mProjectMatrix, 0);
             Matrix.setIdentityM(mCameraMatrix, 0);
             Matrix.setIdentityM(mMVPMatrix, 0);
             Matrix.setIdentityM(mTempMatrix, 0);
         }
 
-        // ToDo 字面意思看，是加载shader
         private int loadShader(int type, String shaderCode) {
             int shader = GLES20.glCreateShader(type);
             // 添加上面编写的着色器代码并编译它
@@ -209,7 +211,9 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
         }
 
 
-        /**这一坨变量干嘛的。等待理解**/
+        /**
+         * 这一坨变量干嘛的。等待理解
+         **/
         private int uPosHandle;
         private int aTexHandle;
         private int mMVPMatrixHandle;
@@ -217,7 +221,10 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
         private float[] mCameraMatrix = new float[16];
         private float[] mMVPMatrix = new float[16];
         private float[] mTempMatrix = new float[16];
-        /**这一坨变量干嘛的。等待理解**/
+
+        /**
+         * 这一坨变量干嘛的。等待理解
+         **/
 
 
         @Override
@@ -233,11 +240,11 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
             // 打开相机
             camera = Camera.open(camera_status);
             try {
-                 // 设定相机预览的画布
+                // 设定相机预览的画布
                 camera.setPreviewTexture(mSurfaceTexture);
                 // 开始预览相机
                 camera.startPreview();
-            } catch (IOException e) { 
+            } catch (IOException e) {
                 e.printStackTrace();
             }
             //添加程序到ES环境中
@@ -257,10 +264,10 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
             mMVPMatrixHandle = GLES20.glGetUniformLocation(mProgram, "textureTransform");
 
             mPosBuffer = convertToFloatBuffer(mPosCoordinate);
-            if(camera_status == 0){
+            if (camera_status == 0) {
                 // 后置摄像头
                 mTexBuffer = convertToFloatBuffer(mTexCoordinateBackRight);
-            }else{
+            } else {
                 // 前置摄像头
                 mTexBuffer = convertToFloatBuffer(mTexCoordinateFrontRight);
             }
@@ -281,7 +288,7 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
             GLES20.glViewport(0, 0, width, height);
 
             // 这里也没看懂
-            Matrix.scaleM(mMVPMatrix,0,1,-1,1);
+            Matrix.scaleM(mMVPMatrix, 0, 1, -1, 1);
             float ratio = (float) width / height;
             Matrix.orthoM(mProjectMatrix, 0, -1, 1, -ratio, ratio, 1, 7);// 3和7代表远近视点与眼睛的距离，非坐标点
             Matrix.setLookAtM(mCameraMatrix, 0, 0, 0, 3, 0f, 0f, 0f, 0f, 1.0f, 0.0f);// 3代表眼睛的坐标点
@@ -292,7 +299,7 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
         @Override
         public void onDrawFrame(GL10 gl) {
             // 加这一段，主要是为了切换摄像头的时候， 需要重新走一遍激活程序的流程
-            if(mActivityProgram){
+            if (mActivityProgram) {
                 activeProgram();
                 mActivityProgram = false;
             }
@@ -307,7 +314,7 @@ public class CameraGlSurfaceShowActivity extends AppCompatActivity implements Su
         }
     }
 
-    // ToDo 这里完全看不懂，需要理解
+    // 生成一个纹理，返回这个纹理id
     public static int createOESTextureObject() {
         int[] tex = new int[1];
         //生成一个纹理

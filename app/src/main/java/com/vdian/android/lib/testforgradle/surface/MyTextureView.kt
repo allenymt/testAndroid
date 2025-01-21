@@ -30,12 +30,15 @@ class MyTextureView : TextureView, TextureView.SurfaceTextureListener {
         init()
     }
 
+    // 相机
     private var camera: Camera? = null
 
     private fun init() {
         surfaceTextureListener = this
     }
 
+    // SurfaceTexture 不同于 SurfaceView 会将图像显示在屏幕上，SurfaceTexture 对图像流的处理并不直接显示，而是转为 GL 外部纹理。
+    //主要用于纹理处理，然后把处理好的纹理输出到Camera或者MediaPlayer上
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         camera = Camera.open()
         val previewSize: Camera.Size = camera?.parameters?.previewSize ?: return
@@ -43,8 +46,10 @@ class MyTextureView : TextureView, TextureView.SurfaceTextureListener {
             previewSize.width, previewSize.height, Gravity.CENTER
         )
         kotlin.runCatching {
+            // 设置预览显示
             camera?.setPreviewTexture(surface)
         }
+        // 开始预览
         camera?.startPreview()
         rotation = 90.0f
     }
