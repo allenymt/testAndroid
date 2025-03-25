@@ -1,5 +1,6 @@
 package com.vdian.android.lib.testforgradle.nfc
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.nfc.NdefMessage
@@ -7,7 +8,9 @@ import android.nfc.NdefRecord
 import android.nfc.NfcAdapter
 import android.nfc.Tag
 import android.nfc.tech.Ndef
+import android.nfc.tech.NdefFormatable
 import android.util.Log
+import android.widget.Toast
 
 /**
  * @author yulun
@@ -21,7 +24,7 @@ import android.util.Log
  * 同时处理ACTION_NDEF_DISCOVERED 和 ACTION_TECH_DISCOVERED
  */
 class BuyerNFCUtil {
-    object Companion {
+    object Reader {
 
         private val URI_PREFIX_MAP: MutableMap<Byte, String> = HashMap()
 
@@ -69,7 +72,7 @@ class BuyerNFCUtil {
             val tag = intent.getParcelableExtra<Tag>(NfcAdapter.EXTRA_TAG)
             tag?.let {
                 val ndef = Ndef.get(it)
-                ndef.let {
+                ndef?.let {
                     return "${ndef.type}\n max size: ${ndef.maxSize} bytes\n\n"
                 }
             }
@@ -145,5 +148,90 @@ class BuyerNFCUtil {
             System.arraycopy(payload, 1, fullUri, prefixBytes.size, payload.size - 1)
             return Uri.parse(String(fullUri, Charsets.UTF_8))
         }
+    }
+
+    object Writer {
+        fun writeNfcData(context: Context, intent: Intent, url: String): Boolean {
+            Log.i("BuyerNFCUtil", "start writeNfcData: $url")
+            val tag: Tag? = intent.getParcelableExtra(NfcAdapter.EXTRA_TAG)
+            if (tag == null) {
+                Log.e("BuyerNFCUtil", "tag is null")
+                return false
+            }
+            
+            try {
+                val ndefRecords = arrayOf(
+                    NdefRecord.createUri(url),
+                    NdefRecord.createApplicationRecord(context.packageName)
+                )
+                val ndefMessage = NdefMessage(ndefRecords)
+
+                // 获取 NDEF 标签
+                val ndef = Ndef.get(tag)
+                if (ndef != null) {
+                    return writeToNdefTag(ndef, ndefMessage)
+                }
+
+                // 如果不是 NDEF 格式，尝试格式化并写入
+                val formatable = NdefFormatable.get(tag)
+                if (formatable != null) {
+                    return formatAndWrite(formatable, ndefMessage)
+                }
+
+                Log.e("BuyerNFCUtil", "不支持的标签类型")
+                return false
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Log.e("BuyerNFCUtil", "writeNfcData failed: ${e.message}")
+                return false
+            }
+        }
+
+        private fun writeToNdefTag(ndef: Ndef, ndefMessage: NdefMessage): Boolean {
+            try {
+                ndef.connect()
+                if (!ndef.isWritable) {
+                    Log.e("BuyerNFCUtil", "tag is not writable")
+                    return false
+                }
+                if (ndef.maxSize < ndefMessage.byteArrayLength) {
+                    Log.e("BuyerNFCUtil", "tag capacity is not enough")
+                    return false
+                }
+                ndef.writeNdefMessage(ndefMessage)
+                Log.i("BuyerNFCUtil", "写入成功")
+                return true
+            } catch (e: Exception) {
+                Log.e("BuyerNFCUtil", "写入失败: ${e.message}")
+                return false
+            } finally {
+                try {
+                    ndef.close()
+                } catch (e: Exception) {
+                    Log.e("BuyerNFCUtil", "关闭连接失败", e)
+                }
+            }
+        }
+
+        private fun formatAndWrite(formatable: NdefFormatable, ndefMessage: NdefMessage): Boolean {
+            try {
+                formatable.connect()
+                // 直接格式化并写入数据
+                formatable.format(ndefMessage)
+                Log.i("BuyerNFCUtil", "格式化并写入成功")
+                return true
+            } catch (e: Exception) {
+                Log.e("BuyerNFCUtil", "格式化并写入失败: ${e.message}")
+                return false
+            } finally {
+                try {
+                    formatable.close()
+                } catch (e: Exception) {
+                    Log.e("BuyerNFCUtil", "关闭连接失败", e)
+                }
+            }
+        }
+
+        // 移除原有的 formatNfcTag 方法，因为已经集成到新的流程中
     }
 }

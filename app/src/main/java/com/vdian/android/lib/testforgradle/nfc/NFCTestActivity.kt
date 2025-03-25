@@ -9,14 +9,14 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.vdian.android.lib.testforgradle.R
 import com.vdian.android.lib.testforgradle.databinding.ActivityNfctestBinding
-import kotlinx.android.synthetic.main.activity_nfctest.view.nfc_info
+
 
 class NFCTestActivity : AppCompatActivity() {
     private lateinit var nfcTestBinding: ActivityNfctestBinding
 
     private var mNfcAdapter: NfcAdapter? = null
     private lateinit var mPendingIntent: PendingIntent
-
+    private var id = 1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,14 +27,31 @@ class NFCTestActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
+//        nfcTestBinding.nfcButton.setOnClickListener {
+//            mNfcAdapter?.let {
+//                BuyerNFCUtil.Writer.writeNfcData(this, intent, "https://www.baidu.com?id=${id++}",)
+//            }
+//        }
+        nfcTestBinding.root.postDelayed({
+            android.util.Log.i("BuyerNFCUtil", "test onCreate write")
+            BuyerNFCUtil.Writer.writeNfcData(this, intent, "https://wdb-applink.weidian.com?id=${id++}")
+        }, 2000)
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        nfcTestBinding.nfcInfo.text = BuyerNFCUtil.Companion.readNFCInfo(intent)
-        nfcTestBinding.nfcRecord.text = BuyerNFCUtil.Companion.readNfcUri(intent).joinToString("\n\n")
-    }
+        android.util.Log.i("BuyerNFCUtil", "onNewIntent: $intent")
+        setIntent(intent)
+        nfcTestBinding.nfcInfo.text = BuyerNFCUtil.Reader.readNFCInfo(intent)
+        nfcTestBinding.nfcRecord.text = BuyerNFCUtil.Reader.readNfcUri(intent).joinToString("\n\n")
+        // nfcTestBinding.root.postDelayed({
+        //     android.util.Log.i("NFCTestActivity", "test onNewIntent write")
+        //     BuyerNFCUtil.Writer.writeNfcData(this, intent, "https://www.baidu.com?id=${id++}",)
+        // }, 5000)
+        
+        android.util.Log.i("BuyerNFCUtil", "test onNewIntent write")
+        BuyerNFCUtil.Writer.writeNfcData(this, intent, "https://wdb-applink.weidian.com?id=${id++}")
+}
 
     override fun onStart() {
         super.onStart()

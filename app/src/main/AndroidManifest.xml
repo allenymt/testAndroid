@@ -44,13 +44,7 @@
             <intent-filter>
                 <action android:name="android.nfc.action.NDEF_DISCOVERED" />
                 <category android:name="android.intent.category.DEFAULT" />
-                <data android:host="wdb" android:pathPrefix="/nfc" android:scheme="testandroid"/>
-                <data android:host="wdb" android:pathPrefix="/nfc" android:scheme="https"/>
-            </intent-filter>
-            <intent-filter>
-                <action android:name="android.nfc.action.NDEF_DISCOVERED" />
-                <category android:name="android.intent.category.DEFAULT" />
-                <data android:scheme="https"/>
+                <data android:host="wdb-applink.weidian.com" android:scheme="https"/>
             </intent-filter>
         </activity>
 

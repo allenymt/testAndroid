@@ -31,19 +31,18 @@
         android:textColor="@android:color/black"
         android:textSize="15sp"/>
 
-<!--    <EditText-->
-<!--        android:id="@+id/nfc_edit"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="100dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:hint="输入内容，写入NFC卡片" />-->
+    <EditText
+        android:id="@+id/nfc_edit"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"
+        android:hint="输入内容，写入NFC卡片" />
 
-<!--    <Button-->
-<!--        android:id="@+id/nfc_button"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="50dp"-->
-<!--        android:layout_marginTop="20dp"-->
-<!--        android:text="写入NFC卡片" />-->
-<!--        />-->
+    <Button
+        android:id="@+id/nfc_button"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="20dp"
+        android:text="写入NFC卡片" />
 
 </LinearLayout>
