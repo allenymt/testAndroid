@@ -11,7 +11,7 @@ import com.vdian.android.lib.testforgradle.R
 import com.vdian.android.lib.testforgradle.databinding.ActivityNfctestBinding
 
 
-class NFCTestActivity : AppCompatActivity() {
+class NFCTestLaunchActivity : AppCompatActivity() {
     private lateinit var nfcTestBinding: ActivityNfctestBinding
 
     private var mNfcAdapter: NfcAdapter? = null
@@ -27,31 +27,16 @@ class NFCTestActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-//        nfcTestBinding.nfcButton.setOnClickListener {
-//            mNfcAdapter?.let {
-//                BuyerNFCUtil.Writer.writeNfcData(this, intent, "https://www.baidu.com?id=${id++}",)
-//            }
-//        }
-//        nfcTestBinding.root.postDelayed({
-//            android.util.Log.i("BuyerNFCUtil", "test onCreate write")
-//            BuyerNFCUtil.Writer.writeNfcData(this, intent, "https://wdb-applink.weidian.com?id=${id++}")
-//        }, 2000)
+        nfcTestBinding.nfcInfo.text = "NFCTestLaunchActivity-NFC Info"
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        android.util.Log.i("BuyerNFCUtil", "onNewIntent: $intent")
+        android.util.Log.i("BuyerNFCUtil", "NFCTestLaunchActivity onNewIntent: $intent")
         setIntent(intent)
         nfcTestBinding.nfcInfo.text = BuyerNFCUtil.Reader.readNFCInfo(intent)
         nfcTestBinding.nfcRecord.text = BuyerNFCUtil.Reader.readNfcUri(intent).joinToString("\n\n")
-        // nfcTestBinding.root.postDelayed({
-        //     android.util.Log.i("NFCTestActivity", "test onNewIntent write")
-        //     BuyerNFCUtil.Writer.writeNfcData(this, intent, "https://www.baidu.com?id=${id++}",)
-        // }, 5000)
-        
-        android.util.Log.i("BuyerNFCUtil", "test onNewIntent write")
-        BuyerNFCUtil.Writer.writeNfcData(this, intent, "https://wdb-applink.weidian.com?id=${id++}")
-}
+    }
 
     override fun onStart() {
         super.onStart()
