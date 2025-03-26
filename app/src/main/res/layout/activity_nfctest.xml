@@ -31,18 +31,23 @@
         android:textColor="@android:color/black"
         android:textSize="15sp"/>
 
-    <EditText
-        android:id="@+id/nfc_edit"
+    <TextView
+        android:id="@+id/nfc_support"
         android:layout_width="match_parent"
         android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        android:hint="输入内容，写入NFC卡片" />
+        android:layout_marginTop="20dp"/>
+
+    <TextView
+        android:id="@+id/nfc_enable"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="20dp"/>
 
     <Button
-        android:id="@+id/nfc_button"
+        android:id="@+id/to_nfc_setting"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
-        android:text="写入NFC卡片" />
+        android:text="跳转系统nfc设置页面" />
 
 </LinearLayout>

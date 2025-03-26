@@ -27,6 +27,9 @@ class NFCTestActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        nfcTestBinding.toNfcSetting.setOnClickListener {
+            BuyerNFCUtil.Util.toOpenNfc(this)
+        }
 //        nfcTestBinding.nfcButton.setOnClickListener {
 //            mNfcAdapter?.let {
 //                BuyerNFCUtil.Writer.writeNfcData(this, intent, "https://www.baidu.com?id=${id++}",)
@@ -65,6 +68,8 @@ class NFCTestActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         mNfcAdapter?.enableForegroundDispatch(this, mPendingIntent, null, null)
+        nfcTestBinding.nfcEnable.text = "当前NFC状态：${if (BuyerNFCUtil.Util.isNfcEnabled(this)) "已开启" else "未开启"}"
+        nfcTestBinding.nfcSupport.text = "当前设备是否支持NFC：${if (BuyerNFCUtil.Util.isNfcSupported(this)) "支持" else "不支持"}"
     }
 
     override fun onPause() {

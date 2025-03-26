@@ -148,6 +148,8 @@ class BuyerNFCUtil {
             System.arraycopy(payload, 1, fullUri, prefixBytes.size, payload.size - 1)
             return Uri.parse(String(fullUri, Charsets.UTF_8))
         }
+
+
     }
 
     object Writer {
@@ -158,7 +160,7 @@ class BuyerNFCUtil {
                 Log.e("BuyerNFCUtil", "tag is null")
                 return false
             }
-            
+
             try {
                 val ndefRecords = arrayOf(
                     NdefRecord.createUri(url),
@@ -231,7 +233,33 @@ class BuyerNFCUtil {
                 }
             }
         }
+    }
 
-        // 移除原有的 formatNfcTag 方法，因为已经集成到新的流程中
+    object Util {
+        fun isNfcSupported(context: Context): Boolean {
+            val nfcAdapter = NfcAdapter.getDefaultAdapter(context)
+            val isSupported = nfcAdapter != null
+            val isEnabled = nfcAdapter?.isEnabled ?: false
+
+            return isSupported
+
+        }
+
+        fun isNfcEnabled(context: Context): Boolean {
+            val nfcAdapter = NfcAdapter.getDefaultAdapter(context)
+            val isSupported = nfcAdapter != null
+            val isEnabled = nfcAdapter?.isEnabled ?: false
+
+            return isSupported && isEnabled
+
+        }
+
+        fun toOpenNfc(context: Context) {
+            try {
+                context.startActivity(Intent(android.provider.Settings.ACTION_NFC_SETTINGS))
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
     }
 }
