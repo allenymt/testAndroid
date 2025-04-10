@@ -11,7 +11,7 @@ import com.vdian.android.lib.testforgradle.R
 import com.vdian.android.lib.testforgradle.databinding.ActivityNfctestBinding
 
 
-class NFCTestActivity : AppCompatActivity() {
+class NFCIdentificationActivity : AppCompatActivity() {
     private lateinit var nfcTestBinding: ActivityNfctestBinding
 
     private var mNfcAdapter: NfcAdapter? = null
