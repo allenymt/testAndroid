@@ -220,6 +220,15 @@
                 android:onClick="goToNFC"
                 android:textAllCaps="false"
                 android:text="跳转NFC测试页面" />
+
+            <Button
+                android:id="@+id/test_go_gradient"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToTestGoGradientActivity"
+                android:textAllCaps="false"
+                android:text="跳转渐变色背景" />
+
         </LinearLayout>
     </ScrollView>
 

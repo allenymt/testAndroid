@@ -145,14 +145,15 @@ class TestCoroutineContext {
         // 使用线程池的调度器（例如 Dispatchers.IO 或 Dispatchers.Default）不能保证代码块一直在同一线程上从上到下执行，
         // 在某些情况下，协程在 suspend 和 resume 后可能会将任务移交给另一个线程来执行。这意味着，对于整个 withContext() 块，
         // 由于多线程并发之间的原子性和可见性等原因，先后读取到的线程局部变量可能并非是同个值
-        fun testWithContext(){
+        fun testWithContext() {
             // 回顾到之前说的，CoroutineContext的四要素，job ,CoroutineDispatcher,CoroutineName,CoroutineExceptionHandler
             // 如果需要指定多项，用+号拼接即可，CoroutineContext重载了+号操作符
             // TODO CoroutineExceptionHandler
-            GlobalScope.launch(CoroutineName("MainCoroutine")+Dispatchers.Main) {
+            GlobalScope.launch(CoroutineName("MainCoroutine") + Dispatchers.Main) {
                 fetchDocs()
             }
         }
+
         suspend fun fetchDocs() {                      // Dispatchers.Main
             val result = get("developer.android.com")  // Dispatchers.Main
             log(result)

@@ -1,0 +1,21 @@
+{
+    "files.associations": {
+        "*.kt": "kotlin",
+        "*.kts": "kotlin"
+    },
+    "kotlin.languageServer.enabled": true,
+    "kotlin.completion.snippets.enabled": true,
+    "kotlin.debugAdapter.enabled": true,
+    "kotlin.trace.server": "off",
+    "kotlin.linting.enabled": true,
+    "kotlin.formatting.enabled": true,
+    "editor.semanticHighlighting.enabled": true,
+    "editor.bracketPairColorization.enabled": true,
+    "editor.guides.bracketPairs": true,
+    "editor.wordBasedSuggestions": "off",
+    "editor.quickSuggestions": {
+        "other": true,
+        "comments": false,
+        "strings": true
+    }
+} 

@@ -29,11 +29,13 @@ import com.vdian.android.lib.testforgradle.dataBinding.TestDateBindingActivity;
 import com.vdian.android.lib.testforgradle.datastore.TestDataStoreActivity;
 import com.vdian.android.lib.testforgradle.directory.TestAndroidFileDirectory;
 import com.vdian.android.lib.testforgradle.go_market.TestGoMarketActivity;
+import com.vdian.android.lib.testforgradle.gradient.TestGradientActivity;
 import com.vdian.android.lib.testforgradle.ktl.coroutines.TestCoroutinesActivity;
 import com.vdian.android.lib.testforgradle.ktl.inline.TestNoInline;
 import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
 import com.vdian.android.lib.testforgradle.location.LocationTestActivity;
 import com.vdian.android.lib.testforgradle.memory.TestMemory;
+import com.vdian.android.lib.testforgradle.nfc.NFCIdentificationActivity;
 import com.vdian.android.lib.testforgradle.nfc.NFCTestLaunchActivity;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
 import com.vdian.android.lib.testforgradle.pageing3.PagingTestActivity;
@@ -280,13 +282,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goToNFC(View view) {
-//        Intent intent = new Intent(this, NFCTestActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
-//        startActivity(intent);
-
-        Intent intent = new Intent(this, NFCTestLaunchActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(this, NFCIdentificationActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
+
+//        Intent intent = new Intent(this, NFCTestLaunchActivity.class);
+//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+//        startActivity(intent);
+    }
+
+    public void goToTestGoGradientActivity(View view) {
+        startActivity(new Intent(MainActivity.this, TestGradientActivity.class));
     }
 
     @Override

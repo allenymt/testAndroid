@@ -143,6 +143,7 @@
         <activity android:name=".applink.AppLinkTestDomainActivity" />
         <activity android:name=".testleak.TestLeak1Activity" />
         <activity android:name=".go_market.TestGoMarketActivity" />
+        <activity android:name=".gradient.TestGradientActivity" />
         <activity
             android:name=".MainActivity"
             android:exported="true"

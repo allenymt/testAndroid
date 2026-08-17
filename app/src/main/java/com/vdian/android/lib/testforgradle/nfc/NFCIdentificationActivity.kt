@@ -45,15 +45,10 @@ class NFCIdentificationActivity : AppCompatActivity() {
         super.onNewIntent(intent)
         android.util.Log.i("BuyerNFCUtil", "onNewIntent: $intent")
         setIntent(intent)
-        nfcTestBinding.nfcInfo.text = BuyerNFCUtil.Reader.readNFCInfo(intent)
-        nfcTestBinding.nfcRecord.text = BuyerNFCUtil.Reader.readNfcUri(intent).joinToString("\n\n")
-        // nfcTestBinding.root.postDelayed({
-        //     android.util.Log.i("NFCTestActivity", "test onNewIntent write")
-        //     BuyerNFCUtil.Writer.writeNfcData(this, intent, "https://www.baidu.com?id=${id++}",)
-        // }, 5000)
-        
-        android.util.Log.i("BuyerNFCUtil", "test onNewIntent write")
-        BuyerNFCUtil.Writer.writeNfcData(this, intent, "https://wdb-applink.weidian.com?id=${id++}")
+//        nfcTestBinding.nfcInfo.text = BuyerNFCUtil.Reader.readNFCInfo(intent)
+//        nfcTestBinding.nfcRecord.text = BuyerNFCUtil.Reader.readNfcUri(intent).joinToString("\n\n")
+//        android.util.Log.i("BuyerNFCUtil", "test onNewIntent write")
+//        BuyerNFCUtil.Writer.writeNfcData(this, intent, "https://wdb-applink.weidian.com?id=${id++}")
 }
 
     override fun onStart() {
