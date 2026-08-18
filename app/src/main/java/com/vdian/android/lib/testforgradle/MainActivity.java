@@ -36,6 +36,7 @@ import com.vdian.android.lib.testforgradle.launch_app.LaunchOtherAppActivity;
 import com.vdian.android.lib.testforgradle.location.LocationTestActivity;
 import com.vdian.android.lib.testforgradle.memory.TestMemory;
 import com.vdian.android.lib.testforgradle.nfc.NFCIdentificationActivity;
+import com.vdian.android.lib.testforgradle.nfc.Fm1208NfcLaunchActivity;
 import com.vdian.android.lib.testforgradle.nfc.NFCTestLaunchActivity;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
 import com.vdian.android.lib.testforgradle.pageing3.PagingTestActivity;
@@ -289,6 +290,10 @@ public class MainActivity extends AppCompatActivity {
 //        Intent intent = new Intent(this, NFCTestLaunchActivity.class);
 //        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 //        startActivity(intent);
+    }
+
+    public void goToNfcColdLaunch(View view) {
+        startActivity(new Intent(this, Fm1208NfcLaunchActivity.class));
     }
 
     public void goToTestGoGradientActivity(View view) {

@@ -1,65 +1,120 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".nfc.NFCIdentificationActivity">
 
-    <TextView
-        android:id="@+id/title"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:text="NFCTestActivity"
-        android:textColor="@android:color/black"
-        android:textSize="30sp"
-        android:textStyle="bold" />
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
 
-    <TextView
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:gravity="center"
+            android:text="NDEF / FMCOS 卡片测试"
+            android:textColor="@android:color/black"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <TextView
         android:id="@+id/nfc_info"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp"
         android:gravity="center"
-        android:text="NFC Info"
+        android:text="请选择卡片操作"
         android:textColor="@android:color/black"
         android:textSize="30sp"
         android:textStyle="bold" />
 
-    <TextView
+        <TextView
         android:id="@+id/nfc_record"
         android:layout_width="match_parent"
-        android:layout_height="200dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="20dp"
-        android:gravity="center"
-        android:text="NFC Record"
+        android:layout_height="wrap_content"
+        android:minHeight="100dp"
+        android:layout_marginBottom="12dp"
+        android:gravity="center_vertical"
+        android:text="操作结果"
         android:textColor="@android:color/black"
         android:textSize="15sp"/>
 
-    <TextView
+        <EditText
+        android:id="@+id/fm1208_url"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="HTTPS 业务 URL"
+        android:inputType="textUri"
+        android:maxLines="4" />
+
+        <EditText
+        android:id="@+id/fm1208_package"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="目标 Android 包名"
+        android:inputType="text"
+        android:singleLine="true" />
+
+        <Button
+            android:id="@+id/read_fm1208"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="自动识别并读取" />
+
+        <Button
+            android:id="@+id/write_ndef"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="写入 NDEF 卡片" />
+
+        <Button
+            android:id="@+id/write_fmcos"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="更新已初始化的 FMCOS 测试卡" />
+
+        <Button
+            android:id="@+id/initialize_fmcos_test"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#B3261E"
+            android:text="格式化并初始化指定 FMCOS 测试卡"
+            android:textColor="@android:color/white" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="12dp"
+            android:text="仅允许 UID 77:E9:CC:7D。该操作将擦除 MF 下文件并写入实验性 ADF01 / EF0003 profile。"
+            android:textColor="#B3261E"
+            android:textSize="13sp" />
+
+        <TextView
         android:id="@+id/nfc_support"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"/>
 
-    <TextView
+        <TextView
         android:id="@+id/nfc_enable"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="20dp"/>
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"/>
 
-    <Button
+        <Button
         android:id="@+id/to_nfc_setting"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="12dp"
         android:text="跳转系统nfc设置页面" />
 
-</LinearLayout>
+    </LinearLayout>
+</ScrollView>

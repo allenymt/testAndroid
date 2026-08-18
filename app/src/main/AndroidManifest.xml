@@ -41,7 +41,22 @@
         <activity
             android:name=".nfc.NFCIdentificationActivity"
             android:exported="true"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop" />
+        <activity
+            android:name=".nfc.Fm1208NfcLaunchActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:noHistory="true">
+            <intent-filter>
+                <action android:name="android.nfc.action.TECH_DISCOVERED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.nfc.action.TECH_DISCOVERED"
+                android:resource="@xml/fm1208_tech_filter" />
+        </activity>
         <activity
             android:name=".nfc.NFCSingleTaskActivity"
             android:exported="true"/>

@@ -219,7 +219,15 @@
                 android:layout_height="wrap_content"
                 android:onClick="goToNFC"
                 android:textAllCaps="false"
-                android:text="跳转NFC测试页面" />
+                android:text="FM1208 主动识别与读写" />
+
+            <Button
+                android:id="@+id/test_go_nfc_cold_launch"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="goToNfcColdLaunch"
+                android:text="FM1208 冷启动唤起验证"
+                android:textAllCaps="false" />
 
             <Button
                 android:id="@+id/test_go_gradient"
