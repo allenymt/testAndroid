@@ -38,6 +38,7 @@ import com.vdian.android.lib.testforgradle.memory.TestMemory;
 import com.vdian.android.lib.testforgradle.nfc.NFCIdentificationActivity;
 import com.vdian.android.lib.testforgradle.nfc.Fm1208NfcLaunchActivity;
 import com.vdian.android.lib.testforgradle.nfc.NFCTestLaunchActivity;
+import com.vdian.android.lib.testforgradle.nfc.Ntag424DnaTestActivity;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
 import com.vdian.android.lib.testforgradle.pageing3.PagingTestActivity;
 import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
@@ -294,6 +295,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void goToNfcColdLaunch(View view) {
         startActivity(new Intent(this, Fm1208NfcLaunchActivity.class));
+    }
+
+    public void goToNtag424DnaTest(View view) {
+        android.util.Log.i("Ntag424DnaTest", "[NTAG424-DEMO] opening standalone test page");
+        startActivity(new Intent(this, Ntag424DnaTestActivity.class));
     }
 
     public void goToTestGoGradientActivity(View view) {

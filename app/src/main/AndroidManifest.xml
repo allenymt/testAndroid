@@ -43,6 +43,9 @@
             android:exported="true"
             android:launchMode="singleTop" />
         <activity
+            android:name=".nfc.Ntag424DnaTestActivity"
+            android:exported="false" />
+        <activity
             android:name=".nfc.Fm1208NfcLaunchActivity"
             android:excludeFromRecents="true"
             android:exported="true"

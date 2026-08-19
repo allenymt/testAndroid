@@ -1,0 +1,213 @@
+14:38■
+= TagInfo
+<
+NDEF
+EXTRA
+• Technologies Supported
+Fully compliant to the ISO/IEC 14443, all parts 1 to 4 Fully compliant to the ISO/IEC 7816-4 file selection and APDU handling
+Fully compliant passive target compliant to
+ISO/IEC18092
+• Android Technology Information
+Tag description:
+• TAG: Tech [android.nfc.tech.lsoDep,
+android.nfc.tech.NfcA, android.nfc.tech.Ndef]
+• Maximum transceive length: 65279 bytes
+• Default maximum transceive time-out: 1500 ms
+• Extended length APDUs supported
+• Maximum transceive length: 253 bytes
+• Default maximum transceive time.out: 618 ms
+~ Detailed Protocol Intormation
+ID: 04:18:72:62:E5:16:90
+ATQA: 0x4403
+SAK: 0x20
+ATS: 0x067777710280
+• Max. accepted frame size: 128 bytes (FSCI: 7)
+• 106, 212, 424, 848 kbit/s (DR: 1, 2, 4, 8)
+• 106, 212, 424, 848 kbit/s (DS: 1, 2, 4, 8)
+Ditterent send and receive rates supported
+• SFGT: 604.1 us (SFGI: 1)
+• FWT: 38.66 ms (FWI: 7)
+• NAD not supported
+CID supported
+• Historical bytes: 0x80 H
+• Memory Content
+PICC configuration
+• PICC authentication not supporte
+• Key configuration:
+• 4 immutable AES 128 bit originality keys
+Application configuration (DF 0xD2760000850101):
+• Deraun ApoMasterney
+• Key configuration:
+• 5 mutable AES 128 bit AppKeys
+Settings for file 01:
+• File Type: StandardData file
+• Secure Dynamic Messaging: disabled
+• Communication mode: plain
+• Permissions:
+ReadWrite: with key 0x(
+• Change: with key Ox0
+• Read: free access
+• Write: with key 0x0
+• File size: 32 bytes
+［00］
+00 17 20 01 00 00 FF 04
+06 E1 04 01 00 00 00 05
+［10］
+C(1.) 0.đ0 05 00 đ0 02 00 10
+Settings for file 02:
+• FileType: StandardData file
+Secure Dynamic Messaging: disable
+* Communication mode: plair
+• Permissions:
+• ReadWrite: free access
+• Change: with key 0x0
+• Read: free access
+• Write: free access
+• File size: 256 bytes
+10001
+［020］
+［028］
+0501
+弘6s13均95939s295390191939 0
+［090］
+［098］
+OAO
+048
+[OCO]
+s93Z8189Y5
+[0C8]
+；0000000019l9
+CE62686E227775322546256E257A3370513670494761636F696E00000000
+912D2E2676579463276336333626A566C537848626E6F6D22E0000000000
+0000000029432g+59#かbz8cgtZ#999525969598941910
+A070656F746472326E723179315737353847353855323A686575
+000g0000
+557069605569254666782570751755125393835426576F6879
+8gggg
+59均958969折5z999928958b比zE6E94EE19孔北均939加
+95帥9坦5均比339忆66U
+١٠٠٠٠٠٧٠٧
+db-appli
+an.cou.
+large curi
+|=veidian|
+b%2Fnfc%
+[3Fversio
+1135018020
+| d%3D1zGu
+INzbVW08F
+upVruQ3k
+299999907998
+UOSyG1L0
+nDXis8Tn
+|kGbcUBT-I
+٠CUI. ٣٨٤
+an. buyer
+1UPO
+Settings for file 03:
+• File Type: StandardData file
+• Secure Dynamic Messaging: disabled
+• Communication mode: MAC authenticated
+•-ermissions.
+• ReadWrite: with key 0x3
+• Change: with key 0x0
+"Read. with Key Ux<
+• Write: with key 0x3
+• File size: 128 bytes
+
+
+============================================================
+2026-08-19 APP 实卡检测补充
+============================================================
+
+一、卡片身份与通信参数
+
+- RF UID：04:18:72:62:E5:16:90
+- Android technologies：IsoDep、NfcA
+- GetVersion：
+  - Hardware：04 04 02 30 00 11 05
+  - Software：04 04 02 01 02 11 05（软件版本 1.2）
+  - Production：04 18 72 62 E5 16 90 CF 8D 16 4D 10 13 23
+- APP 识别结果：符合 NTAG 424 DNA 的 GetVersion 特征。
+- RF UID 与 GetVersion UID 一致，当前未观察到 Random ID。
+
+二、NDEF 文件 02 当前设置
+
+- GetFileSettings 命令：90 F5 00 00 01 02 00
+- 原始响应：00 00 E0 EE 00 01 00 91 00
+- FileType：StandardData File（00）
+- FileOption：Plain communication，SDM disabled（00）
+- FileSize：256 bytes（00 01 00，小端）
+- AccessRights 在线路上按低字节在前编码：E0 EE -> 逻辑值 EE E0
+  - Read：Free（E）
+  - Write：Free（E）
+  - ReadWrite：Free（E）
+  - Change：Key 0（0）
+
+结论：当前 NDEF 文件可以匿名读取和写入，但修改文件设置（包括开启 SDM）必须先使用 Key 0 完成认证。
+
+三、当前 NDEF 内容
+
+- NLEN：00 CE（206 bytes）
+- NDEF records：2
+- URI host：wdb-applink.weidian.com
+- Android Application Record：com.koudai.weidian.buyer
+- 当前 URL 是静态 NDEF 内容，没有 SDM PICCData、ReadCounter 或 SDMMAC 占位字段。
+
+四、Originality Signature
+
+- Read_Sig 命令：90 3C 00 00 01 00 00
+- 实卡返回 56-byte signature，响应状态为 91 90：
+  7A268D0725176746995DCBDB301F71B5FEE884FDC145ED5A5C6555CFF832EA97
+  415A71D6D8C99347A2B0635EE01585D80882FC0118169760
+- NXP AN12196 的 Read_Sig 示例同样使用 91 90 作为响应结尾。APP 已兼容该实卡行为。
+- 当前 Demo 仅读取签名，尚未使用 NXP 公钥执行 ECDSA secp224r1 验签。
+
+五、APP 开启 SDM 的可行性判断
+
+技术上可以通过 Android APP 开启；当前 Demo 已增加仅面向本测试卡的受控写卡入口。开启条件如下：
+
+1. 必须掌握当前卡片正确的 AppMasterKey（Key 0）。TagInfo 显示“Default AppMasterKey”不能单独证明 Key 0 一定仍是 16-byte 全零值；应以供应商或个性化记录为准，禁止盲目重试未知密钥。
+2. APP 需要实现 AuthenticateEV2First（或卡片当前模式对应的认证）以及 Full Secure Messaging，包括会话 ENC/MAC 密钥、TI 和命令计数器处理。
+3. 先把 NDEF 改成 SDM URL 模板，为 PICCData、SDMMAC 等动态字段预留固定长度占位符，并按最终 NDEF 字节计算 PICCDataOffset、SDMMACInputOffset 和 SDMMACOffset。
+4. 通过受 Full Secure Messaging 保护的 ChangeFileSettings 为 File 02 设置 FileOption、AccessRights、SDMOptions、SDMAccessRights 和各字段 offset。不能使用一条未认证的明文 ChangeFileSettings 开启。
+5. 必须预先确定 SDMMetaReadKey、SDMFileReadKey 和 SDMCtrRet 对应的 AppKey，并替换所有仍为出厂全零值的应用密钥。生产密钥不能硬编码进 APK。
+6. 开启后应立即重新读取 GetFileSettings 和 NDEF，并由后端/HSM 验证 SDMMAC、解密 UID/ReadCounter、原子记录计数器以防重放。
+
+建议：这张测试卡可用于受控环境中的 SDM 个性化 Demo；正式产品应由发卡工具、SAM 或后端/HSM 管理 Key 0 和每卡多样化密钥，APP 只负责读卡和转交动态数据。
+
+
+============================================================
+2026-08-19 APP 全零 Key 0 开启 SDM 测试方案
+============================================================
+
+一、操作范围与保护条件
+
+- 测试页面增加“使用全零 Key 0 开启测试卡 SDM”按钮；普通贴卡仍只执行检测。
+- 写入流程硬限制 RF UID 为 04:18:72:62:E5:16:90，其他卡片不会进入认证或写入流程。
+- 用户确认后只授权下一次贴卡；APP 使用 16-byte 全零 Key 0 执行 AuthenticateEV2First。
+- 只有卡片通过 NTAG 424 DNA 版本检查、File 02 尚未开启 SDM、Change 权限为 Key 0，并且 EV2 双向随机数校验成功后，才会发送写入命令。
+- APP 根据 File 02 当前通信模式发送 WriteData；本卡当前为 Plain，因此在 Key 0 认证成功后使用 Plain WriteData。随后使用 EV2 Full Secure Messaging 发送 ChangeFileSettings 并校验响应 MAC。
+- 此入口不会修改 Key 0~Key 4。全零传输密钥仅用于本测试卡，不能作为生产方案。
+
+二、将写入的 NDEF 与 File 02 设置
+
+- NDEF URL 模板：https://wdb-applink.weidian.com/ntag424?e=<32 个十六进制字符>&c=<16 个十六进制字符>
+- APP 根据最终 NDEF 文件字节动态计算 ENCPICCDataOffset、SDMMACOffset 和 SDMMACInputOffset，不使用固定偏移。
+- FileOption：40（SDM enabled，Plain communication）。
+- AccessRights：00 E0（ReadWrite=Key 0、Change=Key 0、Read=Free、Write=Key 0）。这是修复前 Demo 将权限写死后得到的实卡历史结果；开启 SDM 本身不要求修改写权限，当前实现改为保留开启前的 EEE0。
+- SDMOptions：C1（Encrypted PICCData，包含 UID 和 SDMReadCtr，ASCII 输出）。
+- SDMAccessRights：F1 21（SDMMetaRead=Key 2、SDMFileRead=Key 1、SDMCtrRet=Key 1）。
+- 当前步骤只假定 Key 0 为全零；动态字段后续能否由服务端正确解密/验签，取决于服务端是否掌握卡内实际 Key 1 和 Key 2。若卡片仍为全默认密钥，则二者也是全零。
+
+三、实卡验证状态
+
+- 代码和 NXP AN12196 的全零密钥官方向量已通过 JVM 单元测试，包括认证、会话密钥派生、命令 IV、Plain WriteData 格式、ChangeFileSettings 密文和截断 MAC。
+- 尚未在物理卡上成功完成写入。操作成功后应移开并重新贴卡，确认 GetFileSettings 显示 SDM enabled，并检查 NDEF 中 e/c 字段是否由芯片动态替换。
+- 实卡操作日志过滤标记：[NTAG424-SDM-CONFIG]。若失败，应保留完整命令节点和状态码日志，但不要记录或上传真实生产密钥。
+
+四、首次实卡尝试与修正
+
+- 15:01:02 的首次写入尝试已成功使用全零 Key 0 完成 AuthenticateEV2First，TI=A5E10E85。
+- 首次实现错误地对当前 CommMode.Plain 的 File 02 使用了 Full 模式 WriteData，卡片返回 91 7E（Length Error）；卡片随后仍显示 SDM disabled、NLEN 仍为 00 CE，确认没有发生写入。
+- 已改为根据 GetFileSettings 选择写入通信模式。本测试卡使用认证后的 Plain WriteData；成功后双方的 CmdCtr 增加到 1，再以 CmdCtr=1 发送 Full 模式 ChangeFileSettings。
