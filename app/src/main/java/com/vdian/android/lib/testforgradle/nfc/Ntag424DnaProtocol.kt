@@ -37,6 +37,11 @@ internal data class Ntag424FileSettings(
 
 internal enum class Ntag424WriteMode { PLAIN, FULL }
 
+internal data class Ntag424SdmDisablePlan(
+    val disableFileSettings: Boolean,
+    val cleanedUrl: String?
+)
+
 internal object Ntag424DnaProtocol {
     val SELECT_NDEF_APPLICATION = byteArrayOf(
         0x00, 0xA4.toByte(), 0x04, 0x00, 0x07,
@@ -134,6 +139,53 @@ internal object Ntag424DnaProtocol {
         val separator = if (base.contains('?')) "&" else "?"
         return "$base${separator}e=$encryptedPiccData&c=$mac$fragment"
     }
+
+    /** Removes only top-level SDM fields while preserving encoded nested queries and fragments. */
+    fun removeSdmParameters(url: String): String {
+        val fragmentStart = url.indexOf('#').let { if (it < 0) url.length else it }
+        val withoutFragment = url.substring(0, fragmentStart)
+        val fragment = url.substring(fragmentStart)
+        val queryStart = withoutFragment.indexOf('?')
+        if (queryStart < 0) return url
+        val base = withoutFragment.substring(0, queryStart)
+        val retainedParameters = withoutFragment.substring(queryStart + 1)
+            .split('&')
+            .filter { it.isNotEmpty() && !it.isSdmParameter() }
+        return if (retainedParameters.isEmpty()) {
+            base + fragment
+        } else {
+            "$base?${retainedParameters.joinToString("&")}$fragment"
+        }
+    }
+
+    fun hasSdmPlaceholders(url: String): Boolean {
+        val fragmentStart = url.indexOf('#').let { if (it < 0) url.length else it }
+        val query = url.substring(0, fragmentStart).substringAfter('?', "")
+        val parameters = query.split('&').filter { it.isNotEmpty() }
+        val piccData = parameters.singleOrNull { it.parameterName().equals("e", true) }
+            ?.substringAfter('=', "")
+        val mac = parameters.singleOrNull { it.parameterName().equals("c", true) }
+            ?.substringAfter('=', "")
+        return piccData == "0".repeat(32) && mac == "0".repeat(16)
+    }
+
+    fun planSdmDisable(sdmEnabled: Boolean, currentUrl: String?): Ntag424SdmDisablePlan {
+        val cleanedUrl = currentUrl?.let(::removeSdmParameters)
+            ?.takeIf { it != currentUrl }
+        val canRetryUrlCleanup = currentUrl?.let(::hasSdmPlaceholders) == true
+        check(sdmEnabled || canRetryUrlCleanup) {
+            "SDM 尚未开启，URL 中也没有可清理的 SDM 占位参数"
+        }
+        return Ntag424SdmDisablePlan(
+            disableFileSettings = sdmEnabled,
+            cleanedUrl = cleanedUrl
+        )
+    }
+
+    private fun String.isSdmParameter(): Boolean =
+        parameterName().let { it.equals("e", true) || it.equals("c", true) }
+
+    private fun String.parameterName(): String = substringBefore('=')
 
     /** Uses RFC 3986 query-safe characters to keep the SDM NDEF within the 256-byte file. */
     fun compactUrlForSdm(url: String): String = url.replace(

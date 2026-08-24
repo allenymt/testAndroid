@@ -13,7 +13,7 @@
 1. **Key 编号**：AppKey 0、1、2、3、4 在权限和协议中承担不同角色；
 2. **Key value**：每个 Key 编号对应的 16-byte AES 密钥内容。
 
-当前 Demo 为方便测试，让 AppKey 0..4 都使用同一份 16-byte 全零 key value，但 Key 编号仍然不同。例如，File 03 默认写权限是 Key 3，因此命令仍必须以 Key 3 进行认证，不能因为 Key 0 和 Key 3 的值相同就用 Key 0 代替。
+当前 Demo 支持把 AppKey 0、1、2 从 version 0 的 16-byte 全零 transport key，分别修改为代码内三个不同的固定 Demo key value；Key 0 还支持从固定 Demo key/version 1 改回全零 transport key/version 0。AppKey 3、4 暂时仍使用全零 transport key。Key 编号始终独立，例如 File 03 默认写权限是 Key 3，因此仍必须以 Key 3 认证。
 
 全零密钥仅用于受控测试卡，不得用于生产。
 
@@ -79,7 +79,7 @@ File 02 出厂通信模式为 Plain。
 | 修改 File 02 通信模式 | 需要 | 当前 Change right 指定的 Key，出厂为 Key 0 | 使用 `ChangeFileSettings` |
 | 修改 Read/Write/RW/Change rights | 需要 | 修改前的 Change Key，出厂为 Key 0 | 修改后的权限只影响后续操作 |
 | 开启 SDM | 需要 | 当前 Change Key，出厂为 Key 0 | 还需要先把 SDM 占位符写入 NDEF |
-| 关闭 SDM | 需要 | 当前 Change Key，当前 Demo 为 Key 0 | 只清除 SDM 设置，不应顺带改变写权限 |
+| 关闭 SDM | 需要 | 当前 Change Key，当前 Demo 为 Key 0；清理 URL 还需满足 Write/RW rights | 清除 SDM 设置和顶层 `e/c`，不改变写权限或业务数据 |
 
 访问权限中的 `Fh` 表示 Never。若 Write 和 ReadWrite 均为 Never，则不能通过普通写命令更新内容；Key 0 不是能够绕过任意文件权限的“万能 Key”。
 
@@ -95,7 +95,7 @@ File 02 出厂通信模式为 Plain。
 5. 把最终 NLEN 写回 offset 0，提交新 NDEF
 ```
 
-第 2 步是否需要 Key 由当前 Write/ReadWrite rights 决定。当前 Demo 即使 File 02 为 Free，也会使用全零 Key 0 建立受控测试 session；这属于 Demo 的实现选择，不代表出厂 File 02 在协议上必须使用 Key 0 才能写。
+第 2 步是否需要 Key 由当前 Write/ReadWrite rights 决定。当前 Demo 即使 File 02 为 Free，也会按 KeyVersion 选择 transport Key 0 或固定 Demo Key 0 建立受控测试 session；这属于 Demo 的实现选择，不代表出厂 File 02 在协议上必须使用 Key 0 才能写。
 
 ## 4. File 03（Proprietary Data）
 
@@ -214,6 +214,7 @@ https://example.com/path?business=123
 | 把 `e/c` 占位符写入 File 02 | 取决于 File 02 Write/RW rights | 对应 Write/RW Key | 不适用 |
 | 执行 ChangeFileSettings 开启 SDM | 需要 | 当前 Change Key，出厂为 Key 0 | 不适用 |
 | 执行 ChangeFileSettings 关闭 SDM | 需要 | 当前 Change Key，当前 Demo 为 Key 0 | 不适用 |
+| 从 File 02 URL 移除 `e/c` | 取决于 File 02 Write/RW rights | Free 或对应 Write/RW Key；当前 Demo 支持 Free/Key 0 | 不适用 |
 | 后端解密 `e` | 不是 NFC 认证 | SDMMetaRead Key，当前为 Key 2 | 必须 |
 | 后端验证 `c` | 不是 NFC 认证 | SDMFileRead Key，当前为 Key 1 | 必须 |
 | 受保护读取 SDMReadCtr | 需要 | SDMCtrRet Key，当前为 Key 1 | 视业务需要 |
@@ -254,13 +255,17 @@ https://example.com/path?business=123
 ### 5.5 关闭 SDM 的步骤
 
 ```text
-1. 读取 File 02 settings，确认 SDM 已开启
-2. 使用当前 Change Key 认证，当前 Demo 为 Key 0
-3. ChangeFileSettings 清除 SDM enable 位和 SDM 配置段
-4. 保持 NDEF 内容、通信模式和所有访问权限不变
+1. 读取 File 02 settings，并尝试读取当前动态 NDEF；允许 NLEN=0 或没有 URI record
+2. 若存在 URI record，只从其顶层 query 移除 `e/c`，保留业务 query、fragment 和 pkg record
+3. 仅在需要写回清理后 NDEF 时，先确认当前 Demo Key 0/Free 权限可写，避免先改 settings 后才发现不可写
+4. 使用当前 Change Key 认证，当前 Demo 为 Key 0
+5. ChangeFileSettings 清除 SDM enable 位和 SDM 配置段
+6. 若第 2 步产生了清理后的 NDEF，再将其写回；保持通信模式和所有访问权限不变
 ```
 
-关闭 SDM 后，原 NDEF 中的静态占位符仍然存在。若要换成新的业务 URL/pkg，应把“写 NDEF”作为下一次独立操作执行。
+Android 或其他工具“格式化 NDEF”只会改写 File 02 内容，不会自动清除 NTAG 424 的 SDM FileSettings。因此可能出现“SDM 仍开启，但 NDEF 为空或没有 URI”的状态。关闭操作在这种状态下仍会使用 ChangeFileSettings 关闭 SDM，只是没有 `e/c` 内容需要清理。
+
+关闭完成后，原 NDEF 中由 Demo 添加的静态 `e/c` 占位符也会被移除，因此同一业务 URL 可以再次开启 SDM。若上一次操作在 settings 已关闭后、NDEF 清理完成前中断，重复执行“关闭 SDM”可识别全零占位符并重试清理；不会把普通业务 URL 中任意同名参数当作恢复目标。
 
 ### 5.6 使用 File 02 并开启 SDM 需要哪些 Key
 
@@ -302,7 +307,7 @@ https://example.com/path?business=123
   -> Key 1 验证 c
 ```
 
-如果 File 02 的 Write/RW/Change rights 或 SDMAccessRights 被重新配置，实际 Key 编号必须以卡片当前 FileSettings 为准，不能永远写死为 0/1/2。当前 Demo 中 Key 0、1、2 的 key value 都是 16-byte 全零值，但它们仍是三个独立的 Key slot。
+如果 File 02 的 Write/RW/Change rights 或 SDMAccessRights 被重新配置，实际 Key 编号必须以卡片当前 FileSettings 为准，不能永远写死为 0/1/2。当前 Demo 的 Key 0、1、2 使用三个不同的固定值，它们仍是三个独立的 Key slot。
 
 ## 6. File 02 写保护与 SDM 的独立性
 
@@ -311,7 +316,7 @@ https://example.com/path?business=123
 | 操作 | 改变的字段 | 不应改变 |
 | --- | --- | --- |
 | 开启 SDM | SDM enable、options、rights、offsets、必要的 NDEF 占位符 | 原 File 02 Read/Write/RW/Change rights 和通信模式 |
-| 关闭 SDM | 清除 SDM enable 和 SDM 配置段 | NDEF、权限和通信模式 |
+| 关闭 SDM | 清除 SDM enable/配置段，并从 URI 顶层 query 移除 SDM `e/c` | 业务 query、pkg record、权限和通信模式 |
 | 增加 Demo 写保护 | Write、ReadWrite 改为 Key 0 | SDM、Read、Change、通信模式、NDEF |
 | 移除 Demo 写保护 | Write、ReadWrite 改为 Free | SDM、Read、Change、通信模式、NDEF |
 
@@ -324,7 +329,8 @@ https://example.com/path?business=123
 | 只读检测 NDEF | File 02 | 普通读取不认证 | 无 | SDM 读取会推进 SDMReadCtr |
 | 写入 URL + pkg | File 02 | 当前实现会认证 | Key 0 | 只写 NDEF；SDM 已开启时拒绝写入 |
 | 开启 SDM | File 02 | 是 | Key 0 | 只增加 SDM，不改变写保护 |
-| 关闭 SDM | File 02 | 是 | Key 0 | 只关闭 SDM，不改变写保护 |
+| 关闭 SDM | File 02 | 是 | Key 0 | 关闭 SDM 并移除其 `e/c`；不改变写保护和业务数据 |
+| 一次贴卡修改 Key 0/1/2 + 写 NDEF + 开启 SDM | 应用 Key + File 02 | 是 | Key 0/1/2 | 依次完成 Key 个性化、两条 NDEF records 写入和 SDM 配置 |
 | 增加 File 02 写保护 | File 02 | 是 | Key 0 | 只修改 Write/RW rights |
 | 移除 File 02 写保护 | File 02 | 是 | Key 0 | 只修改 Write/RW rights |
 | 写入 File 03 | File 03 | 是 | 默认 Key 3 | 不改变 File 02/SDM |
@@ -396,7 +402,7 @@ File 02 SDMAccessRights
 - 某个 Key 暂时没有被任何权限引用，例如当前 Demo 的 Key 4；
 - 通过 ChangeFileSettings 把某个角色从 Key 2 改为 Key 4，而不修改 Key 2 或 Key 4 的 key value。
 
-权限判断同时依赖“认证使用的 Key 编号”和“该 slot 中的 key value”。即使 Demo 中五个 slot 都存放全零值，用 Key 0 成功认证后，芯片的 active key number 仍是 0；它不会因此授予只配置给 Key 2 或 Key 3 的权限。
+权限判断同时依赖“认证使用的 Key 编号”和“该 slot 中的 key value”。即使两个 slot 恰好存放相同值，用 Key 0 成功认证后，芯片的 active key number 仍是 0；它不会因此授予只配置给 Key 2 或 Key 3 的权限。
 
 ### 9.4 能否修改 AppKey
 
@@ -419,7 +425,7 @@ AppKey 0..4 都属于客户应用密钥，交付状态下可以通过 `ChangeKey
 - 修改 Key 0 后，后续 ChangeFileSettings、ChangeKey 及所有引用 Key 0 的文件操作都必须使用新 Key 0；
 - key version 是用于识别密钥版本的元数据，不是 key value，也不能代替 AES 密钥；
 - 某些 KeySettings 可以限制或禁止后续密钥/配置修改。生产个性化前必须确认这些设置；不可逆地锁定前必须完成新密钥验证和恢复方案设计；
-- 当前 Demo 没有实现 ChangeKey，页面上的 NDEF、SDM、写保护和 File 03 操作都不会修改任何 AppKey。
+- 当前 Demo 为 Key 0、1、2 提供独立 ChangeKey 操作；Key 0 还可从固定 Demo value/version 1 恢复为全零 transport value/version 0，再重新改为 version 1，用于验证 Key 0 可以反复修改。NDEF、SDM、写保护和 File 03 操作本身仍不会修改任何 AppKey。
 
 ### 9.5 修改各 Key 对当前功能的影响
 
@@ -433,19 +439,19 @@ AppKey 0..4 都属于客户应用密钥，交付状态下可以通过 `ChangeKey
 
 如果需要轮换 SDM Key，必须把“卡片 ChangeKey”“后端新旧 key version”“请求验证切换时间”和“失败恢复”设计成一个完整流程。仅在卡片上换 Key 1/2 而不同步后端，会立即导致真实卡片验证失败。
 
-### 9.6 当前 Demo 的全零密钥关系
+### 9.6 当前 Demo 的固定密钥关系
 
-当前 Demo 的状态可表示为：
+修改前的 transport 状态是 Key 0..4 均为全零 version 0。执行独立 ChangeKey 操作后，目标状态可表示为：
 
 ```text
-Key 0 value = 00000000000000000000000000000000
-Key 1 value = 00000000000000000000000000000000
-Key 2 value = 00000000000000000000000000000000
+Key 0 version = 1，value = 00112233445566778899AABBCCDDEEFF
+Key 1 version = 1，value = 0102030405060708090A0B0C0D0E0F10
+Key 2 version = 1，value = 102030405060708090A0B0C0D0E0F000
 Key 3 value = 00000000000000000000000000000000
 Key 4 value = 00000000000000000000000000000000
 ```
 
-这是“五个独立 slot 暂时写了相同值”，而不是“卡片只有一把 Key”。当前代码会根据操作选择 Key 编号：
+当前代码先读取 KeyVersion：version 0 使用全零 transport key，version 1 使用对应固定 Demo key；未知 version 会拒绝认证。修改顺序建议为 Key 1、Key 2、最后 Key 0，避免中途丢失管理入口。当前代码会根据操作选择 Key 编号：
 
 ```text
 File 02 settings / SDM 配置 -> 认证 Key 0
@@ -455,4 +461,47 @@ File 03 读取                -> 默认认证 Key 2
 File 03 写入                -> 默认认证 Key 3
 ```
 
-统一全零值只能降低 Demo 联调成本，不提供生产安全性，也不能用来证明权限隔离设计正确。生产环境应让不同角色使用不同的受控 key value，并为每张卡或每个发行批次设计明确的 diversification 和 key version 策略。
+Key 0 的反复修改路径为 `version 0 / 全零 value -> version 1 / 固定 Demo value -> version 0 / 全零 value`。每次 ChangeKey 后都会重新选择应用、读取 KeyVersion，并使用目标 key value 再执行一次 EV2 认证；只有三项都成功，页面才报告修改成功。该回退仅是测试能力，不代表生产环境应该继续使用全零 transport key。
+
+这些固定值和全零 transport key 都公开存在于 Demo APK，只用于协议联调，不提供生产安全性。生产环境应使用受控 key value，并为每张卡或每个发行批次设计明确的 diversification 和 key version 策略。
+
+## 10. Mock 服务器验证 SDM URL
+
+服务端算法、输入约束、错误处理和生产防重放要求详见 [SDM 服务端验证流程](sdm_verification_flow.md)。
+
+当前测试页提供“读卡并自动验证 SDM URL”入口，不再要求手工输入 URL。点击后，下一次贴卡会读取 File 02 的 URI record，从卡片返回的动态 URI 中自动提取 `e/c`，再使用固定 Demo Key 2 解密 `e`、使用固定 Demo Key 1 验证 `c`，模拟可信服务器收到 URL 后的完整流程：
+
+```text
+1. 严格解析 URL，要求 e/c 各出现一次
+2. 要求 e 为 32 个 hex 字符、c 为 16 个 hex 字符
+3. 使用 Key 2 和全零 IV 执行 AES-CBC 解密 e
+4. 校验 PICCDataTag，并取出 7-byte UID 和 3-byte little-endian SDMReadCtr
+5. 构造 3CC300010080 || UID || SDMReadCtr_LE
+6. 使用 Key 1 对该 16-byte 向量计算 AES-CMAC，派生本次 session MAC key
+7. 使用 session MAC key 对 SDMMAC 输入区间计算 AES-CMAC
+8. 按 NTAG 424 规则取 CMAC 的奇数字节，得到 8-byte c
+9. 使用 MessageDigest.isEqual 常量时间比较服务器 c 与 URL c
+10. MAC 成功后，按 UID 原子记录更大的 SDMReadCtr；重复或更小计数器按重放拒绝
+```
+
+当前 SDM profile 配置 `SDMMACInputOffset == SDMMACOffset`，所以步骤 7 的额外文件 MAC 输入是空 byte array。若未来修改 offsets 让 MAC 覆盖业务 URL bytes，服务器必须从动态 File 02 的相同 `[SDMMACInputOffset, SDMMACOffset)` 区间传入完全一致的 bytes。
+
+防重放状态当前仅保存在测试 Activity 进程内的内存 Map 中，重启 App 后会丢失。生产服务必须使用数据库或一致性存储，把“验证 MAC、比较计数器、写入新计数器、受理业务”设计为原子事务；否则并发请求仍可能重放成功。
+
+## 11. 一次贴卡复合 Key、NDEF 与 SDM 配置
+
+测试页的“一次贴卡：修改 Key 0/1/2 + 写 NDEF + 开启 SDM”从页面读取 URL 和 pkg，要求 File 02 初始未开启 SDM，并在同一次 ISO-DEP 连接内执行：
+
+```text
+1. 读取 Key 0、1、2 version；只接受 transport v0 或固定 Demo v1
+2. 在任何 ChangeKey 前预检 File 02：SDM 关闭、Change=Key 0、Demo Key 0 可写、NDEF 不超容量
+3. 按 Key 1 -> Key 2 -> Key 0 修改仍为 v0 的 Key
+4. 对已经是 v1 的 Key 不重复 ChangeKey，但用对应固定 Demo Key 执行 EV2 认证
+5. 使用新 Key 0 向 File 02 原子写入 URL record 和 android.com:pkg record
+6. 重新读取刚写入的 NDEF，追加等长 e/c 占位符并计算 SDM offsets
+7. 使用新 Key 0 写入 SDM 模板并执行 ChangeFileSettings 开启 SDM
+```
+
+底层仍按 Key 1、Key 2、最后 Key 0 的顺序修改，避免在其他 Key 尚未完成时先失去旧 Key 0 管理入口；按钮文案中的 Key 0/1/2 表示本操作覆盖的三个 Key，不表示底层修改顺序。
+
+这是一项明确选择的复合测试操作，不表示 `ChangeKey`、NDEF 写入和 `ChangeFileSettings` 在卡片内部构成事务：每个成功命令都会立即持久化。若在 Key 阶段中途移卡，再次执行会跳过并认证已是 v1 的 Key；若在 NDEF 写完但 SDM 尚未开启时移卡，重试会覆盖相同 NDEF 后继续开启 SDM。若卡片已成功开启 SDM，复合操作会在任何 Key 或文件写入前拒绝重复执行。完成后应移开卡片，再单独执行“读卡并自动验证 SDM URL”。

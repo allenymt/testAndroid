@@ -1,153 +1,296 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
+    android:orientation="vertical"
+    android:paddingHorizontal="16dp"
     tools:context=".nfc.Ntag424DnaTestActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="8dp"
+        android:text="NTAG 424 DNA"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/ntag424_status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:background="#E8F1EA"
+        android:padding="10dp"
+        android:text="正在检查 NFC 状态"
+        android:textColor="#174C2B"
+        android:textSize="15sp"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="20dp">
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="NTAG 424 DNA"
-            android:textColor="@android:color/black"
-            android:textSize="30sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="芯片检测与受控 SDM 配置测试"
-            android:textColor="#555555"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/ntag424_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:background="#E8F1EA"
-            android:padding="14dp"
-            android:text="正在检查 NFC 状态"
-            android:textColor="#174C2B"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/ntag424_result"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:minHeight="220dp"
-            android:background="#F4F4F1"
-            android:fontFamily="monospace"
-            android:padding="14dp"
-            android:text="@string/ntag424_waiting_for_tag"
-            android:textColor="@android:color/black"
-            android:textIsSelectable="true"
-            android:textSize="14sp" />
-
-        <EditText
-            android:id="@+id/ntag424_url"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
-            android:hint="HTTPS URL"
-            android:inputType="textUri"
-            android:maxLines="4"
-            android:text="https://wdb-applink.weidian.com?targetUrl=weidianbuyer%3A%2F%2Fwdb%2Fnfc%3Fversion%3D1%26encryptId%3D1zGuNzbVWQ8Fq3j87uVAupVruQ3M9QlK8%2Fu6SgG9Z8hpxD58fnZIHDx5bBkGbcUB" />
-
-        <EditText
-            android:id="@+id/ntag424_package"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Android package name"
-            android:inputType="text"
-            android:maxLines="1"
-            android:text="com.koudai.weidian.buyer" />
+        android:layout_marginTop="6dp"
+        android:orientation="horizontal">
 
         <Button
-            android:id="@+id/write_ntag424_ndef"
-            android:layout_width="match_parent"
+            android:id="@+id/show_ntag424_file02"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="写入 URL + pkg 到 NDEF (File 02)" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="14dp"
-            android:text="普通贴卡仅执行只读检测。写入 NDEF、开启 SDM、关闭 SDM、增加写保护、移除写保护是五个独立的一次性操作，互不夹带其他配置变化。Demo 的 AppKey 0/1/2 使用同一份 16 字节全零密钥值，但各 Key 编号的协议角色不变；这些操作都不会修改密钥。"
-            android:textColor="#8A3D00"
-            android:textSize="13sp" />
+            android:layout_weight="1"
+            android:minHeight="40dp"
+            android:text="NDEF/SDM"
+            android:textSize="12sp" />
 
         <Button
-            android:id="@+id/clear_ntag424_result"
-            android:layout_width="match_parent"
+            android:id="@+id/show_ntag424_keys"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="清空结果，等待再次贴卡" />
+            android:layout_weight="1"
+            android:minHeight="40dp"
+            android:text="AppKey"
+            android:textSize="12sp" />
 
         <Button
-            android:id="@+id/enable_sdm_zero_key"
-            android:layout_width="match_parent"
+            android:id="@+id/show_ntag424_file03"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:backgroundTint="#B3261E"
-            android:text="使用全零 Key 0 开启测试卡 SDM"
-            android:textColor="@android:color/white" />
+            android:layout_weight="1"
+            android:minHeight="40dp"
+            android:text="File 03"
+            android:textSize="12sp" />
 
         <Button
-            android:id="@+id/disable_sdm_zero_key"
-            android:layout_width="match_parent"
+            android:id="@+id/show_ntag424_result"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="关闭 NDEF (File 02) SDM" />
-
-        <Button
-            android:id="@+id/enable_ntag424_write_protection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="增加 File 02 写保护（Demo Key 0）" />
-
-        <Button
-            android:id="@+id/disable_ntag424_write_protection"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="移除 File 02 写保护（恢复 Free）" />
-
-        <EditText
-            android:id="@+id/ntag424_file03_data"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:hint="File 03 测试文本（最多 126 bytes UTF-8）"
-            android:inputType="textMultiLine"
-            android:maxLines="4"
-            android:text="NTAG424 File03 demo" />
-
-        <Button
-            android:id="@+id/write_ntag424_file03"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="写入 Proprietary File 03（Demo Key 3）" />
-
-        <Button
-            android:id="@+id/read_ntag424_file03"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="读取 Proprietary File 03（Demo Key 2）" />
-
-        <Button
-            android:id="@+id/open_nfc_settings"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="打开系统 NFC 设置" />
-
+            android:layout_weight="1"
+            android:minHeight="40dp"
+            android:text="结果"
+            android:textSize="12sp" />
     </LinearLayout>
-</ScrollView>
+
+    <ScrollView
+        android:id="@+id/ntag424_content_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp">
+
+            <LinearLayout
+                android:id="@+id/ntag424_file02_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="12dp"
+                    android:text="NDEF (File 02) / SDM"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <Button
+                    android:id="@+id/verify_ntag424_sdm_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#176B3A"
+                    android:text="读卡并自动验证 SDM URL"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/enable_sdm_zero_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="使用当前 Demo Key 0 开启 SDM" />
+
+                <Button
+                    android:id="@+id/disable_sdm_zero_key"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="关闭 NDEF (File 02) SDM" />
+
+                <EditText
+                    android:id="@+id/ntag424_url"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="HTTPS URL"
+                    android:inputType="textUri"
+                    android:maxLines="4"
+                    android:text="https://wdb-applink.weidian.com?targetUrl=weidianbuyer%3A%2F%2Fwdb%2Fnfc%3Fversion%3D1%26encryptId%3D1zGuNzbVWQ8Fq3j87uVAupVruQ3M9QlK8%2Fu6SgG9Z8hpxD58fnZIHDx5bBkGbcUB" />
+
+                <EditText
+                    android:id="@+id/ntag424_package"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Android package name"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:text="com.koudai.weidian.buyer" />
+
+                <Button
+                    android:id="@+id/write_ntag424_ndef"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="写入 URL + pkg 到 NDEF (File 02)" />
+
+                <Button
+                    android:id="@+id/enable_ntag424_write_protection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="增加 File 02 写保护（Demo Key 0）" />
+
+                <Button
+                    android:id="@+id/disable_ntag424_write_protection"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="移除 File 02 写保护（恢复 Free）" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ntag424_keys_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="AppKey 测试"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingVertical="6dp"
+                    android:text="建议顺序：Key 1 → Key 2 → Key 0。Key 0 可在 version 0/1 之间反复切换。"
+                    android:textColor="#8A3D00"
+                    android:textSize="13sp" />
+
+                <Button
+                    android:id="@+id/personalize_keys_and_verify_sdm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#176B3A"
+                    android:text="一次贴卡：修改 Key 0/1/2 + 写 NDEF + 开启 SDM"
+                    android:textColor="@android:color/white" />
+
+                <Button
+                    android:id="@+id/change_ntag424_key1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="修改 AppKey 1 为固定 Demo Key (v1)" />
+
+                <Button
+                    android:id="@+id/change_ntag424_key2"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="修改 AppKey 2 为固定 Demo Key (v1)" />
+
+                <Button
+                    android:id="@+id/change_ntag424_key0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="修改 AppKey 0 为固定 Demo Key (v1)" />
+
+                <Button
+                    android:id="@+id/reset_ntag424_key0"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="恢复 AppKey 0 为全零 Transport Key (v0)" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ntag424_file03_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Proprietary File 03"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/ntag424_file03_data"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="最多 126 bytes UTF-8"
+                    android:inputType="textMultiLine"
+                    android:maxLines="4"
+                    android:text="NTAG424 File03 demo" />
+
+                <Button
+                    android:id="@+id/write_ntag424_file03"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="写入 File 03（Demo Key 3）" />
+
+                <Button
+                    android:id="@+id/read_ntag424_file03"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="读取 File 03（Demo Key 2）" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ntag424_result_section"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="18dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="操作结果"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/ntag424_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:background="#F4F4F1"
+                    android:fontFamily="monospace"
+                    android:minHeight="180dp"
+                    android:padding="12dp"
+                    android:text="@string/ntag424_waiting_for_tag"
+                    android:textColor="@android:color/black"
+                    android:textIsSelectable="true"
+                    android:textSize="14sp" />
+
+                <Button
+                    android:id="@+id/clear_ntag424_result"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="清空结果，等待再次贴卡" />
+
+                <Button
+                    android:id="@+id/open_nfc_settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="打开系统 NFC 设置" />
+            </LinearLayout>
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

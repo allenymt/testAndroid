@@ -195,6 +195,53 @@ class Ntag424DnaProtocolTest {
     }
 
     @Test
+    fun removeSdmParameters_allowsDisableThenEnableAgainWithoutChangingBusinessQuery() {
+        val original = "https://example.com/path?targetUrl=a%26e%3Dnested&business=1#section"
+        val enabled = "https://example.com/path?targetUrl=a%26e%3Dnested&E=${"A".repeat(32)}&" +
+            "business=1&c=${"B".repeat(16)}#section"
+
+        val disabled = Ntag424DnaProtocol.removeSdmParameters(enabled)
+
+        assertEquals(original, disabled)
+        assertEquals(
+            "https://example.com/path?targetUrl=a%26e%3Dnested&business=1&e=CCCC&c=DDDD#section",
+            Ntag424DnaProtocol.buildSdmUrl(disabled, "CCCC", "DDDD")
+        )
+        assertEquals(
+            "https://example.com/path#section",
+            Ntag424DnaProtocol.removeSdmParameters(
+                "https://example.com/path?e=${"0".repeat(32)}&c=${"0".repeat(16)}#section"
+            )
+        )
+        assertTrue(
+            Ntag424DnaProtocol.hasSdmPlaceholders(
+                "https://example.com/path?e=${"0".repeat(32)}&c=${"0".repeat(16)}"
+            )
+        )
+        assertFalse(
+            Ntag424DnaProtocol.hasSdmPlaceholders(
+                "https://example.com/path?e=${"A".repeat(32)}&c=${"B".repeat(16)}"
+            )
+        )
+        assertFalse(
+            Ntag424DnaProtocol.hasSdmPlaceholders(
+                "https://example.com/path?targetUrl=a%26e%3D${"0".repeat(32)}%26c%3D${"0".repeat(16)}"
+            )
+        )
+    }
+
+    @Test
+    fun planSdmDisable_allowsEnabledFileWithoutUriAfterNdefFormat() {
+        val plan = Ntag424DnaProtocol.planSdmDisable(
+            sdmEnabled = true,
+            currentUrl = null
+        )
+
+        assertTrue(plan.disableFileSettings)
+        assertEquals(null, plan.cleanedUrl)
+    }
+
+    @Test
     fun parseCapabilityContainer_findsNdefFile() {
         val (fileId, fileSize) = Ntag424DnaProtocol.parseCapabilityContainer(
             hex("000F20003B00340406E10401000000")

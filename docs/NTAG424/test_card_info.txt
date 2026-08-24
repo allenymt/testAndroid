@@ -184,7 +184,7 @@ Settings for file 03:
 一、操作范围与保护条件
 
 - 测试页面增加“使用全零 Key 0 开启测试卡 SDM”按钮；普通贴卡仍只执行检测。
-- 写入流程硬限制 RF UID 为 04:18:72:62:E5:16:90，其他卡片不会进入认证或写入流程。
+- 当前实现不再硬限制 RF UID；该 UID 仅是本文件记录的样卡信息。写入和配置操作接受任意通过卡型识别且能以当前 Demo Key 成功认证的 NTAG 424 DNA 卡片。
 - 用户确认后只授权下一次贴卡；APP 使用 16-byte 全零 Key 0 执行 AuthenticateEV2First。
 - 只有卡片通过 NTAG 424 DNA 版本检查、File 02 尚未开启 SDM、Change 权限为 Key 0，并且 EV2 双向随机数校验成功后，才会发送写入命令。
 - APP 根据 File 02 当前通信模式发送 WriteData；本卡当前为 Plain，因此在 Key 0 认证成功后使用 Plain WriteData。随后使用 EV2 Full Secure Messaging 发送 ChangeFileSettings 并校验响应 MAC。

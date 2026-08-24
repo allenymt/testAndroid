@@ -295,7 +295,7 @@ File 03 也不能开启 SDM。Datasheet 第 10 页 §8.2.3.1 和第 74 页 Chang
 
 - 写入前读取 File 03 settings，要求容量为 128 bytes、CommMode 为 Full；默认权限下使用 AppKey 3 执行 `AuthenticateEV2First`，随后以 Full `WriteData` 从 offset 0 覆盖完整 128 bytes。
 - 读取前同样校验 settings；默认权限下使用 AppKey 2 认证，再以 Full `ReadData` 读取完整 128 bytes，验证 response MAC 后使用 response IV 解密。
-- 若卡片权限编号已改变，Demo 会选择 Read/Write 或 ReadWrite rights 中实际配置的 AppKey 0..4。当前 AppKey 0..4 的测试 key value 统一为 16-byte 全零值，但 key number 仍按 FileSettings 权限执行。
+- 若卡片权限编号已改变，Demo 会选择 Read/Write 或 ReadWrite rights 中实际配置的 AppKey 0..4。Key 0、1、2 可独立修改为代码内固定 Demo 值，Key 3、4 暂时仍为全零 transport value；key number 始终按 FileSettings 权限执行。
 - 测试数据格式固定为 `2-byte big-endian payload length + UTF-8 payload + zero padding`，因此 UTF-8 payload 最大为 126 bytes。该格式只是 Demo 自定义格式，并非 NXP 或 NFC Forum 标准。
 
 完整覆盖 128 bytes 可避免短数据覆盖后残留上一次写入的尾部内容。File 03 是 StandardData file，单帧 128-byte 写入具备芯片声明的 tearing protection；这不代表由多个命令组成的更大业务事务具有原子性。
@@ -396,7 +396,7 @@ e --Key 2 解密--> UID + SDMReadCtr
 - 认证读取：返回静态 NDEF 和占位符，不执行 SDM mirroring；
 - 每次有效 SDM 读取会推进 SDMReadCtr，因此后续 `e` 和 `c` 通常不同。
 
-当前 Demo 使用全零 Key 1 和 Key 2，只能验证协议和 App 流程，不能提供生产级防伪。生产密钥必须使用安全随机值，由服务端/HSM 管理；不得写入 Android App、日志或 Git。服务端还应记录密钥版本和卡片个性化 profile，确保验证时采用与卡片完全一致的 SDMOptions、offset 和 key diversification 规则。
+当前 Demo 可把 Key 1 和 Key 2 修改为代码内固定值，并用它们执行本地 Mock 服务端验证；固定值公开存在于 APK，只能验证协议和 App 流程，不能提供生产级防伪。生产密钥必须使用安全随机值，由服务端/HSM 管理；不得写入 Android App、日志或 Git。服务端还应记录密钥版本和卡片个性化 profile，确保验证时采用与卡片完全一致的 SDMOptions、offset 和 key diversification 规则。
 
 ## 11. 功能操作边界与 Demo 密钥约定
 
@@ -405,10 +405,12 @@ e --Key 2 解密--> UID + SDMReadCtr
 | 操作 | 允许改变 | 必须保持不变 |
 | --- | --- | --- |
 | 开启 SDM | FileOption 的 SDM 位、SDMOptions、SDMAccessRights、SDM offsets，以及 URL 中 SDM 所需的等长占位符 | 原 Read/Write/ReadWrite/Change rights、原通信模式、pkg record 和原业务 query |
-| 关闭 SDM | 清除 FileOption 的 SDM 位，并按协议移除 FileSettings 中不再适用的 SDM 配置段 | NDEF 内容、Read/Write/ReadWrite/Change rights 和通信模式 |
+| 关闭 SDM | 清除 FileOption 的 SDM 位和 SDM 配置段，并从 URI 顶层 query 移除本 Demo 添加的 `e/c` | 原业务 query、pkg record、Read/Write/ReadWrite/Change rights 和通信模式 |
 | 增加写保护 | File 02 的 Write、ReadWrite rights 改为 Demo Key 0 | SDM 全部配置、Read/Change rights、通信模式和文件内容 |
 | 移除写保护 | File 02 的 Write、ReadWrite rights 改为 Free (`Eh`) | SDM 全部配置、Read/Change rights、通信模式和文件内容 |
 
-这里的“原子化”是功能语义边界：开启或关闭 SDM 不能顺带改变写保护，增加或移除写保护也不能重建 NDEF 或改变 SDM。每项操作仍通过一次 `ChangeFileSettings` 提交对应的最终 FileSettings；开启 SDM 之前写入等长占位符是 SDM 本身必需的准备步骤，不视为额外的业务功能。关闭 SDM 不删除 URL 中原有占位符；如需替换业务 NDEF，应在关闭成功后单独执行写入操作。
+这里的“原子化”是功能语义边界：开启或关闭 SDM 不能顺带改变写保护，增加或移除写保护也不能改变 SDM。开启时写入等长占位符、关闭时移除同一组顶层 `e/c`，都是 SDM 生命周期本身的必要步骤，不视为额外业务功能；两者都必须保留业务 query、pkg record、权限和通信模式。关闭流程先确认 File 02 可由当前 Demo Key 0/Free 权限写入，再关闭 settings 并提交清理后的 NDEF；若后半段中断，可在 SDM 已关闭时识别全零占位符并重试清理。
 
-为方便当前测试，AppKey 0、SDMMetaRead 使用的 AppKey 2、SDMFileRead 使用的 AppKey 1 均采用同一份 16-byte 全零 key material。Key 编号仍承担各自协议角色，只是测试阶段的 key value 相同。此约定不包含 `ChangeKey`，上述三个操作都不会修改卡片密钥。生产环境必须替换为受控密钥，并单独设计密钥轮换流程。
+当前测试支持分别执行 `ChangeKey(1)`、`ChangeKey(2)`、`ChangeKey(0)`，把三者从全零 version 0 修改为不同的固定 Demo value/version 1。Key 0 另有独立回退操作，可从固定 Demo value/version 1 改回全零 transport value/version 0，并在写后读取版本、使用全零 Key 0 重新认证；之后可再次执行 `ChangeKey(0)` 改为 version 1，以验证 Key 0 可反复修改。各操作只修改目标 key slot，不改变 FileSettings；建议先 Key 1、Key 2，最后 Key 0。生产环境必须替换为受控密钥，并单独设计密钥轮换流程。
+
+测试页另提供用户明确选择的复合操作：在一次 ISO-DEP 连接中按 Key 1、Key 2、Key 0 个性化，使用新 Key 0 写入页面指定的 URL + pkg NDEF，再写入 SDM 模板并开启 SDM。它不是卡片事务；中途移卡时已经成功的 ChangeKey 或文件写入不会回滚。实现会在任何 ChangeKey 前拒绝未知 version，并预检 File 02 的 SDM 状态、Change/Write 权限及 NDEF 容量；重试时认证并跳过已为固定 Demo v1 的 Key。复合操作完成后，需要移卡并单独执行动态 SDM URL 验证。
