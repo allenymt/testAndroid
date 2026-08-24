@@ -43,8 +43,12 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         }
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
         binding.openNfcSettings.setOnClickListener { BuyerNFCUtil.Util.toOpenNfc(this) }
-        binding.clearNtag424Result.setOnClickListener {
-            Log.i(LOG_TAG, "$LOG_PREFIX result cleared by user")
+        binding.readNtag424Card.setOnClickListener {
+            pendingWriteRequest = null
+            pendingFile03Text = null
+            pendingOperation.set(Operation.INSPECT)
+            Log.i(LOG_TAG, "$LOG_PREFIX card content read armed by user")
+            binding.ntag424Status.text = "已准备读取卡内容，请贴 NTAG 424 DNA 卡片"
             binding.ntag424Result.text = getString(R.string.ntag424_waiting_for_tag)
         }
         binding.writeNtag424Ndef.setOnClickListener { confirmBusinessNdefWrite() }

@@ -18,6 +18,14 @@
         android:textStyle="bold" />
 
     <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="读取、写入与安全配置"
+        android:textColor="#5D665F"
+        android:textSize="13sp" />
+
+    <TextView
         android:id="@+id/ntag424_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -41,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:minHeight="40dp"
-            android:text="NDEF/SDM"
+            android:text="NDEF / SDM"
             android:textSize="12sp" />
 
         <Button
@@ -50,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:minHeight="40dp"
-            android:text="AppKey"
+            android:text="密钥"
             android:textSize="12sp" />
 
         <Button
@@ -60,7 +68,8 @@
             android:layout_weight="1"
             android:minHeight="40dp"
             android:text="File 03"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/show_ntag424_result"
@@ -68,7 +77,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:minHeight="40dp"
-            android:text="结果"
+            android:text="读取结果"
             android:textSize="12sp" />
     </LinearLayout>
 
@@ -105,7 +114,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#176B3A"
-                    android:text="读卡并自动验证 SDM URL"
+                    android:text="读取并验证 SDM URL"
                     android:textColor="@android:color/white" />
 
                 <Button
@@ -218,7 +227,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"
@@ -260,7 +270,7 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="操作结果"
+                    android:text="卡片内容与操作结果"
                     android:textColor="@android:color/black"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -280,10 +290,12 @@
                     android:textSize="14sp" />
 
                 <Button
-                    android:id="@+id/clear_ntag424_result"
+                    android:id="@+id/read_ntag424_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="清空结果，等待再次贴卡" />
+                    android:backgroundTint="#176B3A"
+                    android:text="读取卡内容"
+                    android:textColor="@android:color/white" />
 
                 <Button
                     android:id="@+id/open_nfc_settings"
