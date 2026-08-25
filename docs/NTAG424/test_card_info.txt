@@ -211,3 +211,33 @@ Settings for file 03:
 - 15:01:02 的首次写入尝试已成功使用全零 Key 0 完成 AuthenticateEV2First，TI=A5E10E85。
 - 首次实现错误地对当前 CommMode.Plain 的 File 02 使用了 Full 模式 WriteData，卡片返回 91 7E（Length Error）；卡片随后仍显示 SDM disabled、NLEN 仍为 00 CE，确认没有发生写入。
 - 已改为根据 GetFileSettings 选择写入通信模式。本测试卡使用认证后的 Plain WriteData；成功后双方的 CmdCtr 增加到 1，再以 CmdCtr=1 发送 Full 模式 ChangeFileSettings。
+
+
+============================================================
+2026-08-25 Random UID 实卡验证结论
+============================================================
+
+一、验证结果
+
+- 已通过 APP 入口成功开启 PICC Random UID。
+- 开启后，RF 层（Android `Tag.id` / NFC-A 防冲突）使用 Random UID；该值不应再作为卡片的永久身份或数据库主键。
+- 读取 SDM URL 后，使用 Key 2 解密外层 `e`，解密结果中的 UID 确认为卡片真实 UID，而不是本次 RF 会话看到的 Random UID。
+- 因此当前 SDM 配置下，Random UID 只影响 RF 识别层，不改变 `e` 的 PICCData 结构；服务端仍应使用 `e` 解密出的真实 UID 参与 Key 1 会话 MAC 派生和计数器防重放。
+
+二、Originality Signature 行为
+
+- Random UID 开启后，读取 Originality Signature 返回状态 `91 0B`。
+- APP 已将该状态归类为 Random UID 模式下的兼容性提示：
+  `Random UID 已开启，Originality Signature 当前不可读取（910B）`。
+- 该提示不代表 Key 0/1/2、NDEF、File 02、SDM 或 `e/c` 校验失败；NDEF 读取和 SDM URL 验证仍可继续执行。
+- Originality Signature 是与制造身份绑定的静态能力，不能用本次 RF Random UID 重新构造或校验。生产环境如需做芯片来源验证，应按芯片/协议支持情况使用制造 UID、签名和 NXP 公钥验证；不能把 `91 0B` 当作 SDM 失败。
+
+三、对后续实现的约束
+
+1. 不得固定比较 Android `Tag.id`，也不得用它选择 Key 1/Key 2 或绑定长期卡片档案。
+2. 服务端必须先用 Key 2 解密 `e`，校验 PICCDataTag，再使用解出的真实 UID 和 SDMReadCtr 派生 Key 1 会话 MAC 并校验 `c`。
+3. 防重放状态应绑定发行记录/profile 或 personalization generation；不能仅按每次变化的 RF Random UID 建立新计数器。
+4. 开启 Random UID 是不可逆配置。关闭 SDM、重写 NDEF、恢复 Key 0/1/2、修改 File 02/03 均不会关闭 Random UID 或恢复固定 RF UID。
+5. 后续实卡回归测试应重点确认：RF UID 会变化、`e` 中 UID 保持真实 UID、SDMReadCtr 单调递增、`c` 验证成功且旧 URL 被拒绝重放。
+
+结论：本次 Random UID 开启成功，且已确认 SDM `e` 中仍输出真实 UID；`91 0B` 仅表示 Random UID 模式下 Originality Signature 不可读，不影响当前 File 02/SDM 业务链路。

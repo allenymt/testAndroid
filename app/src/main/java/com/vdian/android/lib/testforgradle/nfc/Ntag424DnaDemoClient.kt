@@ -87,10 +87,7 @@ internal class Ntag424DnaDemoClient private constructor(private val isoDep: IsoD
             "$LOG_PREFIX file settings read, available=${settings != null}, " +
                 "sdmEnabled=${settings?.sdmEnabled}"
         )
-        val signature = capture("读取 Originality Signature", warnings) {
-            nativeExchange(Ntag424DnaProtocol.READ_ORIGINALITY_SIGNATURE, "read originality signature")
-                .also { require(it.size == ORIGINALITY_SIGNATURE_LENGTH) { "签名长度应为 56，实际为 ${it.size}" } }
-        }
+        val signature = captureOriginalitySignature(warnings)
         Log.i(LOG_TAG, "$LOG_PREFIX originality signature read, available=${signature != null}")
         val ndef = capture("读取 NDEF", warnings) { readNdef() }
         Log.i(
@@ -199,6 +196,23 @@ internal class Ntag424DnaDemoClient private constructor(private val isoDep: IsoD
         } catch (error: Exception) {
             Log.w(LOG_TAG, "$LOG_PREFIX $label failed", error)
             warnings += "${label}失败: ${error.message ?: error.javaClass.simpleName}"
+            null
+        }
+
+    private fun captureOriginalitySignature(warnings: MutableList<String>): ByteArray? =
+        try {
+            nativeExchange(Ntag424DnaProtocol.READ_ORIGINALITY_SIGNATURE, "read originality signature")
+                .also { require(it.size == ORIGINALITY_SIGNATURE_LENGTH) { "签名长度应为 56，实际为 ${it.size}" } }
+        } catch (error: Exception) {
+            // Random ID is a permanent PICC configuration. Some cards reject ReadSignature
+            // with 910B after it is enabled; this does not affect SDM/NDEF inspection.
+            if (error.message?.contains("status=910B", ignoreCase = true) == true) {
+                Log.i(LOG_TAG, "$LOG_PREFIX Originality Signature unavailable in Random UID mode")
+                warnings += "Random UID 已开启，Originality Signature 当前不可读取（910B）"
+            } else {
+                Log.w(LOG_TAG, "$LOG_PREFIX 读取 Originality Signature failed", error)
+                warnings += "读取 Originality Signature 失败: ${error.message ?: error.javaClass.simpleName}"
+            }
             null
         }
 

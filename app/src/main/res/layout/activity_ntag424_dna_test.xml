@@ -124,6 +124,12 @@
                     android:text="使用当前 Demo Key 0 开启 SDM" />
 
                 <Button
+                    android:id="@+id/enable_random_uid"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="永久开启 Random UID（不可逆）" />
+
+                <Button
                     android:id="@+id/disable_sdm_zero_key"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

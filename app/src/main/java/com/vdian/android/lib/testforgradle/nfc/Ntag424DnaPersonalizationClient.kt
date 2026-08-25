@@ -21,6 +21,7 @@ internal class Ntag424DnaPersonalizationClient private constructor(
     data class WriteResult(val ndefBytes: Int, val recordCount: Int)
     data class WriteProtectionResult(val protected: Boolean, val writeKey: Int, val readWriteKey: Int)
     data class DisableSdmResult(val settingsChanged: Boolean, val urlParametersRemoved: Boolean)
+    data class RandomUidResult(val enabled: Boolean)
     data class File03Result(val text: String, val payloadBytes: Int, val rawBytes: ByteArray)
     data class ChangeKeyResult(val keyNumber: Int, val oldVersion: Int, val newVersion: Int)
     data class RestoreKeysResult(
@@ -89,6 +90,21 @@ internal class Ntag424DnaPersonalizationClient private constructor(
                 "piccDataOffset=${template.piccDataOffset}, macOffset=${template.macOffset}"
         )
         return Result(template.fileBytesSize, template.piccDataOffset, template.macOffset)
+    }
+
+    /** Permanently enables the PICC Random ID configuration; it cannot be reversed. */
+    fun enableRandomUidWithDemoKey0(): RandomUidResult {
+        exchangeIso(Ntag424DnaProtocol.SELECT_NDEF_APPLICATION, "select NDEF application")
+        requireRecognizedCard()
+        val session = authenticateDemoKey(0)
+        secureFullCommand(
+            session,
+            SET_CONFIGURATION_COMMAND,
+            byteArrayOf(0x00),
+            byteArrayOf(0x02),
+            "enable PICC Random ID"
+        )
+        return RandomUidResult(enabled = true)
     }
 
     fun setWriteProtectionWithDemoKey(protected: Boolean): WriteProtectionResult {
@@ -771,6 +787,7 @@ internal class Ntag424DnaPersonalizationClient private constructor(
         private const val TRANSPORT_KEY_VERSION = 0x00
         private const val GET_KEY_VERSION_COMMAND = 0x64
         private const val CHANGE_FILE_SETTINGS_COMMAND = 0x5F
+        private const val SET_CONFIGURATION_COMMAND = 0x5C
         private const val DEMO_KEY_NUMBER = 0
         private const val FILE_03_NUMBER = 3
         private const val FILE_03_SIZE = 128

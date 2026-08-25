@@ -53,6 +53,7 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         }
         binding.writeNtag424Ndef.setOnClickListener { confirmBusinessNdefWrite() }
         binding.enableSdmZeroKey.setOnClickListener { confirmDemoKeySdmConfiguration() }
+        binding.enableRandomUid.setOnClickListener { confirmEnableRandomUid() }
         binding.disableSdmZeroKey.setOnClickListener { confirmDisableSdm() }
         binding.enableNtag424WriteProtection.setOnClickListener {
             confirmWriteProtection(protected = true)
@@ -123,6 +124,7 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             binding.ntag424Status.text = when (operation) {
                 Operation.WRITE_NDEF -> "正在写入 URL + pkg，请勿移开卡片..."
                 Operation.ENABLE_SDM -> "正在使用当前 Demo Key 0 配置 SDM，请勿移开卡片..."
+                Operation.ENABLE_RANDOM_UID -> "正在永久开启 Random UID，请勿移开卡片..."
                 Operation.DISABLE_SDM -> "正在关闭 SDM，请勿移开卡片..."
                 Operation.ENABLE_WRITE_PROTECTION -> "正在增加 File 02 写保护，请勿移开卡片..."
                 Operation.DISABLE_WRITE_PROTECTION -> "正在移除 File 02 写保护，请勿移开卡片..."
@@ -159,6 +161,12 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                         "PICCDataOffset: ${result.piccDataOffset}\n" +
                         "SDMMACOffset: ${result.macOffset}\n\n" +
                         "请移开卡片后重新贴卡，执行只读检测确认 SDM 状态。"
+                }
+                Operation.ENABLE_RANDOM_UID -> Ntag424DnaPersonalizationClient.connect(tag).use { client ->
+                    client.enableRandomUidWithDemoKey0()
+                    "Random UID 已开启\n" +
+                        "该配置不可逆，后续每次 RF 识别可能返回不同 UID。\n" +
+                        "SDM、NDEF、File 02/03 内容和密钥未修改。"
                 }
                 Operation.DISABLE_SDM -> Ntag424DnaPersonalizationClient.connect(tag).use { client ->
                     val result = client.disableSdmWithDemoKey()
@@ -326,6 +334,26 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 binding.ntag424Result.text =
                     "等待 NTAG 424 DNA 卡片\n卡型识别或认证失败时不会发送写入命令。"
                 Log.w(LOG_TAG, "$LOG_PREFIX Demo-Key SDM configuration armed for one tag")
+            }
+            .show()
+    }
+
+    private fun confirmEnableRandomUid() {
+        AlertDialog.Builder(this)
+            .setTitle("确认永久开启 Random UID")
+            .setMessage(
+                "下一次贴卡将使用当前 Demo Key 0 执行 SetConfiguration，永久开启 PICC Random UID。\n\n" +
+                    "开启后不能关闭或恢复真实 RF UID；SDM/NDEF/密钥内容不变，但 Android 读取到的 RF UID 可能每次不同。\n\n" +
+                    "仅建议在测试卡上执行。"
+            )
+            .setNegativeButton("取消", null)
+            .setPositiveButton("确认，等待贴卡") { _, _ ->
+                pendingWriteRequest = null
+                pendingFile03Text = null
+                pendingOperation.set(Operation.ENABLE_RANDOM_UID)
+                binding.ntag424Status.text = "已授权一次永久开启 Random UID，请贴 NTAG 424 DNA 卡片"
+                binding.ntag424Result.text = "等待卡片；此操作不可逆，请保持贴卡直到完成。"
+                Log.w(LOG_TAG, "$LOG_PREFIX Random UID enable armed for one tag")
             }
             .show()
     }
@@ -518,6 +546,7 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         INSPECT,
         WRITE_NDEF,
         ENABLE_SDM,
+        ENABLE_RANDOM_UID,
         DISABLE_SDM,
         ENABLE_WRITE_PROTECTION,
         DISABLE_WRITE_PROTECTION,
