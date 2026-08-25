@@ -23,6 +23,10 @@ internal class Ntag424DnaPersonalizationClient private constructor(
     data class DisableSdmResult(val settingsChanged: Boolean, val urlParametersRemoved: Boolean)
     data class File03Result(val text: String, val payloadBytes: Int, val rawBytes: ByteArray)
     data class ChangeKeyResult(val keyNumber: Int, val oldVersion: Int, val newVersion: Int)
+    data class RestoreKeysResult(
+        val initialKeyVersions: Map<Int, Int>,
+        val restoredKeys: List<Int>
+    )
     data class CompositeSetupResult(
         val initialKeyVersions: Map<Int, Int>,
         val changedKeys: List<Int>,
@@ -206,19 +210,26 @@ internal class Ntag424DnaPersonalizationClient private constructor(
         return changeKey(keyNumber, oldVersion, oldKey, Ntag424DemoKeys.PERSONALIZED_VERSION, newKey)
     }
 
-    fun changeDemoKey0ToTransport(): ChangeKeyResult {
+    fun restoreDemoKeysToTransport(): RestoreKeysResult {
         exchangeIso(Ntag424DnaProtocol.SELECT_NDEF_APPLICATION, "select NDEF application")
         requireRecognizedCard()
-        val oldVersion = readKeyVersion(DEMO_KEY_NUMBER)
-        check(oldVersion != TRANSPORT_KEY_VERSION) { "AppKey 0 已是 transport version 0" }
-        val oldKey = Ntag424DemoKeys.valueForVersion(DEMO_KEY_NUMBER, oldVersion)
-        return changeKey(
-            DEMO_KEY_NUMBER,
-            oldVersion,
-            oldKey,
-            TRANSPORT_KEY_VERSION,
-            Ntag424DemoKeys.transportKey
-        )
+        val initialVersions = (0..2).associateWith(::readKeyVersion)
+        val keysToRestore = Ntag424DemoKeys.planTransportRestore(initialVersions)
+
+        val restoredKeys = mutableListOf<Int>()
+        keysToRestore.forEach { keyNumber ->
+            // The previous write-back verification leaves an EV2 session active on that key.
+            // Reselect before the next plain GetKeyVersion/AuthenticateEV2First sequence.
+            exchangeIso(
+                Ntag424DnaProtocol.SELECT_NDEF_APPLICATION,
+                "reselect application before restoring AppKey $keyNumber"
+            )
+            val oldVersion = initialVersions.getValue(keyNumber)
+            val oldKey = Ntag424DemoKeys.valueForVersion(keyNumber, oldVersion)
+            changeKey(keyNumber, oldVersion, oldKey, TRANSPORT_KEY_VERSION, Ntag424DemoKeys.transportKey)
+            restoredKeys += keyNumber
+        }
+        return RestoreKeysResult(initialVersions, restoredKeys)
     }
 
     fun personalizeDemoKeysWriteNdefAndEnableSdm(
@@ -613,24 +624,23 @@ internal class Ntag424DnaPersonalizationClient private constructor(
                 packageRecord.type.contentEquals(ANDROID_PACKAGE_TYPE) &&
                 packageRecord.payload.isNotEmpty()
         ) { "当前 NDEF 第二条不是有效的 android.com:pkg record" }
-        check(Uri.parse(originalUrl).queryParameterNames.none { it.equals("e", true) || it.equals("c", true) }) {
-            "原 URL 已包含 e 或 c 参数，拒绝重复追加 SDM 字段"
+        val containsCompleteTemplate = validateSdmTemplateIfPresent(
+            originalUrl,
+            piccPlaceholder,
+            macPlaceholder
+        )
+        val sdmUrl = if (containsCompleteTemplate) {
+            originalUrl
+        } else {
+            val compactUrl = Ntag424DnaProtocol.compactUrlForSdm(originalUrl)
+            Ntag424DnaProtocol.buildSdmUrl(compactUrl, piccPlaceholder, macPlaceholder)
         }
-        val compactUrl = Ntag424DnaProtocol.compactUrlForSdm(originalUrl)
-        val sdmUrl = Ntag424DnaProtocol.buildSdmUrl(compactUrl, piccPlaceholder, macPlaceholder)
         val records = currentMessage.records.copyOf()
         records[uriRecordIndex] = NdefRecord.createUri(Uri.parse(sdmUrl))
         val message = NdefMessage(records).toByteArray()
         val fileBytes = byteArrayOf((message.size ushr 8).toByte(), message.size.toByte()) + message
-        val piccMarker = "e=$piccPlaceholder".toByteArray(Charsets.US_ASCII)
-        val macMarker = "c=$macPlaceholder".toByteArray(Charsets.US_ASCII)
-        val piccMarkerOffset = fileBytes.indexOf(piccMarker)
-        val macMarkerOffset = fileBytes.indexOf(macMarker)
-        check(fileBytes.countOccurrences(piccMarker) == 1 && fileBytes.countOccurrences(macMarker) == 1) {
-            "SDM URL placeholder 不唯一"
-        }
-        val piccDataOffset = piccMarkerOffset + 2
-        val macOffset = macMarkerOffset + 2
+        val piccDataOffset = findPlaceholderValueOffset(fileBytes, "e", piccPlaceholder)
+        val macOffset = findPlaceholderValueOffset(fileBytes, "c", macPlaceholder)
         check(fileBytes.size <= maxFileSize) {
             "保留原 NDEF 后 SDM 模板为 ${fileBytes.size} bytes，超过文件容量 $maxFileSize bytes"
         }
@@ -640,6 +650,49 @@ internal class Ntag424DnaPersonalizationClient private constructor(
                 "originalUriLength=${originalUrl.length}, sdmUriLength=${sdmUrl.length}"
         )
         return Template(message, piccDataOffset, macOffset)
+    }
+
+    private fun validateSdmTemplateIfPresent(
+        url: String,
+        piccPlaceholder: String,
+        macPlaceholder: String
+    ): Boolean {
+        val outer = Uri.parse(url)
+        val outerValues = outer.sdmValues()
+        if (outerValues == null) return false
+
+        val (encryptedPiccData, mac) = outerValues
+        check(encryptedPiccData == piccPlaceholder && mac == macPlaceholder) {
+            "外层 URL 必须包含 32 个 0 的 e 和 16 个 0 的 c 占位符"
+        }
+        return true
+    }
+
+    private fun Uri.sdmValues(): Pair<String, String>? {
+        val encryptedPiccData = getQueryParameters("e")
+        val mac = getQueryParameters("c")
+        check(encryptedPiccData.size <= 1 && mac.size <= 1) { "URL 中 e/c 参数必须唯一" }
+        check(encryptedPiccData.isEmpty() == mac.isEmpty()) { "URL 必须同时包含 e 和 c" }
+        return if (encryptedPiccData.isEmpty()) null else encryptedPiccData.single() to mac.single()
+    }
+
+    private fun findPlaceholderValueOffset(
+        fileBytes: ByteArray,
+        parameterName: String,
+        placeholder: String
+    ): Int {
+        val fileText = fileBytes.toString(Charsets.ISO_8859_1)
+        val markers = listOf(
+            "$parameterName=$placeholder",
+            "$parameterName%3D$placeholder"
+        )
+        val matches = markers.mapNotNull { marker ->
+            fileText.indexOf(marker, ignoreCase = true)
+                .takeIf { it >= 0 }
+                ?.let { it + marker.length - placeholder.length }
+        }
+        check(matches.size == 1) { "SDM URL 的 $parameterName 占位符缺失或不唯一" }
+        return matches.single()
     }
 
     private fun createBusinessMessage(url: String, applicationPackage: String): NdefMessage {

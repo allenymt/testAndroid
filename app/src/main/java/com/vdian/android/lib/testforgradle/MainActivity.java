@@ -3,6 +3,7 @@ package com.vdian.android.lib.testforgradle;
 import static android.view.WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
@@ -13,11 +14,11 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
-import android.view.View;
 import android.view.WindowManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
@@ -37,7 +38,6 @@ import com.vdian.android.lib.testforgradle.location.LocationTestActivity;
 import com.vdian.android.lib.testforgradle.memory.TestMemory;
 import com.vdian.android.lib.testforgradle.nfc.NFCIdentificationActivity;
 import com.vdian.android.lib.testforgradle.nfc.Fm1208NfcLaunchActivity;
-import com.vdian.android.lib.testforgradle.nfc.NFCTestLaunchActivity;
 import com.vdian.android.lib.testforgradle.nfc.Ntag424DnaTestActivity;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
 import com.vdian.android.lib.testforgradle.pageing3.PagingTestActivity;
@@ -98,7 +98,11 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        bindDemoCategories();
+        runStartupDiagnostics();
+    }
 
+    private void runStartupDiagnostics() {
         TestMath.main();
 
         // 测试类中 变量 静态变量，构造函数等的初始化顺序
@@ -174,136 +178,106 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void testCatchException(View view) {
-        Util.Util.INSTANCE.testTryCache(mHandler);
+    private void bindDemoCategories() {
+        findViewById(R.id.category_nfc).setOnClickListener(view -> showNfcDemos());
+        findViewById(R.id.category_android).setOnClickListener(view -> showAndroidDemos());
+        findViewById(R.id.category_data).setOnClickListener(view -> showDataDemos());
+        findViewById(R.id.category_ui).setOnClickListener(view -> showUiDemos());
+        findViewById(R.id.category_runtime).setOnClickListener(view -> showRuntimeDemos());
     }
 
-    public void toLink(View view) {
-        startActivity(new Intent(MainActivity.this, AppLinkActivity.class));
+    private void showNfcDemos() {
+        showDemoDialog("NFC 与卡片", new DemoEntry[]{
+                new DemoEntry("FM1208 · 主动识别与读写", this::openNfcIdentification),
+                activityDemo("FM1208 · 冷启动唤起验证", Fm1208NfcLaunchActivity.class),
+                new DemoEntry("NTAG 424 DNA · 读写与 SDM", () -> {
+                    android.util.Log.i("Ntag424DnaTest", "[NTAG424-DEMO] opening standalone test page");
+                    openDemo(Ntag424DnaTestActivity.class);
+                })
+        });
     }
 
-    public void testLeak(View view) {
-        android.util.Log.i("testFinalize", "test anr222");
-        startActivity(new Intent(MainActivity.this, TestLeak1Activity.class));
+    private void showAndroidDemos() {
+        showDemoDialog("系统与组件", new DemoEntry[]{
+                activityDemo("App Link", AppLinkActivity.class),
+                new DemoEntry("Activity Result / ViewModel", () ->
+                        startActivityForResult(new Intent(this, TestBActivity.class), 1002)),
+                activityDemo("启动其他 App", LaunchOtherAppActivity.class),
+                activityDemo("Activity 启动模式", TestSingleTaskActivity.class),
+                activityDemo("Activity 屏幕旋转", RotateTestActivity.class),
+                activityDemo("应用市场跳转", TestGoMarketActivity.class),
+                activityDemo("定位", LocationTestActivity.class),
+                activityDemo("ROM 与设备检测", RomCheckActivity.class)
+        });
     }
 
-    public void goToTouchAc(View view) {
-        startActivity(new Intent(MainActivity.this, TestTouchActivity.class));
-        android.util.Log.i("getStatusBarHeight", "getStatusBarHeight: " + Util.Util.INSTANCE.getStatusBarHeight(this));
-
+    private void showDataDemos() {
+        showDemoDialog("数据与后台任务", new DemoEntry[]{
+                activityDemo("Data Binding", TestDateBindingActivity.class),
+                activityDemo("View Binding", TestViewBindingActivity.class),
+                activityDemo("WorkManager", WorkManagerTestActivity.class),
+                activityDemo("Room", RoomTestActivity.class),
+                activityDemo("Paging 3", PagingTestActivity.class),
+                activityDemo("DataStore", TestDataStoreActivity.class)
+        });
     }
 
-    public void goToLaunchAc(View view) {
-        startActivity(new Intent(MainActivity.this, LaunchOtherAppActivity.class));
+    private void showUiDemos() {
+        showDemoDialog("界面与渲染", new DemoEntry[]{
+                activityDemo("Touch 事件", TestTouchActivity.class),
+                activityDemo("自定义 View", SelfViewActivity.class),
+                activityDemo("Surface / Texture / OpenGL", SurfaceNavigationActivity.class),
+                activityDemo("TabLayout", TabLayoutTestActivity.class),
+                activityDemo("渐变背景", TestGradientActivity.class)
+        });
     }
 
-    public void goToSelfView(View view) {
-        startActivity(new Intent(MainActivity.this, SelfViewActivity.class));
+    private void showRuntimeDemos() {
+        showDemoDialog("性能、线程与进程", new DemoEntry[]{
+                new DemoEntry("异常捕获", () -> Util.Util.INSTANCE.testTryCache(mHandler)),
+                activityDemo("内存泄漏", TestLeak1Activity.class),
+                activityDemo("OOM", OomDemoActivity.class),
+                activityDemo("多线程", TestThreadActivity.class),
+                activityDemo("协程", TestCoroutinesActivity.class),
+                activityDemo("Binder", RemoteTestActivity.class),
+                activityDemo("线程 Dump", TestThreadDumpActivity.class)
+        });
     }
 
-    public void goToOomDemo(View view) {
-        startActivity(new Intent(MainActivity.this, OomDemoActivity.class));
+    private DemoEntry activityDemo(String title, Class<? extends Activity> activityClass) {
+        return new DemoEntry(title, () -> openDemo(activityClass));
     }
 
-    public void goToThread(View view) {
-        int oldCapacity = 10;
-        oldCapacity = oldCapacity >> 1; // 右移1位 除以2
-        startActivity(new Intent(MainActivity.this, TestThreadActivity.class));
+    private void openDemo(Class<? extends Activity> activityClass) {
+        startActivity(new Intent(this, activityClass));
     }
 
-    public void goToTestBinder(View view) {
-        startActivity(new Intent(MainActivity.this, RemoteTestActivity.class));
-    }
-
-    public void goToTestThreadDump(View view) {
-        startActivity(new Intent(MainActivity.this, TestThreadDumpActivity.class));
-
-    }
-
-    public void goToTestAcRotate(View view) {
-        startActivity(new Intent(MainActivity.this, RotateTestActivity.class));
-
-    }
-
-    public void testViewModel(View v) {
-        startActivityForResult(new Intent(MainActivity.this, TestBActivity.class), 1002);
-
-    }
-
-
-    public void goToRomCheck(View view) {
-        startActivity(new Intent(MainActivity.this, RomCheckActivity.class));
-    }
-
-    public void goToCoroutines(View view) {
-        startActivity(new Intent(MainActivity.this, TestCoroutinesActivity.class));
-    }
-
-    public void goToLocation(View view) {
-        startActivity(new Intent(MainActivity.this, LocationTestActivity.class));
-    }
-
-    public void goToDataBinding(View view) {
-        startActivity(new Intent(MainActivity.this, TestDateBindingActivity.class));
-    }
-
-    public void goToViewBinding(View view) {
-        startActivity(new Intent(MainActivity.this, TestViewBindingActivity.class));
-    }
-
-    public void goToWorkManager(View view) {
-        startActivity(new Intent(MainActivity.this, WorkManagerTestActivity.class));
-    }
-
-    public void goToRoom(View view) {
-        startActivity(new Intent(MainActivity.this, RoomTestActivity.class));
-    }
-
-    public void goToPaging3(View view) {
-        startActivity(new Intent(MainActivity.this, PagingTestActivity.class));
-    }
-
-    public void goToDataStore(View view) {
-        startActivity(new Intent(MainActivity.this, TestDataStoreActivity.class));
-    }
-
-    public void goToTestAcLaunch(View view) {
-        startActivity(new Intent(MainActivity.this, TestSingleTaskActivity.class));
-    }
-
-    public void goToTestSurfaceNavigation(View view) {
-        startActivity(new Intent(MainActivity.this, SurfaceNavigationActivity.class));
-    }
-
-    public void goToTestGoMarketActivity(View view) {
-        startActivity(new Intent(MainActivity.this, TestGoMarketActivity.class));
-    }
-
-    public void goToTestTabLayoutActivity(View view) {
-        startActivity(new Intent(MainActivity.this, TabLayoutTestActivity.class));
-    }
-
-    public void goToNFC(View view) {
+    private void openNfcIdentification() {
         Intent intent = new Intent(this, NFCIdentificationActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
         startActivity(intent);
-
-//        Intent intent = new Intent(this, NFCTestLaunchActivity.class);
-//        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-//        startActivity(intent);
     }
 
-    public void goToNfcColdLaunch(View view) {
-        startActivity(new Intent(this, Fm1208NfcLaunchActivity.class));
+    private void showDemoDialog(String title, DemoEntry[] entries) {
+        String[] labels = new String[entries.length];
+        for (int index = 0; index < entries.length; index++) {
+            labels[index] = entries[index].title;
+        }
+        new AlertDialog.Builder(this)
+                .setTitle(title)
+                .setItems(labels, (dialog, which) -> entries[which].action.run())
+                .setNegativeButton("取消", null)
+                .show();
     }
 
-    public void goToNtag424DnaTest(View view) {
-        android.util.Log.i("Ntag424DnaTest", "[NTAG424-DEMO] opening standalone test page");
-        startActivity(new Intent(this, Ntag424DnaTestActivity.class));
-    }
+    private static final class DemoEntry {
+        private final String title;
+        private final Runnable action;
 
-    public void goToTestGoGradientActivity(View view) {
-        startActivity(new Intent(MainActivity.this, TestGradientActivity.class));
+        private DemoEntry(String title, Runnable action) {
+            this.title = title;
+            this.action = action;
+        }
     }
 
     @Override

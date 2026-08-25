@@ -57,9 +57,19 @@ class Ntag424MockServerVerifierTest {
     }
 
     @Test
+    fun demoKeys_matchIssuedCardConfiguration() {
+        assertArrayEquals(hex("112233445566778899AABBCCDDEEFF00"), Ntag424DemoKeys.key0)
+        assertArrayEquals(hex("A1B2C3D4E5F6071829303A4B5C6D7E8F"), Ntag424DemoKeys.key1)
+        assertArrayEquals(hex("000102030405060708090A0B0C0D0E0F"), Ntag424DemoKeys.key2)
+        assertArrayEquals(hex("00112233445566778899AABBCCDDEEFF"), Ntag424DemoKeys.valueForVersion(0, 1))
+        assertArrayEquals(hex("0102030405060708090A0B0C0D0E0F10"), Ntag424DemoKeys.valueForVersion(1, 1))
+        assertArrayEquals(hex("102030405060708090A0B0C0D0E0F000"), Ntag424DemoKeys.valueForVersion(2, 1))
+    }
+
+    @Test
     fun demoChangeKeyData_matchesNtag424Encoding() {
         assertArrayEquals(
-            Ntag424DemoKeys.key0 + byteArrayOf(0x01),
+            Ntag424DemoKeys.key0 + byteArrayOf(0x02),
             Ntag424DemoKeys.buildChangeKeyData(
                 keyNumber = 0,
                 oldKey = Ntag424DemoKeys.transportKey,
@@ -82,8 +92,8 @@ class Ntag424MockServerVerifierTest {
         )
         assertArrayEquals(Ntag424DemoKeys.key1, key1Data.copyOfRange(0, 16))
         assertEquals(21, key1Data.size)
-        assertEquals(0x01, key1Data[16].toInt() and 0xFF)
-        assertArrayEquals(hex("0E7FB3F6"), key1Data.copyOfRange(17, 21))
+        assertEquals(0x02, key1Data[16].toInt() and 0xFF)
+        assertArrayEquals(hex("AA87C986"), key1Data.copyOfRange(17, 21))
     }
 
     @Test
@@ -93,16 +103,40 @@ class Ntag424MockServerVerifierTest {
             Ntag424DemoKeys.planPersonalization(mapOf(0 to 0, 1 to 0, 2 to 0))
         )
         assertEquals(
-            listOf(2, 0),
-            Ntag424DemoKeys.planPersonalization(mapOf(0 to 0, 1 to 1, 2 to 0))
+            listOf(1, 0),
+            Ntag424DemoKeys.planPersonalization(mapOf(0 to 0, 1 to 1, 2 to 2))
         )
         assertEquals(
             emptyList<Int>(),
-            Ntag424DemoKeys.planPersonalization(mapOf(0 to 1, 1 to 1, 2 to 1))
+            Ntag424DemoKeys.planPersonalization(mapOf(0 to 2, 1 to 2, 2 to 2))
         )
         expectFailure("不支持") {
-            Ntag424DemoKeys.planPersonalization(mapOf(0 to 0, 1 to 2, 2 to 0))
+            Ntag424DemoKeys.planPersonalization(mapOf(0 to 0, 1 to 3, 2 to 0))
         }
+    }
+
+    @Test
+    fun demoCompositePersonalization_migratesLegacyVersion1Keys() {
+        assertEquals(
+            listOf(1, 2, 0),
+            Ntag424DemoKeys.planPersonalization(mapOf(0 to 1, 1 to 1, 2 to 1))
+        )
+    }
+
+    @Test
+    fun demoTransportRestore_ordersKeysAndSkipsAlreadyRestoredKeys() {
+        assertEquals(
+            listOf(1, 2, 0),
+            Ntag424DemoKeys.planTransportRestore(mapOf(0 to 2, 1 to 2, 2 to 2))
+        )
+        assertEquals(
+            listOf(2, 0),
+            Ntag424DemoKeys.planTransportRestore(mapOf(0 to 1, 1 to 0, 2 to 2))
+        )
+        assertEquals(
+            emptyList<Int>(),
+            Ntag424DemoKeys.planTransportRestore(mapOf(0 to 0, 1 to 0, 2 to 0))
+        )
     }
 
     private fun buildUrl(uid: ByteArray, counter: Int): String {
@@ -125,7 +159,9 @@ class Ntag424MockServerVerifierTest {
         val mac = Ntag424DnaEv2Crypto.truncateMac(
             Ntag424DnaEv2Crypto.cmac(sessionKey, ByteArray(0))
         )
-        return "https://wdb-applink.weidian.com?targetUrl=test&e=${encryptedPiccData.toHex()}&c=${mac.toHex()}"
+        return "https://wdb-applink.weidian.com?" +
+            "targetUrl=weidianbuyer%3A%2F%2Fwdb%2Fnfc%3FencryptId%3DN2.01%26version%3D1" +
+            "&e=${encryptedPiccData.toHex()}&c=${mac.toHex()}"
     }
 
     private fun expectFailure(message: String, block: () -> Unit) {

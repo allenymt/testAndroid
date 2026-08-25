@@ -94,4 +94,5 @@ internal class Ntag424MockServerVerifier(
 
     private fun hex(value: String): ByteArray =
         value.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
+
 }

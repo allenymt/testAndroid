@@ -152,14 +152,39 @@ class NFCIdentificationActivity : AppCompatActivity() {
             val result = runCatching {
                 when (selectedOperation) {
                     Operation.READ -> when (val content = Fm1208CardClient.read(tag)) {
-                        is Fm1208CardClient.Content.NdefContent ->
+                        is Fm1208CardClient.Content.NdefContent -> {
+                            android.util.Log.i(
+                                LOG_TAG,
+                                "$LOG_PREFIX scan=$scanId read result type=NDEF, " +
+                                    "records=${content.recordCount}, uri=${content.uri ?: "none"}, " +
+                                    "package=${content.applicationPackage ?: "none"}"
+                            )
                             "NDEF 读取成功 (${content.recordCount} records)\n" +
                                 "URI: ${content.uri ?: "无"}\n包名: ${content.applicationPackage ?: "无"}"
+                        }
                         is Fm1208CardClient.Content.FmcosContent -> {
                             val profile = content.profile
                             val applications = profile.applications.joinToString("\n") { entry ->
                                 "#${entry.recordNumber} AID=${entry.aid ?: "无"} label=${entry.label ?: "无"}"
                             }.ifEmpty { "无已登记应用" }
+                            android.util.Log.i(
+                                LOG_TAG,
+                                "$LOG_PREFIX scan=$scanId read result type=FMCOS, " +
+                                    "mf=${profile.masterFileName ?: "unknown"}, " +
+                                    "dirSfi=${profile.directorySfi ?: "unknown"}, " +
+                                    "applications=${profile.applications.size}, " +
+                                    "uri=${content.uri ?: "none"}, " +
+                                    "package=${content.applicationPackage ?: "none"}, " +
+                                    "records=${content.recordCount}"
+                            )
+                            profile.applications.forEach { entry ->
+                                android.util.Log.i(
+                                    LOG_TAG,
+                                    "$LOG_PREFIX scan=$scanId read application " +
+                                        "record=${entry.recordNumber}, aid=${entry.aid ?: "none"}, " +
+                                        "label=${entry.label ?: "none"}"
+                                )
+                            }
                             "FMCOS 读取成功\nMF: ${profile.masterFileName ?: "未知"}\n" +
                                 "DIR SFI: ${profile.directorySfi ?: "未知"}\n应用:\n$applications\n" +
                                 "业务 URI: ${content.uri ?: "无"}\n" +

@@ -63,7 +63,7 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         binding.writeNtag424File03.setOnClickListener { confirmFile03Write() }
         binding.readNtag424File03.setOnClickListener { armFile03Read() }
         binding.changeNtag424Key0.setOnClickListener { confirmChangeDemoKey(0) }
-        binding.resetNtag424Key0.setOnClickListener { confirmResetDemoKey0() }
+        binding.resetNtag424Keys.setOnClickListener { confirmResetDemoKeys() }
         binding.changeNtag424Key1.setOnClickListener { confirmChangeDemoKey(1) }
         binding.changeNtag424Key2.setOnClickListener { confirmChangeDemoKey(2) }
         binding.personalizeKeysAndVerifySdm.setOnClickListener { confirmCompositeSetup() }
@@ -129,7 +129,7 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 Operation.WRITE_FILE_03 -> "正在使用 Demo Key 3 写入 File 03，请勿移开卡片..."
                 Operation.READ_FILE_03 -> "正在使用 Demo Key 2 读取 File 03，请勿移开卡片..."
                 Operation.CHANGE_KEY_0 -> "正在修改 AppKey 0，请勿移开卡片..."
-                Operation.RESET_KEY_0 -> "正在把 AppKey 0 恢复为 transport version 0，请勿移开卡片..."
+                Operation.RESET_KEYS -> "正在把 AppKey 0/1/2 恢复为 transport version 0，请勿移开卡片..."
                 Operation.CHANGE_KEY_1 -> "正在修改 AppKey 1，请勿移开卡片..."
                 Operation.CHANGE_KEY_2 -> "正在修改 AppKey 2，请勿移开卡片..."
                 Operation.PERSONALIZE_KEYS_WRITE_NDEF_ENABLE_SDM ->
@@ -202,11 +202,16 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                         "version: ${changeResult.oldVersion} -> ${changeResult.newVersion}\n" +
                         "密钥值为代码内固定 Demo 值，不会输出到日志或页面。"
                 }
-                Operation.RESET_KEY_0 -> Ntag424DnaPersonalizationClient.connect(tag).use { client ->
-                    val changeResult = client.changeDemoKey0ToTransport()
-                    "AppKey 0 已恢复为 Transport Key\n" +
-                        "version: ${changeResult.oldVersion} -> ${changeResult.newVersion}\n" +
-                        "已使用全零 Key 0 重新认证成功；现在可再次执行 version 0 -> version 1。"
+                Operation.RESET_KEYS -> Ntag424DnaPersonalizationClient.connect(tag).use { client ->
+                    val restore = client.restoreDemoKeysToTransport()
+                    val initialVersions = restore.initialKeyVersions.entries.sortedBy { it.key }
+                        .joinToString { "Key ${it.key}: v${it.value} -> v0" }
+                    val restoredKeys = restore.restoredKeys.joinToString()
+                        .ifEmpty { "无（均已是 v0）" }
+                    "AppKey 0/1/2 已恢复为全零 Transport Key\n" +
+                        "初始/目标版本: $initialVersions\n" +
+                        "本次恢复顺序: $restoredKeys\n" +
+                        "写后已逐个使用全零密钥重新认证。NDEF、SDM 和 FileSettings 保持不变。"
                 }
                 Operation.PERSONALIZE_KEYS_WRITE_NDEF_ENABLE_SDM ->
                     Ntag424DnaPersonalizationClient.connect(tag).use { client ->
@@ -217,9 +222,13 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                         )
                         val versions = composite.initialKeyVersions.entries
                             .sortedBy { it.key }
-                            .joinToString { "Key ${it.key}: v${it.value} -> v1" }
+                            .joinToString {
+                                "Key ${it.key}: v${it.value} -> v${Ntag424DemoKeys.PERSONALIZED_VERSION}"
+                            }
                         val changed = composite.changedKeys.joinToString()
-                            .ifEmpty { "无（均已是 v1，已逐个认证）" }
+                            .ifEmpty {
+                                "无（均已是 v${Ntag424DemoKeys.PERSONALIZED_VERSION}，已逐个认证）"
+                            }
                         "复合操作成功\n" +
                             "初始/目标版本: $versions\n" +
                             "本次修改顺序: $changed\n" +
@@ -237,8 +246,7 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                     check(report.ndefSettings?.sdmEnabled == true) { "File 02 尚未开启 SDM" }
                     val dynamicUrl = checkNotNull(report.ndefUri) { "File 02 没有可验证的 URI record" }.toString()
                     val verification = mockServerVerifier.verify(dynamicUrl)
-                    report.toDisplayText() + "\n\n" +
-                        "Mock 服务器验证成功\n" +
+                    "服务器验证成功\n" +
                         "UID: ${verification.uid.toHex(":")}\n" +
                         "SDMReadCtr: ${verification.readCounter}\n" +
                         "c: ${verification.calculatedMac.toHex("")}\n" +
@@ -415,9 +423,10 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         AlertDialog.Builder(this)
             .setTitle("确认修改 AppKey $keyNumber")
             .setMessage(
-                "下一次贴 NTAG 424 DNA 卡片会把其 AppKey $keyNumber 从 transport version 0 " +
-                    "修改为代码内固定的 Demo version ${Ntag424DemoKeys.PERSONALIZED_VERSION}。\n\n" +
-                    "$orderWarning\n该操作不会修改 FileSettings 或其他 AppKey，且不支持重复执行。"
+                "下一次贴 NTAG 424 DNA 卡片会把其 AppKey $keyNumber 从 transport version 0 或旧版 " +
+                    "Demo version ${Ntag424DemoKeys.LEGACY_VERSION} 修改为代码内固定的 Demo version " +
+                    "${Ntag424DemoKeys.PERSONALIZED_VERSION}。\n\n" +
+                    "$orderWarning\n该操作不会修改 FileSettings 或其他 AppKey。"
             )
             .setNegativeButton("取消", null)
             .setPositiveButton("确认，等待贴卡") { _, _ ->
@@ -430,20 +439,22 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             .show()
     }
 
-    private fun confirmResetDemoKey0() {
+    private fun confirmResetDemoKeys() {
         AlertDialog.Builder(this)
-            .setTitle("确认恢复 AppKey 0 为 version 0")
+            .setTitle("确认恢复 AppKey 0/1/2 为 version 0")
             .setMessage(
-                "下一次贴 NTAG 424 DNA 卡片会使用其当前固定 Demo Key 0 授权，把 AppKey 0 的值改回全零 " +
-                    "Transport Key，并把 version 写为 0。写后会用全零 Key 0 重新认证。\n\n" +
-                    "FileSettings、File 02、File 03 和其他 AppKey 均保持不变。完成后可再次把 Key 0 改为 version 1。"
+                "下一次贴卡会按 Key 1 → Key 2 → Key 0 的顺序，把 AppKey 0、1、2 恢复为全零 " +
+                    "Transport Key/version 0，并在每次修改后使用全零密钥重新认证。\n\n" +
+                    "NDEF、SDM、FileSettings、File 03 和 AppKey 3/4 均保持不变。若 SDM 仍开启，" +
+                    "动态 e/c 将改为使用全零 Key 2/1；服务端也必须使用对应密钥验证。\n\n" +
+                    "操作顺序支持中途移卡后重试，但三次换钥不构成卡片事务，请保持贴卡直至完成。"
             )
             .setNegativeButton("取消", null)
             .setPositiveButton("确认，等待贴卡") { _, _ ->
                 pendingWriteRequest = null
                 pendingFile03Text = null
-                pendingOperation.set(Operation.RESET_KEY_0)
-                binding.ntag424Status.text = "已授权一次恢复 AppKey 0，请贴 NTAG 424 DNA 卡片"
+                pendingOperation.set(Operation.RESET_KEYS)
+                binding.ntag424Status.text = "已授权一次恢复 AppKey 0/1/2，请贴 NTAG 424 DNA 卡片"
                 binding.ntag424Result.text = "等待 NTAG 424 DNA 卡片"
             }
             .show()
@@ -462,7 +473,8 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             .setTitle("确认一次贴卡完成复合配置")
             .setMessage(
                 "下一次贴卡会在同一次 NFC 连接中执行：\n\n" +
-                    "1. 修改或确认 AppKey 0、1、2 为固定 Demo Key/version 1\n" +
+                    "1. 修改或确认 AppKey 0、1、2 为固定 Demo Key/version " +
+                    "${Ntag424DemoKeys.PERSONALIZED_VERSION}\n" +
                     "2. 向 NDEF (File 02) 写入 URL + pkg\n" +
                     "3. 使用新 Key 0 开启 SDM\n\n" +
                     "URL: ${request.url}\n" +
@@ -512,7 +524,7 @@ class Ntag424DnaTestActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         WRITE_FILE_03,
         READ_FILE_03,
         CHANGE_KEY_0,
-        RESET_KEY_0,
+        RESET_KEYS,
         CHANGE_KEY_1,
         CHANGE_KEY_2,
         PERSONALIZE_KEYS_WRITE_NDEF_ENABLE_SDM,

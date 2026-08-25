@@ -415,9 +415,9 @@ AppKey 0..4 都属于客户应用密钥，交付状态下可以通过 ChangeKey 
 
 修改前的 transport 状态是 Key 0..4 均为全零 version 0。执行独立 ChangeKey 操作后，目标状态可表示为：
 
-    Key 0 version = 1，value = 00112233445566778899AABBCCDDEEFF
-    Key 1 version = 1，value = 0102030405060708090A0B0C0D0E0F10
-    Key 2 version = 1，value = 102030405060708090A0B0C0D0E0F000
+    Key 0 version = 1，value = 112233445566778899AABBCCDDEEFF00
+    Key 1 version = 1，value = A1B2C3D4E5F6071829303A4B5C6D7E8F
+    Key 2 version = 1，value = 000102030405060708090A0B0C0D0E0F
     Key 3 value = 00000000000000000000000000000000
     Key 4 value = 00000000000000000000000000000000
 

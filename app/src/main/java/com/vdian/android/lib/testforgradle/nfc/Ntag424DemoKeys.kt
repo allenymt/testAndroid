@@ -4,16 +4,28 @@ import java.util.zip.CRC32
 
 /** Fixed keys for protocol testing on demo cards. Never use these values in production. */
 internal object Ntag424DemoKeys {
-    const val PERSONALIZED_VERSION = 0x01
+    const val LEGACY_VERSION = 0x01
+    const val PERSONALIZED_VERSION = 0x02
     val transportKey = ByteArray(16)
-    val key0 = hex("00112233445566778899AABBCCDDEEFF")
-    val key1 = hex("0102030405060708090A0B0C0D0E0F10")
-    val key2 = hex("102030405060708090A0B0C0D0E0F000")
+    private val legacyKey0 = hex("00112233445566778899AABBCCDDEEFF")
+    private val legacyKey1 = hex("0102030405060708090A0B0C0D0E0F10")
+    private val legacyKey2 = hex("102030405060708090A0B0C0D0E0F000")
+    val key0 = hex("112233445566778899AABBCCDDEEFF00")
+    val key1 = hex("A1B2C3D4E5F6071829303A4B5C6D7E8F")
+    val key2 = hex("000102030405060708090A0B0C0D0E0F")
 
     fun valueForVersion(keyNumber: Int, version: Int): ByteArray = when (version) {
         0 -> transportKey
+        LEGACY_VERSION -> legacyValue(keyNumber)
         PERSONALIZED_VERSION -> personalizedValue(keyNumber)
         else -> error("不支持 AppKey $keyNumber version $version")
+    }
+
+    private fun legacyValue(keyNumber: Int): ByteArray = when (keyNumber) {
+        0 -> legacyKey0
+        1 -> legacyKey1
+        2 -> legacyKey2
+        else -> error("AppKey $keyNumber 尚未配置旧版 Demo key value")
     }
 
     fun personalizedValue(keyNumber: Int): ByteArray = when (keyNumber) {
@@ -26,11 +38,21 @@ internal object Ntag424DemoKeys {
     fun planPersonalization(initialVersions: Map<Int, Int>): List<Int> {
         require(initialVersions.keys == setOf(0, 1, 2)) { "必须提供 AppKey 0、1、2 的版本" }
         initialVersions.forEach { (keyNumber, version) ->
-            check(version == 0 || version == PERSONALIZED_VERSION) {
+            check(version in 0..PERSONALIZED_VERSION) {
                 "AppKey $keyNumber version $version 不支持复合 Demo 操作"
             }
         }
-        return listOf(1, 2, 0).filter { initialVersions.getValue(it) == 0 }
+        return listOf(1, 2, 0).filter { initialVersions.getValue(it) != PERSONALIZED_VERSION }
+    }
+
+    fun planTransportRestore(initialVersions: Map<Int, Int>): List<Int> {
+        require(initialVersions.keys == setOf(0, 1, 2)) { "必须提供 AppKey 0、1、2 的版本" }
+        initialVersions.forEach { (keyNumber, version) ->
+            check(version in 0..PERSONALIZED_VERSION) {
+                "AppKey $keyNumber version $version 不支持恢复 Transport Key"
+            }
+        }
+        return listOf(1, 2, 0).filter { initialVersions.getValue(it) != 0 }
     }
 
     fun buildChangeKeyData(

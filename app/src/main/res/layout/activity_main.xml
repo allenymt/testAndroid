@@ -1,251 +1,249 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@drawable/bg_demo_home"
+    android:fillViewport="true"
     tools:context=".MainActivity">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="20dp"
+        android:paddingTop="36dp"
+        android:paddingBottom="28dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:letterSpacing="0.12"
+            android:text="ANDROID SANDBOX"
+            android:textColor="#B34B20"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Demo Lab"
+            android:textColor="#17251D"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:lineSpacingExtra="3dp"
+            android:text="按功能选择实验目录。所有原 Demo 页面仍保留，只把入口收拢到清晰的二级导航。"
+            android:textColor="#536158"
+            android:textSize="15sp" />
 
         <LinearLayout
+            android:id="@+id/category_nfc"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:background="@drawable/bg_demo_category"
+            android:clickable="true"
+            android:contentDescription="打开 NFC 与卡片实验"
+            android:focusable="true"
+            android:minHeight="104dp"
+            android:orientation="vertical"
+            android:padding="18dp">
 
-            <Button
-                android:id="@+id/test1"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:onClick="testCatchException"
-                android:text="测试异常捕获" />
+                android:text="01  NFC 与卡片"
+                android:textColor="#176B3A"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
-            <Button
-                android:id="@+id/test2"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="testLeak"
-                android:text="测试内存泄露" />
+                android:layout_marginTop="8dp"
+                android:text="FM1208 · NTAG 424 DNA · 冷启动唤起"
+                android:textColor="#536158"
+                android:textSize="14sp" />
 
-
-            <Button
-                android:id="@+id/go_to_link"
-                android:layout_width="wrap_content"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:onClick="toLink"
-                android:textAllCaps="false"
-                android:text="app-link测试" />
-
-            <Button
-                android:id="@+id/test3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="testViewModel"
-                android:textAllCaps="false"
-                android:text="viewModel测试" />
-
-
-            <Button
-                android:id="@+id/test_touch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="false"
-                android:onClick="goToTouchAc"
-                android:text="touch测试" />
-
-            <Button
-                android:id="@+id/test_launch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToLaunchAc"
-                android:text="启动其他APP" />
-
-            <Button
-                android:id="@+id/test_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToSelfView"
-                android:textAllCaps="false"
-                android:text="自定义view" />
-
-            <Button
-                android:id="@+id/oom_test_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToOomDemo"
-                android:textAllCaps="false"
-                android:text="oom测试" />
-
-            <Button
-                android:id="@+id/go_to_thread"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAllCaps="false"
-                android:onClick="goToThread"
-                android:text="多线程demo" />
-
-            <Button
-                android:id="@+id/go_to_binder"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToTestBinder"
-                android:textAllCaps="false"
-                android:text="binder测试" />
-
-            <Button
-                android:id="@+id/go_to_thread_dump"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToTestThreadDump"
-                android:textAllCaps="false"
-                android:text="线程dump测试" />
-
-            <Button
-                android:id="@+id/go_to_rom_check"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToRomCheck"
-                android:textAllCaps="false"
-                android:text="rom检测测试" />
-
-            <Button
-                android:id="@+id/go_to_coroutines"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToCoroutines"
-                android:text="协程测试" />
-
-            <Button
-                android:id="@+id/go_to_location"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToLocation"
-                android:text="定位测试" />
-
-            <Button
-                android:id="@+id/go_to_dataBinding"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToDataBinding"
-                android:textAllCaps="false"
-                android:text="dataBinding测试" />
-
-            <Button
-                android:id="@+id/go_to_viewBinding"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToViewBinding"
-                android:textAllCaps="false"
-                android:text="viewBinding测试" />
-
-            <Button
-                android:id="@+id/go_to_workManager"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToWorkManager"
-                android:textAllCaps="false"
-                android:text="WorkManager测试" />
-
-            <Button
-                android:id="@+id/go_to_room"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToRoom"
-                android:textAllCaps="false"
-                android:text="Room测试" />
-
-            <Button
-                android:id="@+id/go_to_paging"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToPaging3"
-                android:textAllCaps="false"
-                android:text="pageing3测试" />
-
-            <Button
-                android:id="@+id/go_to_data_store"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToDataStore"
-                android:textAllCaps="false"
-                android:text="DataStore测试" />
-
-            <Button
-                android:id="@+id/test_ac_launch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToTestAcLaunch"
-                android:textAllCaps="false"
-                android:text="测试AC启动模式" />
-
-            <Button
-                android:id="@+id/test_ac_rotate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToTestAcRotate"
-                android:textAllCaps="false"
-                android:text="测试AC屏幕旋转" />
-
-            <Button
-                android:id="@+id/test_surface"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToTestSurfaceNavigation"
-                android:textAllCaps="false"
-                android:text="测试Surface和纹理相关" />
-
-            <Button
-                android:id="@+id/test_go_market"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToTestGoMarketActivity"
-                android:textAllCaps="false"
-                android:text="跳转应用市场" />
-
-            <Button
-                android:id="@+id/test_go_tabLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToTestTabLayoutActivity"
-                android:textAllCaps="false"
-                android:text="跳转TabLayout测试页面" />
-
-            <Button
-                android:id="@+id/test_go_nfc"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToNFC"
-                android:textAllCaps="false"
-                android:text="FM1208 主动识别与读写" />
-
-            <Button
-                android:id="@+id/test_go_nfc_cold_launch"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToNfcColdLaunch"
-                android:text="FM1208 冷启动唤起验证"
-                android:textAllCaps="false" />
-
-            <Button
-                android:id="@+id/test_ntag424_dna"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToNtag424DnaTest"
-                android:text="NTAG 424 DNA 独立测试"
-                android:textAllCaps="false" />
-
-            <Button
-                android:id="@+id/test_go_gradient"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="goToTestGoGradientActivity"
-                android:textAllCaps="false"
-                android:text="跳转渐变色背景" />
-
+                android:layout_marginTop="10dp"
+                android:text="3 个实验  →"
+                android:textColor="#B34B20"
+                android:textSize="13sp"
+                android:textStyle="bold" />
         </LinearLayout>
-    </ScrollView>
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/category_android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_demo_category"
+            android:clickable="true"
+            android:contentDescription="打开系统与组件实验"
+            android:focusable="true"
+            android:minHeight="104dp"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="02  系统与组件"
+                android:textColor="#17251D"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Activity · App Link · ROM · 定位 · 外部跳转"
+                android:textColor="#536158"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="8 个实验  →"
+                android:textColor="#B34B20"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/category_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_demo_category"
+            android:clickable="true"
+            android:contentDescription="打开数据与后台任务实验"
+            android:focusable="true"
+            android:minHeight="104dp"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="03  数据与后台任务"
+                android:textColor="#17251D"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Room · DataStore · Paging · WorkManager · Binding"
+                android:textColor="#536158"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="6 个实验  →"
+                android:textColor="#B34B20"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/category_ui"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_demo_category"
+            android:clickable="true"
+            android:contentDescription="打开界面与渲染实验"
+            android:focusable="true"
+            android:minHeight="104dp"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="04  界面与渲染"
+                android:textColor="#17251D"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Touch · 自定义 View · Surface · OpenGL · TabLayout"
+                android:textColor="#536158"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="5 个实验  →"
+                android:textColor="#B34B20"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/category_runtime"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_demo_category"
+            android:clickable="true"
+            android:contentDescription="打开性能线程与进程实验"
+            android:focusable="true"
+            android:minHeight="104dp"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="05  性能、线程与进程"
+                android:textColor="#17251D"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="异常 · 泄漏 · OOM · 线程 · 协程 · Binder"
+                android:textColor="#536158"
+                android:textSize="14sp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="7 个实验  →"
+                android:textColor="#B34B20"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:gravity="center"
+            android:text="29 个 Demo · 5 个功能目录"
+            android:textColor="#788179"
+            android:textSize="12sp" />
+    </LinearLayout>
+</ScrollView>

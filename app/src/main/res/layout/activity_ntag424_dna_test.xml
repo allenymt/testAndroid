@@ -136,7 +136,7 @@
                     android:hint="HTTPS URL"
                     android:inputType="textUri"
                     android:maxLines="4"
-                    android:text="https://wdb-applink.weidian.com?targetUrl=weidianbuyer%3A%2F%2Fwdb%2Fnfc%3Fversion%3D1%26encryptId%3D1zGuNzbVWQ8Fq3j87uVAupVruQ3M9QlK8%2Fu6SgG9Z8hpxD58fnZIHDx5bBkGbcUB" />
+                    android:text="https://wdb-applink.weidian.com?targetUrl=weidianbuyer%3A%2F%2Fwdb%2Fnfc%3FencryptId%3DN2.01%26version%3D1&amp;e=00000000000000000000000000000000&amp;c=0000000000000000" />
 
                 <EditText
                     android:id="@+id/ntag424_package"
@@ -185,7 +185,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:paddingVertical="6dp"
-                    android:text="建议顺序：Key 1 → Key 2 → Key 0。Key 0 可在 version 0/1 之间反复切换。"
+                    android:text="建议顺序：Key 1 → Key 2 → Key 0。当前 Demo Key 为 v2；可一键将 Key 0/1/2 恢复为全零 v0。"
                     android:textColor="#8A3D00"
                     android:textSize="13sp" />
 
@@ -201,25 +201,25 @@
                     android:id="@+id/change_ntag424_key1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="修改 AppKey 1 为固定 Demo Key (v1)" />
+                    android:text="修改 AppKey 1 为固定 Demo Key (v2)" />
 
                 <Button
                     android:id="@+id/change_ntag424_key2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="修改 AppKey 2 为固定 Demo Key (v1)" />
+                    android:text="修改 AppKey 2 为固定 Demo Key (v2)" />
 
                 <Button
                     android:id="@+id/change_ntag424_key0"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="修改 AppKey 0 为固定 Demo Key (v1)" />
+                    android:text="修改 AppKey 0 为固定 Demo Key (v2)" />
 
                 <Button
-                    android:id="@+id/reset_ntag424_key0"
+                    android:id="@+id/reset_ntag424_keys"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="恢复 AppKey 0 为全零 Transport Key (v0)" />
+                    android:text="恢复 AppKey 0/1/2 为全零 Transport Key (v0)" />
             </LinearLayout>
 
             <LinearLayout
