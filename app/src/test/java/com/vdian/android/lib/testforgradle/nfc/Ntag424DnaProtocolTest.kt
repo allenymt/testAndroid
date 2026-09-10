@@ -195,6 +195,18 @@ class Ntag424DnaProtocolTest {
     }
 
     @Test
+    fun hkProductionUrl_keepsSdmPlaceholdersInOuterQuery() {
+        val url = "https://wdb-applink.weidian.com?targetUrl=weidianbuyer://wdb/nfc" +
+            "%3Fversion%3D1%26encryptId%3DN424.&e=${"0".repeat(32)}&c=${"0".repeat(16)}"
+
+        assertTrue(Ntag424DnaProtocol.hasSdmPlaceholders(url))
+        assertTrue(url.contains("encryptId%3DN424."))
+        assertTrue(url.contains("&e=${"0".repeat(32)}&c=${"0".repeat(16)}"))
+        assertFalse(url.contains("%26e%3D"))
+        assertFalse(url.contains("%26c%3D"))
+    }
+
+    @Test
     fun removeSdmParameters_allowsDisableThenEnableAgainWithoutChangingBusinessQuery() {
         val original = "https://example.com/path?targetUrl=a%26e%3Dnested&business=1#section"
         val enabled = "https://example.com/path?targetUrl=a%26e%3Dnested&E=${"A".repeat(32)}&" +

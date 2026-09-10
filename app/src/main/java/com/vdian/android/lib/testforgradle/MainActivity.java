@@ -39,6 +39,8 @@ import com.vdian.android.lib.testforgradle.memory.TestMemory;
 import com.vdian.android.lib.testforgradle.nfc.NFCIdentificationActivity;
 import com.vdian.android.lib.testforgradle.nfc.Fm1208NfcLaunchActivity;
 import com.vdian.android.lib.testforgradle.nfc.Ntag424DnaTestActivity;
+import com.vdian.android.lib.testforgradle.nfc.HkNtag424VerifyActivity;
+import com.vdian.android.lib.testforgradle.nfc.HkNtag424WriteActivity;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
 import com.vdian.android.lib.testforgradle.pageing3.PagingTestActivity;
 import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
@@ -193,7 +195,9 @@ public class MainActivity extends AppCompatActivity {
                 new DemoEntry("NTAG 424 DNA · 读写与 SDM", () -> {
                     android.util.Log.i("Ntag424DnaTest", "[NTAG424-DEMO] opening standalone test page");
                     openDemo(Ntag424DnaTestActivity.class);
-                })
+                }),
+                activityDemo("星愿卡 NTAG 424 · 生产写入", HkNtag424WriteActivity.class),
+                activityDemo("星愿卡 NTAG 424 · 读卡验真", HkNtag424VerifyActivity.class)
         });
     }
 

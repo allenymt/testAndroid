@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="星愿卡读卡验真"
+        android:textColor="@android:color/black"
+        android:textSize="23sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:background="#E8F1EA"
+        android:padding="12dp"
+        android:text="选择读卡验真后贴卡"
+        android:textColor="#174C2B"
+        android:textStyle="bold" />
+
+    <Button
+        android:id="@+id/read_and_verify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="#176B3A"
+        android:text="读取并请求服务端验真"
+        android:textColor="@android:color/white" />
+
+    <TextView
+        android:id="@+id/result"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="12dp"
+        android:layout_weight="1"
+        android:background="#F4F4F1"
+        android:fontFamily="monospace"
+        android:gravity="top"
+        android:padding="12dp"
+        android:text="等待操作"
+        android:textColor="@android:color/black"
+        android:textIsSelectable="true" />
+
+    <Button
+        android:id="@+id/open_nfc_settings"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="打开系统 NFC 设置" />
+</LinearLayout>

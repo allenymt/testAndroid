@@ -34,6 +34,7 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:largeHeap="true"
+        android:networkSecurityConfig="@xml/ntag424_network_security_config"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
@@ -44,6 +45,12 @@
             android:launchMode="singleTop" />
         <activity
             android:name=".nfc.Ntag424DnaTestActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nfc.HkNtag424WriteActivity"
+            android:exported="false" />
+        <activity
+            android:name=".nfc.HkNtag424VerifyActivity"
             android:exported="false" />
         <activity
             android:name=".nfc.Fm1208NfcLaunchActivity"

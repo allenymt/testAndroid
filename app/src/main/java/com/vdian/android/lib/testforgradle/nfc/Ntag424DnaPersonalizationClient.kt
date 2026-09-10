@@ -21,6 +21,11 @@ internal class Ntag424DnaPersonalizationClient private constructor(
     data class WriteResult(val ndefBytes: Int, val recordCount: Int)
     data class WriteProtectionResult(val protected: Boolean, val writeKey: Int, val readWriteKey: Int)
     data class DisableSdmResult(val settingsChanged: Boolean, val urlParametersRemoved: Boolean)
+    data class ClearNdefResult(val cleared: Boolean)
+    data class ProductionResetKeysResult(
+        val initialKeyVersions: Map<Int, Int>,
+        val restoredKeys: List<Int>
+    )
     data class RandomUidResult(val enabled: Boolean)
     data class File03Result(val text: String, val payloadBytes: Int, val rawBytes: ByteArray)
     data class ChangeKeyResult(val keyNumber: Int, val oldVersion: Int, val newVersion: Int)
@@ -29,6 +34,13 @@ internal class Ntag424DnaPersonalizationClient private constructor(
         val restoredKeys: List<Int>
     )
     data class CompositeSetupResult(
+        val initialKeyVersions: Map<Int, Int>,
+        val changedKeys: List<Int>,
+        val writeResult: WriteResult,
+        val sdmResult: Result
+    )
+    data class ProductionSetupResult(
+        val uid: ByteArray,
         val initialKeyVersions: Map<Int, Int>,
         val changedKeys: List<Int>,
         val writeResult: WriteResult,
@@ -131,7 +143,14 @@ internal class Ntag424DnaPersonalizationClient private constructor(
         return WriteProtectionResult(protected, expectedKey, expectedKey)
     }
 
-    fun disableSdmWithDemoKey(): DisableSdmResult {
+    fun disableSdmWithDemoKey(): DisableSdmResult = disableSdm { authenticateDemoKey(0) }
+
+    fun disableSdmWithKey0(key0: ByteArray): DisableSdmResult {
+        require(key0.size == 16) { "Key 0 必须是 16-byte AES key" }
+        return disableSdm { authenticateKey(0, key0) }
+    }
+
+    private fun disableSdm(authenticate: () -> Session): DisableSdmResult {
         exchangeIso(Ntag424DnaProtocol.SELECT_NDEF_APPLICATION, "select NDEF application")
         requireRecognizedCard()
         val currentSettings = readFileSettings()
@@ -158,7 +177,7 @@ internal class Ntag424DnaPersonalizationClient private constructor(
             "File 02 写权限不允许 Demo Key 0 清理 SDM URL 参数；SDM 设置尚未改变"
         }
 
-        val session = authenticateDemoKey(0)
+        val session = authenticate()
         if (disablePlan.disableFileSettings) {
             secureFullCommand(
                 session,
@@ -176,6 +195,69 @@ internal class Ntag424DnaPersonalizationClient private constructor(
             writeNdefAtomically(session, currentSettings, messageBytes, "remove SDM URL parameters")
         }
         return DisableSdmResult(disablePlan.disableFileSettings, cleanedMessage != null)
+    }
+
+    fun clearNdefWithKey0(key0: ByteArray): ClearNdefResult {
+        require(key0.size == 16) { "Key 0 必须是 16-byte AES key" }
+        exchangeIso(Ntag424DnaProtocol.SELECT_NDEF_APPLICATION, "select NDEF application")
+        requireRecognizedCard()
+        val settings = readFileSettings()
+        check(!settings.sdmEnabled) { "File 02 仍开启 SDM；请先关闭 SDM 再清空 NDEF" }
+        check(settings.writeKey == FREE_ACCESS || settings.readWriteKey == FREE_ACCESS ||
+            settings.writeKey == 0 || settings.readWriteKey == 0) {
+            "File 02 写权限既不是 Free，也不允许 Key 0 清空"
+        }
+        val session = authenticateKey(0, key0)
+        writeNdefAtomically(session, settings, ByteArray(0), "clear production NDEF")
+        return ClearNdefResult(cleared = true)
+    }
+
+    fun resetProductionKeysToTransport(
+        key0: ByteArray,
+        key1: ByteArray,
+        key2: ByteArray,
+        productionVersion: Int
+    ): ProductionResetKeysResult {
+        require(key0.size == 16 && key1.size == 16 && key2.size == 16) {
+            "Key 0/1/2 必须是 16-byte AES key"
+        }
+        require(productionVersion in 1..0xFF) { "生产 KeyVersion 必须是 1..255" }
+        exchangeIso(Ntag424DnaProtocol.SELECT_NDEF_APPLICATION, "select NDEF application")
+        requireRecognizedCard()
+        val productionKeys = mapOf(0 to key0, 1 to key1, 2 to key2)
+        val initialVersions = (0..2).associateWith(::readKeyVersion)
+        initialVersions.forEach { (keyNumber, version) ->
+            check(version == TRANSPORT_KEY_VERSION || version == productionVersion) {
+                "AppKey $keyNumber version $version 既不是 transport，也不匹配所选记录 version $productionVersion"
+            }
+        }
+
+        var managerKey = if (initialVersions.getValue(0) == productionVersion) {
+            key0
+        } else {
+            Ntag424DemoKeys.transportKey
+        }
+        val restored = mutableListOf<Int>()
+        listOf(1, 2, 0).forEach { keyNumber ->
+            exchangeIso(
+                Ntag424DnaProtocol.SELECT_NDEF_APPLICATION,
+                "reselect before resetting AppKey $keyNumber"
+            )
+            if (initialVersions.getValue(keyNumber) == TRANSPORT_KEY_VERSION) {
+                authenticateKey(keyNumber, Ntag424DemoKeys.transportKey)
+            } else {
+                changeKeyWithExplicitKeys(
+                    keyNumber = keyNumber,
+                    oldKey = productionKeys.getValue(keyNumber),
+                    newVersion = TRANSPORT_KEY_VERSION,
+                    newKey = Ntag424DemoKeys.transportKey,
+                    managerKey = managerKey
+                )
+                if (keyNumber == 0) managerKey = Ntag424DemoKeys.transportKey
+                restored += keyNumber
+            }
+        }
+        return ProductionResetKeysResult(initialVersions, restored)
     }
 
     fun writeFile03DemoData(text: String): File03Result {
@@ -287,6 +369,108 @@ internal class Ntag424DnaPersonalizationClient private constructor(
         return CompositeSetupResult(initialVersions, changedKeys, writeResult, sdmResult)
     }
 
+    /** Personalizes a transport or partially completed card using one server-issued record. */
+    fun personalizeProductionRecord(
+        url: String,
+        applicationPackage: String,
+        key0: ByteArray,
+        key1: ByteArray,
+        key2: ByteArray,
+        keyVersion: Int
+    ): ProductionSetupResult {
+        require(key0.size == 16 && key1.size == 16 && key2.size == 16) {
+            "Key 0/1/2 必须是 16-byte AES key"
+        }
+        require(keyVersion in 1..0xFF) { "目标 KeyVersion 必须是 1..255" }
+        exchangeIso(Ntag424DnaProtocol.SELECT_NDEF_APPLICATION, "select NDEF application")
+        val version = requireRecognizedCard()
+        val uid = checkNotNull(version.uid) { "GetVersion 未返回真实 UID" }
+        val settings = readFileSettings()
+        check(!settings.sdmEnabled) { "File 02 已开启 SDM，不能覆盖生产记录" }
+        check(settings.changeKey == 0) { "File 02 Change 权限不是 Key 0" }
+        check(settings.writeKey == FREE_ACCESS || settings.readWriteKey == FREE_ACCESS ||
+            settings.writeKey == 0 || settings.readWriteKey == 0) {
+            "File 02 写权限既不是 Free，也不允许 Key 0 写入"
+        }
+
+        val message = createBusinessMessage(url, applicationPackage)
+        val template = buildTemplate(message, settings.fileSize)
+        val targetKeys = mapOf(0 to key0, 1 to key1, 2 to key2)
+        val initialVersions = (0..2).associateWith(::readKeyVersion)
+        initialVersions.forEach { (keyNumber, currentVersion) ->
+            check(currentVersion == TRANSPORT_KEY_VERSION || currentVersion == keyVersion) {
+                "AppKey $keyNumber version $currentVersion 不属于 transport 或当前生产记录"
+            }
+        }
+
+        var currentKey0 = if (initialVersions.getValue(0) == keyVersion) key0 else Ntag424DemoKeys.transportKey
+        val changedKeys = mutableListOf<Int>()
+        listOf(1, 2).forEach { keyNumber ->
+            val targetKey = targetKeys.getValue(keyNumber)
+            if (initialVersions.getValue(keyNumber) == keyVersion) {
+                exchangeIso(Ntag424DnaProtocol.SELECT_NDEF_APPLICATION, "reselect before validating AppKey $keyNumber")
+                authenticateKey(keyNumber, targetKey)
+            } else {
+                changeKeyWithExplicitKeys(
+                    keyNumber = keyNumber,
+                    oldKey = Ntag424DemoKeys.transportKey,
+                    newVersion = keyVersion,
+                    newKey = targetKey,
+                    managerKey = currentKey0
+                )
+                changedKeys += keyNumber
+            }
+        }
+        if (initialVersions.getValue(0) == keyVersion) {
+            exchangeIso(Ntag424DnaProtocol.SELECT_NDEF_APPLICATION, "reselect before validating AppKey 0")
+            authenticateKey(0, key0)
+        } else {
+            changeKeyWithExplicitKeys(
+                keyNumber = 0,
+                oldKey = Ntag424DemoKeys.transportKey,
+                newVersion = keyVersion,
+                newKey = key0,
+                managerKey = currentKey0
+            )
+            currentKey0 = key0
+            changedKeys += 0
+        }
+
+        exchangeIso(Ntag424DnaProtocol.SELECT_NDEF_APPLICATION, "reselect before production NDEF write")
+        val session = authenticateKey(0, currentKey0)
+        writeNdefAtomically(session, settings, template.messageBytes, "write production NDEF template")
+        changeFileSettingsFull(session, settings, template.piccDataOffset, template.macOffset)
+        return ProductionSetupResult(
+            uid = uid,
+            initialKeyVersions = initialVersions,
+            changedKeys = changedKeys,
+            writeResult = WriteResult(template.fileBytesSize, message.records.size),
+            sdmResult = Result(template.fileBytesSize, template.piccDataOffset, template.macOffset)
+        )
+    }
+
+    private fun changeKeyWithExplicitKeys(
+        keyNumber: Int,
+        oldKey: ByteArray,
+        newVersion: Int,
+        newKey: ByteArray,
+        managerKey: ByteArray
+    ) {
+        exchangeIso(Ntag424DnaProtocol.SELECT_NDEF_APPLICATION, "reselect before changing AppKey $keyNumber")
+        val session = authenticateKey(0, managerKey)
+        secureFullCommand(
+            session,
+            CHANGE_KEY_COMMAND,
+            byteArrayOf(keyNumber.toByte()),
+            Ntag424DemoKeys.buildChangeKeyData(keyNumber, oldKey, newKey, newVersion),
+            "change AppKey $keyNumber to production version $newVersion",
+            allowEmptyResponseMac = keyNumber == 0
+        )
+        exchangeIso(Ntag424DnaProtocol.SELECT_NDEF_APPLICATION, "reselect after production ChangeKey")
+        check(readKeyVersion(keyNumber) == newVersion) { "AppKey $keyNumber KeyVersion 写后校验失败" }
+        authenticateKey(keyNumber, newKey)
+    }
+
     private fun changeKey(
         keyNumber: Int,
         oldVersion: Int,
@@ -316,6 +500,12 @@ internal class Ntag424DnaPersonalizationClient private constructor(
         require(keyNumber in 0..4) { "Invalid AppKey number: $keyNumber" }
         val keyVersion = readKeyVersion(keyNumber)
         val authenticationKey = Ntag424DemoKeys.valueForVersion(keyNumber, keyVersion)
+        return authenticateKey(keyNumber, authenticationKey)
+    }
+
+    private fun authenticateKey(keyNumber: Int, authenticationKey: ByteArray): Session {
+        require(keyNumber in 0..4) { "Invalid AppKey number: $keyNumber" }
+        require(authenticationKey.size == 16) { "AppKey must be 16 bytes" }
         Log.i(LOG_TAG, "$LOG_PREFIX AuthenticateEV2First started, keyNo=$keyNumber")
         val firstCommand = byteArrayOf(
             0x90.toByte(), 0x71, 0x00, 0x00, 0x02, keyNumber.toByte(), 0x00, 0x00
@@ -346,7 +536,7 @@ internal class Ntag424DnaPersonalizationClient private constructor(
         Log.i(
             LOG_TAG,
             "$LOG_PREFIX AuthenticateEV2First succeeded, keyNo=$keyNumber, " +
-                "keyVersion=$keyVersion, TI=${transactionId.toHex()}"
+                "TI=${transactionId.toHex()}"
         )
         return Session(transactionId, encKey, macKey)
     }
@@ -723,8 +913,10 @@ internal class Ntag424DnaPersonalizationClient private constructor(
         )
     }
 
-    private fun requireRecognizedCard() {
-        check(readVersion().looksLikeNtag424Dna) { "标签不是已识别的 NTAG 424 DNA" }
+    private fun requireRecognizedCard(): Ntag424Version {
+        val version = readVersion()
+        check(version.looksLikeNtag424Dna) { "标签不是已识别的 NTAG 424 DNA" }
+        return version
     }
 
     private fun canWriteWithDemoKey0(settings: Ntag424FileSettings): Boolean =
