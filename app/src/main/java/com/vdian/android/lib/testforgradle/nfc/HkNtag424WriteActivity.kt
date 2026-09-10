@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.RadioButton
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -58,6 +59,7 @@ class HkNtag424WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             binding.key1Query.setText("")
             renderHistory(announce = true)
         }
+        binding.clearProductionData.setOnClickListener { confirmClearProductionData() }
         renderRecordOptions()
         renderAssignment()
         renderHistory()
@@ -277,6 +279,33 @@ class HkNtag424WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
         binding.recordOptions.clearCheck()
         renderAssignment()
         if (showStatus) binding.status.text = "已清除选择"
+    }
+
+    private fun confirmClearProductionData() {
+        if (processing.get()) {
+            binding.status.text = "当前正在操作卡片，暂不能清除生产数据"
+            return
+        }
+        AlertDialog.Builder(this)
+            .setTitle("清除本机生产数据？")
+            .setMessage("将删除全部历史记录、已发行 UID、已使用 recordId 和 SN 进度，并从 No.001 重新开始。不会修改卡片或 assets 配置。此操作不可撤销。")
+            .setNegativeButton("取消", null)
+            .setPositiveButton("确认清除") { _, _ ->
+                runCatching { store.clearProductionData() }
+                    .onSuccess {
+                        clearSelection(showStatus = false)
+                        binding.key1Query.setText("")
+                        renderRecordOptions()
+                        renderHistory()
+                        binding.status.text = "本机生产数据已清除，SN 将从 No.001 重新开始"
+                        binding.result.text = "历史记录、已发行 UID 和已使用 recordId 均已清除；卡片和 assets 配置未修改"
+                    }
+                    .onFailure { error ->
+                        binding.status.text = "清除本机生产数据失败"
+                        binding.result.text = error.message ?: error.javaClass.simpleName
+                    }
+            }
+            .show()
     }
 
     private fun createHistoryRow(record: HkNtag424Record): View {

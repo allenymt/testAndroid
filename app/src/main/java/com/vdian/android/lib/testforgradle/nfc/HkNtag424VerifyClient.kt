@@ -54,7 +54,7 @@ internal class HkNtag424VerifyClient(
     }
 
     companion object {
-        const val VERIFY_ENDPOINT = "http://10.37.98.52:8080/fusionitem/test/ntag424/verify"
+        const val VERIFY_ENDPOINT = "https://wd-callback.pre.weidian.com/fusionitem/test/ntag424/verify"
         private val JSON_MEDIA_TYPE = "application/json; charset=utf-8".toMediaType()
     }
 }

@@ -124,6 +124,10 @@ internal class HkNtag424ProductionStore(context: Context) {
         true
     }
 
+    fun clearProductionData() = synchronized(LOCK) {
+        check(preferences.edit().clear().commit()) { "清除本机生产数据失败" }
+    }
+
     fun toJson(record: HkNtag424Record): String = gson.toJson(record)
 
     fun isIssued(recordId: String): Boolean = synchronized(LOCK) { recordId in issuedRecordIds() }
