@@ -14,5 +14,13 @@
     "key2": "5D0FAB01C1543751F084C27B6C5644D7",
     "url": "https://wdb-applink.weidian.com?targetUrl=weidianbuyer://wdb/nfc%3Fversion%3D1%26encryptId%3DN424.&e=00000000000000000000000000000000&c=0000000000000000",
     "packageName": "com.koudai.weidian.buyer"
+  },
+  {
+    "version": 1,
+    "key0": "6907637E21563BBB7DB4A8C092A6AE9C",
+    "key1": "BB53418B1449CFE5567E4A8BA82815BF",
+    "key2": "0A8778681C30F311C25ED9852BF1E7AD",
+    "url": "https://wdb-applink.weidian.com?targetUrl=weidianbuyer://wdb/nfc%3Fversion%3D1%26encryptId%3DN424.&e=00000000000000000000000000000000&c=0000000000000000",
+    "packageName": "com.koudai.weidian.buyer"
   }
 ]

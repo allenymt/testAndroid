@@ -43,6 +43,7 @@ import com.vdian.android.lib.testforgradle.nfc.Fm1208NfcLaunchActivity;
 import com.vdian.android.lib.testforgradle.nfc.Ntag424DnaTestActivity;
 import com.vdian.android.lib.testforgradle.nfc.HkNtag424VerifyActivity;
 import com.vdian.android.lib.testforgradle.nfc.HkNtag424WriteActivity;
+import com.vdian.android.lib.testforgradle.nfc.HkNtag215WriteActivity;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
 import com.vdian.android.lib.testforgradle.pageing3.PagingTestActivity;
 import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
@@ -204,16 +205,17 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.category_runtime).setVisibility(View.GONE);
         ((TextView) findViewById(R.id.home_eyebrow)).setText("WD NFC HK");
         ((TextView) findViewById(R.id.home_title)).setText("WdNfcHk");
-        ((TextView) findViewById(R.id.home_description)).setText("星愿卡 NTAG 424 生产写入与读卡验真");
-        ((TextView) findViewById(R.id.nfc_description)).setText("星愿卡 NTAG 424");
-        ((TextView) findViewById(R.id.nfc_count)).setText("1 个功能入口  →");
+        ((TextView) findViewById(R.id.home_description)).setText("星愿卡 NTAG 424 / NTAG215 写入与验证");
+        ((TextView) findViewById(R.id.nfc_description)).setText("星愿卡 NTAG 424 / NTAG215");
+        ((TextView) findViewById(R.id.nfc_count)).setText("2 个功能入口  →");
         ((TextView) findViewById(R.id.home_footer)).setText("星愿卡 NFC 专用工具");
     }
 
     private void showNfcDemos() {
         if (BuildConfig.WD_NFC_HK) {
             showDemoDialog("NFC 与卡片", new DemoEntry[]{
-                    new DemoEntry("星愿卡 NTAG 424", this::showHkNtag424Demos)
+                    new DemoEntry("星愿卡 NTAG 424", this::showHkNtag424Demos),
+                    activityDemo("星愿卡 NTAG215 · 写入", HkNtag215WriteActivity.class)
             });
             return;
         }
@@ -225,7 +227,8 @@ public class MainActivity extends AppCompatActivity {
                     openDemo(Ntag424DnaTestActivity.class);
                 }),
                 activityDemo("星愿卡 NTAG 424 · 生产写入", HkNtag424WriteActivity.class),
-                activityDemo("星愿卡 NTAG 424 · 读卡验真", HkNtag424VerifyActivity.class)
+                activityDemo("星愿卡 NTAG 424 · 读卡验真", HkNtag424VerifyActivity.class),
+                activityDemo("星愿卡 NTAG215 · 写入", HkNtag215WriteActivity.class)
         });
     }
 
