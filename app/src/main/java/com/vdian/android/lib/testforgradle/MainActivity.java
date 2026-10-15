@@ -14,7 +14,9 @@ import android.os.Handler;
 import android.os.Message;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -101,7 +103,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         bindDemoCategories();
-        runStartupDiagnostics();
+        if (BuildConfig.WD_NFC_HK) {
+            configureWdNfcHkHome();
+        } else {
+            runStartupDiagnostics();
+        }
     }
 
     private void runStartupDiagnostics() {
@@ -167,6 +173,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (BuildConfig.WD_NFC_HK) {
+            return;
+        }
         TestSingle.main();
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             String[] per = {Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_NETWORK_STATE};
@@ -188,7 +197,26 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.category_runtime).setOnClickListener(view -> showRuntimeDemos());
     }
 
+    private void configureWdNfcHkHome() {
+        findViewById(R.id.category_android).setVisibility(View.GONE);
+        findViewById(R.id.category_data).setVisibility(View.GONE);
+        findViewById(R.id.category_ui).setVisibility(View.GONE);
+        findViewById(R.id.category_runtime).setVisibility(View.GONE);
+        ((TextView) findViewById(R.id.home_eyebrow)).setText("WD NFC HK");
+        ((TextView) findViewById(R.id.home_title)).setText("WdNfcHk");
+        ((TextView) findViewById(R.id.home_description)).setText("星愿卡 NTAG 424 生产写入与读卡验真");
+        ((TextView) findViewById(R.id.nfc_description)).setText("星愿卡 NTAG 424");
+        ((TextView) findViewById(R.id.nfc_count)).setText("1 个功能入口  →");
+        ((TextView) findViewById(R.id.home_footer)).setText("星愿卡 NFC 专用工具");
+    }
+
     private void showNfcDemos() {
+        if (BuildConfig.WD_NFC_HK) {
+            showDemoDialog("NFC 与卡片", new DemoEntry[]{
+                    new DemoEntry("星愿卡 NTAG 424", this::showHkNtag424Demos)
+            });
+            return;
+        }
         showDemoDialog("NFC 与卡片", new DemoEntry[]{
                 new DemoEntry("FM1208 · 主动识别与读写", this::openNfcIdentification),
                 activityDemo("FM1208 · 冷启动唤起验证", Fm1208NfcLaunchActivity.class),
@@ -198,6 +226,13 @@ public class MainActivity extends AppCompatActivity {
                 }),
                 activityDemo("星愿卡 NTAG 424 · 生产写入", HkNtag424WriteActivity.class),
                 activityDemo("星愿卡 NTAG 424 · 读卡验真", HkNtag424VerifyActivity.class)
+        });
+    }
+
+    private void showHkNtag424Demos() {
+        showDemoDialog("星愿卡 NTAG 424", new DemoEntry[]{
+                activityDemo("生产写入", HkNtag424WriteActivity.class),
+                activityDemo("读卡验真", HkNtag424VerifyActivity.class)
         });
     }
 

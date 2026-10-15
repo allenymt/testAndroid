@@ -2,16 +2,25 @@ package com.vdian.android.lib.testforgradle.nfc
 
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
+import com.google.gson.Gson
+import com.google.gson.JsonParser
 import org.junit.Test
 import java.io.File
 
 class HkNtag424MockRecordsTest {
     @Test
-    fun records_haveUniqueIdentifiersAndValidKeys() {
+    fun records_onlyContainCardConfiguration() {
+        loadRecords().forEach { record ->
+            val fields = JsonParser().parse(Gson().toJson(record)).asJsonObject.keySet()
+            assertEquals(setOf("version", "key0", "key1", "key2", "url", "packageName"), fields)
+        }
+    }
+
+    @Test
+    fun records_haveUniqueKey1AndValidKeys() {
         val records = loadRecords()
 
         assertTrue(records.isNotEmpty())
-        assertEquals(records.size, records.map { it.recordId }.distinct().size)
         assertEquals(records.size, records.map { it.key1.uppercase() }.distinct().size)
         assertTrue(records.all { it.key0Bytes.size == 16 && it.key1Bytes.size == 16 && it.key2Bytes.size == 16 })
     }

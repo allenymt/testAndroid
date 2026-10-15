@@ -10,10 +10,7 @@ import java.util.concurrent.TimeUnit
 
 internal data class HkNtag424VerifyResult(
     val ok: Boolean,
-    val batchId: String?,
-    val recordId: String?,
     val uid: String?,
-    val physicalSerialNo: String?,
     val counter: Long?,
     val message: String
 )
@@ -43,10 +40,7 @@ internal class HkNtag424VerifyClient(
             }
             return HkNtag424VerifyResult(
                 ok = true,
-                batchId = data?.optNullableString("batchId"),
-                recordId = data?.optNullableString("recordId"),
                 uid = data?.optNullableString("uid"),
-                physicalSerialNo = data?.optNullableString("physicalSerialNo"),
                 counter = data?.takeIf { it.has("counter") && !it.isNull("counter") }?.optLong("counter"),
                 message = status?.optString("message").orEmpty()
             )

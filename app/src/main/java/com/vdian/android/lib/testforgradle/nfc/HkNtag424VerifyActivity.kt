@@ -86,10 +86,7 @@ class HkNtag424VerifyActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             result.onSuccess { (_, verification) ->
                 binding.status.text = "服务器验真成功"
                 binding.result.text = buildString {
-                    appendLine("recordId: ${verification.recordId ?: "-"}")
-                    appendLine("batchId: ${verification.batchId ?: "-"}")
                     appendLine("UID: ${verification.uid ?: "-"}")
-                    appendLine("SN: ${verification.physicalSerialNo ?: "-"}")
                     append("Counter: ${verification.counter ?: "-"}")
                 }
             }.onFailure { error ->
