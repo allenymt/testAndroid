@@ -440,8 +440,23 @@ internal class Ntag424DnaPersonalizationClient private constructor(
         val session = authenticateKey(0, currentKey0)
         writeNdefAtomically(session, settings, template.messageBytes, "write production NDEF template")
         changeFileSettingsFull(session, settings, template.piccDataOffset, template.macOffset)
+        // Random UID mode hides the real UID in GetVersion. Read it from the newly
+        // configured PICCENCData rather than persisting zeros or the random RF UID.
+        val actualUid = if (uid.any { it != 0.toByte() }) uid else {
+            val uri = readCurrentNdefMessage().records.firstNotNullOfOrNull { it.toUri() }
+                ?: error("SDM 回读未包含 URL，无法获取真实 UID")
+            val encrypted = uri.getQueryParameter("e").orEmpty()
+            check(encrypted.matches(Regex("[0-9A-Fa-f]{32}"))) { "SDM 回读 e 参数无效" }
+            val plain = Ntag424DnaEv2Crypto.decryptCbc(
+                key2, ZERO_IV, encrypted.chunked(2).map { it.toInt(16).toByte() }.toByteArray()
+            )
+            check(plain[0] == 0xC7.toByte()) { "SDM PICCDataTag 无效，无法获取真实 UID" }
+            plain.copyOfRange(1, 8).also { realUid ->
+                check(realUid.any { it != 0.toByte() }) { "SDM 返回了无效 UID" }
+            }
+        }
         return ProductionSetupResult(
-            uid = uid,
+            uid = actualUid,
             initialKeyVersions = initialVersions,
             changedKeys = changedKeys,
             writeResult = WriteResult(template.fileBytesSize, message.records.size),

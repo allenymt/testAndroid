@@ -14,6 +14,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 class HkNtag424WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private lateinit var binding: ActivityHkNtag424WriteBinding
     private lateinit var records: List<HkNtag424Record>
+    private lateinit var configPanel: HkNfcConfigPanel
     private var nfcAdapter: NfcAdapter? = null
     private val processing = AtomicBoolean(false)
     private var selectedRecordIndex: Int? = null
@@ -35,6 +36,9 @@ class HkNtag424WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             emptyList()
         }
         nfcAdapter = NfcAdapter.getDefaultAdapter(this)
+        configPanel = HkNfcConfigPanel(this, binding.configTools, HkNtag424RecordRepository.ASSET_NAME) {
+            selectedRecordIndex
+        }
         binding.writeCard.setOnClickListener { arm(Operation.WRITE) }
         binding.disableSdm.setOnClickListener { arm(Operation.DISABLE_SDM) }
         binding.clearNdef.setOnClickListener { arm(Operation.CLEAR_NDEF) }
@@ -76,7 +80,7 @@ class HkNtag424WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             Operation.RESET_KEYS -> "已准备使用所选 Key 重置 Key 0/1/2，请贴卡"
         }
         binding.result.text = when (operation) {
-            Operation.WRITE -> "将写入 Key 0/1/2、完整 NDEF，并开启 SDM；端侧不保存发行记录"
+            Operation.WRITE -> "将写入 Key 0/1/2、完整 NDEF，并开启 SDM；成功后将 UID 回写所选 JSON 项的 rfid"
             Operation.DISABLE_SDM -> "只关闭 File 02 SDM 并清理外层 e/c"
             Operation.CLEAR_NDEF -> "要求卡片已关闭 SDM；只把 File 02 NLEN 清零"
             Operation.RESET_KEYS -> "按 Key 1 → Key 2 → Key 0 恢复为全零 Transport Key/version 0"
@@ -98,6 +102,7 @@ class HkNtag424WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 Operation.RESET_KEYS -> "正在重置 Key 0/1/2，请勿移开卡片..."
             }
         }
+        var cardWritten = false
         val result = runCatching {
             Ntag424DnaPersonalizationClient.connect(tag).use { client ->
                 when (operation) {
@@ -118,6 +123,13 @@ class HkNtag424WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                         productionVersion = record.version
                     )
                 }
+            }.also { written ->
+                if (written is Ntag424DnaPersonalizationClient.ProductionSetupResult) {
+                    cardWritten = true
+                    HkNfcConfigFile(this, HkNtag424RecordRepository.ASSET_NAME).writeRfid(
+                        records.indexOfFirst { it === record }, written.uid.toHex()
+                    )
+                }
             }
         }
         runOnUiThread {
@@ -125,7 +137,7 @@ class HkNtag424WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             result.onSuccess { operationResult ->
                 when (operationResult) {
                     is Ntag424DnaPersonalizationClient.ProductionSetupResult -> {
-                        binding.status.text = "写卡成功"
+                        binding.status.text = "写卡成功，rfid 已回写 JSON"
                         binding.result.text = buildString {
                             appendLine("UID: ${operationResult.uid.toHex()}")
                             appendLine("KeyVersion: ${record.version}")
@@ -162,7 +174,7 @@ class HkNtag424WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                 renderSelection()
             }.onFailure { error ->
                 Log.e(LOG_TAG, "card operation failed", error)
-                binding.status.text = "操作失败，可直接重试"
+                binding.status.text = if (cardWritten) "卡片写入成功，但 rfid 回写 JSON 失败" else "操作失败，可直接重试"
                 binding.result.text = error.message ?: error.javaClass.simpleName
                 renderSelection()
             }
@@ -188,6 +200,7 @@ class HkNtag424WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     private fun renderSelection() {
+        configPanel.refresh()
         val record = selectedRecordIndex?.let(records::getOrNull)
         binding.currentRecord.text = if (record == null) {
             "尚未选择写卡数据"
@@ -219,6 +232,11 @@ class HkNtag424WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     private val Int.dp: Int get() = (this * resources.displayMetrics.density).toInt()
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        configPanel.onActivityResult(requestCode, resultCode, data)
+    }
     private fun ByteArray.toHex(): String = joinToString("") { "%02X".format(it) }
 
     companion object {

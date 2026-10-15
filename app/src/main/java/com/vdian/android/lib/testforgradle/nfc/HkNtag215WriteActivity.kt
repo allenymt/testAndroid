@@ -18,6 +18,8 @@ class HkNtag215WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     private lateinit var binding: ActivityHkNtag215WriteBinding
     private var adapter: NfcAdapter? = null
     private var selected: HkNtag215Record? = null
+    private var records: List<HkNtag215Record> = emptyList()
+    private lateinit var configPanel: HkNfcConfigPanel
     private val pending = AtomicReference<HkNtag215Record?>(null)
     private val processing = AtomicBoolean(false)
 
@@ -31,10 +33,15 @@ class HkNtag215WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             insets
         }
         adapter = NfcAdapter.getDefaultAdapter(this)
+        configPanel = HkNfcConfigPanel(this, binding.configTools, HkNtag215Data.ASSET_NAME) {
+            selected?.let { record -> records.indexOfFirst { it === record }.takeIf { it >= 0 } }
+        }
+        configPanel.refresh()
         binding.writeCard.isEnabled = false
         runCatching {
-            assets.open(HkNtag215Data.ASSET_NAME).bufferedReader().use { HkNtag215Data.parse(it.readText()) }
+            HkNtag215Data.parse(HkNfcConfigFile(this, HkNtag215Data.ASSET_NAME).load())
         }.onSuccess { records ->
+            this.records = records
             records.forEachIndexed { index, record ->
                 binding.recordOptions.addView(RadioButton(this).apply {
                     id = View.generateViewId()
@@ -44,6 +51,7 @@ class HkNtag215WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
                             selected = record
                             pending.set(null)
                             binding.currentRecord.text = "${record.url}\n\n包名: ${record.packageName}"
+                            configPanel.refresh()
                             binding.writeCard.isEnabled = !processing.get()
                             binding.status.text = "已选择配置 ${index + 1}"
                         }
@@ -100,17 +108,27 @@ class HkNtag215WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
             }
             binding.status.text = "正在写入，请勿移开卡片"
         }
-        val result = runCatching { HkNtag215Writer.write(tag, record) }
+        var cardWritten = false
+        val result = runCatching {
+            val bytes = HkNtag215Writer.write(tag, record)
+            cardWritten = true
+            HkNfcConfigFile(this, HkNtag215Data.ASSET_NAME).writeRfid(
+                records.indexOfFirst { it === record },
+                tag.id.joinToString("") { "%02X".format(it) }
+            )
+            bytes
+        }
         runOnUiThread {
             result.onSuccess { bytes ->
-                binding.status.text = "NTAG215 写入成功，回读校验通过"
+                binding.status.text = "NTAG215 写入成功，回读通过，rfid 已回写 JSON"
                 binding.result.text = "NDEF: $bytes bytes / 2 条记录\nURL: ${record.url}\n包名: ${record.packageName}"
             }.onFailure { error ->
                 Log.e("HkNtag215Write", "NDEF write failed", error)
-                binding.status.text = "写入失败，请重新选择写入后贴卡"
+                binding.status.text = if (cardWritten) "卡片写入成功，但 rfid 回写 JSON 失败" else "写入失败，请重新选择写入后贴卡"
                 binding.result.text = error.message ?: error.javaClass.simpleName
             }
             processing.set(false)
+            configPanel.refresh()
             binding.writeCard.isEnabled = selected != null
             binding.recordOptions.isEnabled = true
             for (index in 0 until binding.recordOptions.childCount) {
@@ -120,4 +138,9 @@ class HkNtag215WriteActivity : AppCompatActivity(), NfcAdapter.ReaderCallback {
     }
 
     private val Int.dp: Int get() = (this * resources.displayMetrics.density).toInt()
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: android.content.Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        configPanel.onActivityResult(requestCode, resultCode, data)
+    }
 }

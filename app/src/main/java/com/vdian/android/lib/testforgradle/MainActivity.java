@@ -44,6 +44,7 @@ import com.vdian.android.lib.testforgradle.nfc.Ntag424DnaTestActivity;
 import com.vdian.android.lib.testforgradle.nfc.HkNtag424VerifyActivity;
 import com.vdian.android.lib.testforgradle.nfc.HkNtag424WriteActivity;
 import com.vdian.android.lib.testforgradle.nfc.HkNtag215WriteActivity;
+import com.vdian.android.lib.testforgradle.nfc.HkNtag215ReadActivity;
 import com.vdian.android.lib.testforgradle.oomDemo.OomDemoActivity;
 import com.vdian.android.lib.testforgradle.pageing3.PagingTestActivity;
 import com.vdian.android.lib.testforgradle.reflex.TestReflexAction;
@@ -215,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
         if (BuildConfig.WD_NFC_HK) {
             showDemoDialog("NFC 与卡片", new DemoEntry[]{
                     new DemoEntry("星愿卡 NTAG 424", this::showHkNtag424Demos),
-                    activityDemo("星愿卡 NTAG215 · 写入", HkNtag215WriteActivity.class)
+                    new DemoEntry("星愿卡 NTAG215", this::showHkNtag215Demos)
             });
             return;
         }
@@ -228,7 +229,15 @@ public class MainActivity extends AppCompatActivity {
                 }),
                 activityDemo("星愿卡 NTAG 424 · 生产写入", HkNtag424WriteActivity.class),
                 activityDemo("星愿卡 NTAG 424 · 读卡验真", HkNtag424VerifyActivity.class),
-                activityDemo("星愿卡 NTAG215 · 写入", HkNtag215WriteActivity.class)
+                activityDemo("星愿卡 NTAG215 · 写入", HkNtag215WriteActivity.class),
+                activityDemo("星愿卡 NTAG215 · 读取", HkNtag215ReadActivity.class)
+        });
+    }
+
+    private void showHkNtag215Demos() {
+        showDemoDialog("星愿卡 NTAG215", new DemoEntry[]{
+                activityDemo("写入", HkNtag215WriteActivity.class),
+                activityDemo("读取", HkNtag215ReadActivity.class)
         });
     }
 

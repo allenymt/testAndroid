@@ -18,9 +18,7 @@ internal data class HkNtag424Record(
 }
 
 internal class HkNtag424RecordRepository(private val context: Context) {
-    fun load(): List<HkNtag424Record> = context.assets.open(ASSET_NAME).bufferedReader().use {
-        parse(it.readText())
-    }
+    fun load(): List<HkNtag424Record> = parse(HkNfcConfigFile(context, ASSET_NAME).load())
 
     companion object {
         const val ASSET_NAME = "hk_ntag424_mock_records.json"

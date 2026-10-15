@@ -47,6 +47,9 @@
             android:name=".nfc.Ntag424DnaTestActivity"
             android:exported="false" />
         <activity
+            android:name=".nfc.HkNtag215ReadActivity"
+            android:exported="false" />
+        <activity
             android:name=".nfc.HkNtag215WriteActivity"
             android:exported="false" />
         <activity

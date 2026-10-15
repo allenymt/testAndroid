@@ -11,8 +11,9 @@ internal object HkNtag215Data {
     fun parse(json: String): List<HkNtag215Record> {
         val records = JsonParser().parse(json).asJsonArray.mapIndexed { index, element ->
             val item = element.asJsonObject
-            require(item.keySet() == setOf("url", "packageName")) {
-                "配置 ${index + 1} 只允许包含 url 和 packageName"
+            require(item.keySet().containsAll(setOf("url", "packageName")) &&
+                item.keySet().all { it in setOf("url", "packageName", "rfid") }) {
+                "配置 ${index + 1} 只允许包含 url、packageName 和可选 rfid"
             }
             require(item["url"].isJsonPrimitive && item["url"].asJsonPrimitive.isString &&
                 item["packageName"].isJsonPrimitive && item["packageName"].asJsonPrimitive.isString) {

@@ -129,6 +129,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="打开系统 NFC 设置" />
+
+            <LinearLayout
+                android:id="@+id/config_tools"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="vertical" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
